@@ -1,0 +1,22 @@
+[0.929s] Invoking command in '/home/fabin/rsg_ros2_ws/build/risk_scene_graph_core': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(.venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/build --no-deps symlink_data
+[1.199s] running develop
+[1.374s] running egg_info
+[1.374s] creating risk_scene_graph_core.egg-info
+[1.390s] writing risk_scene_graph_core.egg-info/PKG-INFO
+[1.391s] writing dependency_links to risk_scene_graph_core.egg-info/dependency_links.txt
+[1.391s] writing requirements to risk_scene_graph_core.egg-info/requires.txt
+[1.391s] writing top-level names to risk_scene_graph_core.egg-info/top_level.txt
+[1.391s] writing manifest file 'risk_scene_graph_core.egg-info/SOURCES.txt'
+[1.425s] reading manifest file 'risk_scene_graph_core.egg-info/SOURCES.txt'
+[1.426s] writing manifest file 'risk_scene_graph_core.egg-info/SOURCES.txt'
+[1.443s] running build_ext
+[1.443s] Creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/lib/python3.12/site-packages/risk-scene-graph-core.egg-link (link to .)
+[1.444s] 
+[1.444s] Installed /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core
+[1.444s] running symlink_data
+[1.444s] creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index
+[1.444s] creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index/resource_index
+[1.444s] creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index/resource_index/packages
+[1.444s] symbolically linking /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/resource/risk_scene_graph_core -> /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index/resource_index/packages
+[1.444s] symbolically linking /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/package.xml -> /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/risk_scene_graph_core
+[1.472s] Invoked command in '/home/fabin/rsg_ros2_ws/build/risk_scene_graph_core' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(.venv) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/build --no-deps symlink_data

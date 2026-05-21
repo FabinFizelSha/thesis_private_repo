@@ -1,0 +1,9 @@
+source;share/risk_scene_graph_core/hook/pythonpath.ps1
+source;share/risk_scene_graph_core/hook/pythonpath.dsv
+source;share/risk_scene_graph_core/hook/pythonpath.sh
+source;share/risk_scene_graph_core/hook/ament_prefix_path.ps1
+source;share/risk_scene_graph_core/hook/ament_prefix_path.dsv
+source;share/risk_scene_graph_core/hook/ament_prefix_path.sh
+source;../../build/risk_scene_graph_core/share/risk_scene_graph_core/hook/pythonpath_develop.ps1
+source;../../build/risk_scene_graph_core/share/risk_scene_graph_core/hook/pythonpath_develop.dsv
+source;../../build/risk_scene_graph_core/share/risk_scene_graph_core/hook/pythonpath_develop.sh

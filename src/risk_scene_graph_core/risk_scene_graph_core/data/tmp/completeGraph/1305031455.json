@@ -1,0 +1,16 @@
+{
+    "nodes": [
+        {
+            "id": -1,
+            "name": "robot",
+            "meta": "Robot/Sensor platform",
+            "pos": [
+                1.2296,
+                0.1412,
+                1.4754
+            ],
+            "layer": "ROBOT"
+        }
+    ],
+    "edges": []
+}

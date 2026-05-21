@@ -1,0 +1,10 @@
+rsg_pipeline_node:
+  ros__parameters:
+    rgb_topic: /camera/color/image_raw
+    depth_topic: /camera/depth/image_raw
+    camera_info_topic: /camera/color/camera_info
+    target_frame: map
+    camera_frame: camera_color_optical_frame
+    publish_debug: true
+    use_sam_rap: false
+    save_output: true

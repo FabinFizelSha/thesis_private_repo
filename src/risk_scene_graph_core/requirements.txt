@@ -1,0 +1,16 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.0
+pydantic==2.9.2
+numpy
+networkx
+matplotlib
+opencv-python
+scipy
+Pillow
+openai
+requests
+torch
+torchvision
+transformers
+chromadb[cli]
+segment-anything

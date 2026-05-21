@@ -1,0 +1,20 @@
+running develop
+running egg_info
+creating risk_scene_graph_core.egg-info
+writing risk_scene_graph_core.egg-info/PKG-INFO
+writing dependency_links to risk_scene_graph_core.egg-info/dependency_links.txt
+writing requirements to risk_scene_graph_core.egg-info/requires.txt
+writing top-level names to risk_scene_graph_core.egg-info/top_level.txt
+writing manifest file 'risk_scene_graph_core.egg-info/SOURCES.txt'
+reading manifest file 'risk_scene_graph_core.egg-info/SOURCES.txt'
+writing manifest file 'risk_scene_graph_core.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/lib/python3.12/site-packages/risk-scene-graph-core.egg-link (link to .)
+
+Installed /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core
+running symlink_data
+creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index
+creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index/resource_index
+creating /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index/resource_index/packages
+symbolically linking /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/resource/risk_scene_graph_core -> /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/ament_index/resource_index/packages
+symbolically linking /home/fabin/rsg_ros2_ws/build/risk_scene_graph_core/package.xml -> /home/fabin/rsg_ros2_ws/install/risk_scene_graph_core/share/risk_scene_graph_core
