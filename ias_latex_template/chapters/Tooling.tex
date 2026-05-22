@@ -1,0 +1,66 @@
+\chapter{Tooling}
+
+\section{Recommended Editors}
+There are several options for working on your LaTeX document. All of them have individual strong suits and drawbacks. For locally installed editors it is highly recommended to use version control (see \autoref{sec:version_control}).
+
+\subsection{Overleaf}
+By far the easiest and fastest setup is provided by \url{overleaf.com}. After creating an account, you can add this template and start working on your thesis right away.
+Overleaf allows simultaneous editing of by multiple persons and provides integrated version control and document compilation.
+However, sometimes it is not possible to have your work hosted on public servers due to \acp{NDA}. Ask your supervisor if you're allowed to use overleaf!
+
+\subsection{Visual Studio Code}
+VSCode is also a valid choice for editing latex documents. Just install the \texttt{LaTex Workshop} extension. You should also consider installing the \texttt{LTex} extension for integrating LanguageTool (see \autoref{sec:spelling}).
+
+\subsection{TexStudio}
+You can use the TeXstudio\footnote{\url{https://www.texstudio.org/}} latex editor and the MiKTeX\footnote{\url{https://miktex.org/}} LaTeX distribution on your PC.
+
+In TeXstudio, remember to set \texttt{lualatex} as the standard compiler and \texttt{biber} as the bibtex backend.
+
+\subsection{direct command}
+If you use the \texttt{latex} or \texttt{pdflatex} commands directly please remember that you need to run the commands in this order:
+
+\begin{enumerate}
+    \item \texttt{pdflatex Name\_Thema.tex}
+    \item \texttt{biber Name\_Thema}
+    \item \texttt{pdflatex Name\_Thema.tex}
+    \item \texttt{pdflatex Name\_Thema.tex}
+\end{enumerate}
+
+This is necessary that latex knows all your references and can insert them correctly. For more details see: \url{https://tex.stackexchange.com/questions/53235/why-does-latex-bibtex-need-three-passes-to-clear-up-all-warnings#}.
+
+\section{Checking of grammar, spell and style}
+\label{sec:spelling}
+As with all word-processing tasks, it is highly recommended to use at least some sort of spell-checking software.
+For this purpose TexStudio provides integration with LanguageTool\footnote{\url{https://languagetool.org}}. LanguageTool is a java based application, so make sure to install a Java Runtime Environment. A exsample setting for your PC are shown in \autoref{fig:texstudio-languagetool-integration}. Further information on the integration of LanguageTool with TexStudio can be found at the LanguageTool Wiki \footnote{\url{http://wiki.languagetool.org/checking-la-tex-with-languagetool\#toc2}}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.9\linewidth]{example_images/texstudio-languagetool-integration}
+	\caption[Settings for integrating LanguageTool with TexStudio on your computers]{}
+	\label{fig:texstudio-languagetool-integration}
+\end{figure}
+
+\section{Version control}
+\label{sec:version_control}
+Whenever working on a document, it is desirable to have some sort of version control. For this task, you can use for example github \url{https://github.com}. Once you are logged in to github, you can create your own repository for tracking your thesis files. A \texttt{.gitignore} file is necessary to not track all changes to automatically generated files. You may use the \texttt{.gitignore} provided by github \url{https://github.com/github/gitignore/blob/main/TeX.gitignore}.
+
+You can achieve a rudimentary integration with TeXstudio by defining macros such as the git commit macro shown in \autoref{lst:git_commit}. Note that macros can also be called by using shortcuts.
+
+\begin{lstlisting}[caption={\texttt{git commit} macro}, label={lst:git_commit}]
+%SCRIPT
+dialog = new UniversalInputDialog()
+dialog.setWindowTitle("Git commit")
+dialog.add("", "Message", "comment")
+dialog.add(false, "Commit all files","allfiles")
+if (dialog.exec() != null) {
+comment = dialog.get("comment")
+if ((dialog.get("allfiles")) == true){
+buildManager.runCommand(
+"git commit -a -m \"" + comment + "\"", editor.fileName())
+}else{
+buildManager.runCommand(
+"git commit " + editor.fileName() + " -m \"" + comment +
+"\"", editor.fileName())
+}
+}
+\end{lstlisting}

@@ -1,0 +1,75 @@
+\documentclass[ a4paper,
+                oneside,
+                toc=bibliography,
+                toc=listof
+                ]{scrbook}
+
+\input{settings}
+
+% Path to .bib file for BibLatex
+\addbibresource{bibliography.bib}
+% \addbibresource{someOtherBibFile}
+
+% Select your type and language of thesis in the settings.tex document
+\author{Max Mustermann}
+\major{Mechatronics}
+\title{How to train a hamster}
+
+\thesisno{9876}
+\date{10 March 2020}
+\supervisor{My supervisor, M.Sc.}
+\professor{Prof. Dr.-Ing. Dr. h.c. Michael Weyrich}
+
+\extsupervisor{}
+\extcompany{}
+\confidentialthesis{}
+
+\begin{document}
+    \frontmatter
+    \makeIAStitle
+    %\setcounter{page}{1} % start at page (i) after title page
+
+    \cleardoublepage
+    \currentpdfbookmark{\contentsname}{Inhalt}
+    \tableofcontents
+    \cleardoublepage
+    \listoffigures
+    \cleardoublepage
+    \listoftables
+     \cleardoublepage
+    \input{chapters/Acronyms}
+    \cleardoublepage
+    \input{chapters/Glossary}
+
+
+    % Kurzfassung/Abstract
+    \input{chapters/Abstract}
+    \acresetall
+    \cleardoublepage
+
+
+    \mainmatter
+    % ********************************************************************
+    % Write your own contents here:
+    % ********************************************************************
+
+    \input{chapters/Introduction}
+    \input{chapters/Examples}
+    \input{chapters/Tooling}
+
+    \chapter{Conclusions}
+
+    % ********************************************************************
+    % End of contents
+    % ********************************************************************
+
+    \cleardoublepage
+    \printbibliography
+
+    % Appendix, if needed:
+    \appendix
+    \chapter{Example appendix chapter}
+
+    \declarationOfOriginality
+
+\end{document}
