@@ -6,11 +6,27 @@ Robotic systems are increasingly deployed across industrial, service, medical, a
 
 At the same time, robotic systems are increasingly influenced by advances in artificial intelligence. The Stanford AI Index reports that 78\% of organizations used AI in 2024, compared with 55\% in the previous year \cite{stanford2025aiindex}.In addition, global private investment in generative AI reached USD 33.9 billion in 2024. The International Federation of Robotics also identifies physical, analytic, and generative AI as key technological trends in robotics. These developments indicate that future robotic systems will increasingly combine physical operation with adaptive, data-driven, and software-defined capabilities\cite{ifr2025robots}.
 
-This combination introduces new challenges for safety and risk assessment. Conventional risk assessment methods are typically performed before deployment and are based on assumptions about the system design, intended use, operating environment, and known hazards\cite{iso12100}. While such methods remain essential, they are limited when the system behaviour or operating environment changes after deployment. This limitation becomes particularly relevant for autonomous systems that operate in dynamic environments, receive over-the-air software updates, or use adaptive AI-based components.
-
-As a result, there is a growing need for dynamic risk assessment mechanisms that can incorporate information about the current operational context. Such mechanisms require structured representations of the environment, including relevant objects, spatial relationships, and risk-related information. This motivates the development of a spatial risk-annotated scene graph, which can provide environmental context and situational awareness to support risk assessment during system operation.
-
+This combination introduces new challenges for safety and risk assessment. Conventional risk assessment methods are typically performed before deployment and rely on assumptions about the system design, intended use, operating environment, and known hazards \cite{iso12100}. Although such methods remain essential, they are limited when autonomous systems operate in dynamic environments, receive over-the-air software updates, or use adaptive AI-based components. This creates a need for dynamic risk assessment mechanisms that can incorporate the current operational context through structured representations of relevant objects, spatial relationships, and risk-related information while operating at near real time speed. A spatial risk-annotated scene graph is therefore motivated as a means of providing environmental context and situational awareness to support risk assessment during system operation.
 }
 \section{Relevance}
+\small{
+Dynamic risk assessment requires more than the detection of individual objects. In autonomous systems, risk depends not only on whether an object is present, but also on its position, spatial relationships, uncertainty, and relevance to the current operational context. A scene graph provides a suitable representation for this purpose because it organizes perceived objects, spatial relations, and semantic information in a structured and machine-readable form.
+
+With the increasing number and variety of autonomous systems, portability and scalability become important requirements for risk assessment mechanisms. Such mechanisms should not be limited to a specific robot, sensor setup, or software interface, but should be reusable across different autonomous platforms. At the same time, the scene graph must be continuously updated as the environment changes and should be scalable to larger spatial operating areas by incorporating information from multiple observations over time.
+
+Uncertainty handling and runtime performance are also essential for practical deployment. Since object detection, localization, and classification can contain errors, a probabilistic object representation can provide a more robust basis for risk analysis. Furthermore, dynamic risk assessment is only useful if environmental context is available during operation, which makes real-time or near-real-time scene graph generation a central requirement. Therefore, the relevance of this work lies in improving the practical applicability of risk-annotated scene graph generation for autonomous systems by addressing portability, scalability, uncertainty representation, and near-real-time operation.
+
+}
 
 \section{Goal of the Thesis}
+\small{
+The goal of this thesis is to extend an existing risk-annotated scene graph generation framework so that it can better support dynamic risk assessment in robotic systems. The work focuses on improving the framework in terms of portability, scalability, uncertainty handling, and near-real-time applicability.
+
+First, the existing FastAPI-based implementation is ported to ROS 2 to improve integration with robotic software architectures. This allows the framework to communicate more directly with perception, localization, mapping, and planning components used in autonomous robotic systems. Second, the scene graph generation process is extended using SLAM-based spatial data and loop closure detection in order to support larger environments and maintain spatially consistent information over time.
+
+Furthermore, a probabilistic object representation is developed to aid the risk analysis mechanism. The output of the vision-language model is also refined to produce bounded and consistent scene graph information. Since dynamic risk assessment requires timely environmental context, near-real-time performance is considered throughout the design and implementation of the extended framework.
+
+Finally, the resulting framework is evaluated using multiple datasets, including a dataset collected with a Unitree Go1 robot in a university environment.
+
+}
+

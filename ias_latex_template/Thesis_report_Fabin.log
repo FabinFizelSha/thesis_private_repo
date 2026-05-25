@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.22)  25 MAY 2026 00:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.22)  25 MAY 2026 12:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1660,7 +1660,7 @@ Package tocbasic Info: character protrusion at lot deactivated on input line 43
 ]
 (./chapters/Introduction.tex
 chapter 1.
-) (./chapters/Theory.tex [1
+[1
 
 
 
@@ -1668,7 +1668,7 @@ chapter 1.
 
 
 
-]
+]) (./chapters/Theory.tex
 
 LaTeX Font Warning: Font shape `T1/qpl/m/sl' in size <10.95> not available
 (Font)              Font shape `T1/qpl/m/it' tried instead on input line 1.
@@ -1734,18 +1734,18 @@ Package logreq Info: Writing requests to 'Thesis_report_Fabin.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 49639 strings out of 474222
- 1097765 string characters out of 5748733
- 2177265 words of memory out of 5000000
+ 49653 strings out of 474222
+ 1097897 string characters out of 5748733
+ 2177267 words of memory out of 5000000
  70993 multiletter control sequences out of 15000+600000
- 615806 words of font info for 134 fonts, out of 8000000 for 9000
+ 616786 words of font info for 141 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  108i,8n,107p,10914b,2383s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/tex-gyre/qhvb.pfb></usr/share/texmf/font
 s/type1/public/tex-gyre/qplb.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/
 qplr.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/qplri.pfb></usr/share/te
 xmf/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on Thesis_report_Fabin.pdf (14 pages, 235754 bytes).
+Output written on Thesis_report_Fabin.pdf (14 pages, 238564 bytes).
 PDF statistics:
  206 PDF objects out of 1000 (max. 8388607)
  171 compressed objects within 2 object streams
