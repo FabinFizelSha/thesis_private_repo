@@ -13,6 +13,12 @@
 \usepackage[
     type=master, % master, bachelor, study, bachelorproject, diss
 ]{iasthesis}
+
+\ExecuteBibliographyOptions{
+    url=true,
+    doi=true,
+    isbn=false
+}
 %%% STUDENT ACTION NECESSARY HERE %%%
 
 
@@ -63,8 +69,8 @@
 \newlength\figureheight
 \newlength\figurewidth
 \setlength\figureheight{3cm}
-\setlength\figurewidth{0.7\textwidth}
-
+\setlength\figurewidth{.7\textwidth}
+\KOMAoptions{parskip=full}
 
 % If you want to use colors, we already defined some for you (university corporate design)
 \RequirePackage{xcolor}
