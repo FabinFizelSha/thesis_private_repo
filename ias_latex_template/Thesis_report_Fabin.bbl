@@ -1,0 +1,103 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{ifr2025robots}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=ec665a4d6ae588c7e58ebff533460a47}{%
+           family={{International Federation of Robotics}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {International Federation of Robotics}%
+      }
+      \strng{namehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{fullhash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{bibnamehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{authorbibnamehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{authornamehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{authorfullhash}{ec665a4d6ae588c7e58ebff533460a47}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{World Robotics 2025: Press Conference Presentation}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://ifr.org/downloads/press_docs/PressConference2025_presentation.pdf
+      \endverb
+      \verb{url}
+      \verb https://ifr.org/downloads/press_docs/PressConference2025_presentation.pdf
+      \endverb
+    \endentry
+    \entry{stanford2025aiindex}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=3c104df4de39ebe0735048bc5e779288}{%
+           family={{Stanford Institute for Human-Centered Artificial Intelligence}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Stanford University}%
+      }
+      \strng{namehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{fullhash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{bibnamehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{authorbibnamehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{authornamehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{authorfullhash}{3c104df4de39ebe0735048bc5e779288}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Artificial Intelligence Index Report 2025}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://hai.stanford.edu/ai-index
+      \endverb
+      \verb{url}
+      \verb https://hai.stanford.edu/ai-index
+      \endverb
+    \endentry
+    \entry{iso12100}{standard}{}
+      \name{author}{1}{}{%
+        {{hash=7058e4bd76f877c52b621c942b30613c}{%
+           family={{International Organization for Standardization}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {International Organization for Standardization}%
+      }
+      \strng{namehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{fullhash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{bibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorbibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authornamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorfullhash}{7058e4bd76f877c52b621c942b30613c}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ISO 12100: Safety of machinery -- General principles for design -- Risk assessment and risk reduction}
+      \field{year}{2010}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
