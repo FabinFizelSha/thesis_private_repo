@@ -383,49 +383,92 @@
       \verb 10.1109/TASE.2013.2237904
       \endverb
     \endentry
-    \entry{paterson2025amlas}{article}{}
-      \name{author}{5}{}{%
-        {{hash=504557731647a486c6b42f9dd8d135eb}{%
-           family={Paterson},
-           familyi={P\bibinitperiod},
-           given={Colin},
-           giveni={C\bibinitperiod}}}%
-        {{hash=49aae173103551743b8e73e2ceeeb8d6}{%
-           family={Hawkins},
-           familyi={H\bibinitperiod},
-           given={Richard},
-           giveni={R\bibinitperiod}}}%
-        {{hash=f315388ed58e984dfd54787f33ae1c73}{%
-           family={Picardi},
-           familyi={P\bibinitperiod},
-           given={Chiara},
-           giveni={C\bibinitperiod}}}%
-        {{hash=c06280f94aaa404d25ad427ec5d3a969}{%
-           family={Calinescu},
+    \entry{silvaneto2022aisafetyassurance}{article}{}
+      \name{author}{4}{}{%
+        {{hash=e58c59e2b5efc39cebd8d4be797506e1}{%
+           family={Silva\bibnamedelima Neto},
+           familyi={S\bibinitperiod\bibinitdelim N\bibinitperiod},
+           given={Antonio\bibnamedelima V.},
+           giveni={A\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=2bcd960abeee11c8f7170a46e3c0a5a9}{%
+           family={Camargo},
            familyi={C\bibinitperiod},
-           given={Radu},
-           giveni={R\bibinitperiod}}}%
-        {{hash=b66a79d00f63f6132d69a412fcffa57c}{%
-           family={Habli},
-           familyi={H\bibinitperiod},
-           given={Ibrahim},
-           giveni={I\bibinitperiod}}}%
+           given={João\bibnamedelima B.},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=7dea736022874c089f1dcf0f99f6f3a7}{%
+           family={Almeida},
+           familyi={A\bibinitperiod},
+           given={Jorge\bibnamedelima R.},
+           giveni={J\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=c42850625226ebf27d3fc91aa4829fe0}{%
+           family={Cugnasca},
+           familyi={C\bibinitperiod},
+           given={Paulo\bibnamedelima S.},
+           giveni={P\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
       }
-      \strng{namehash}{c9ddaa99697d421dc16eb1b11f9caff0}
-      \strng{fullhash}{5a03f40ff36c0cb06eac8920fdc63913}
-      \strng{bibnamehash}{5a03f40ff36c0cb06eac8920fdc63913}
-      \strng{authorbibnamehash}{5a03f40ff36c0cb06eac8920fdc63913}
-      \strng{authornamehash}{c9ddaa99697d421dc16eb1b11f9caff0}
-      \strng{authorfullhash}{5a03f40ff36c0cb06eac8920fdc63913}
+      \strng{namehash}{da6cdf3701c034ae3d85efded0d096ee}
+      \strng{fullhash}{1364942c4861338c7de17b77da3fb492}
+      \strng{bibnamehash}{1364942c4861338c7de17b77da3fb492}
+      \strng{authorbibnamehash}{1364942c4861338c7de17b77da3fb492}
+      \strng{authornamehash}{da6cdf3701c034ae3d85efded0d096ee}
+      \strng{authorfullhash}{1364942c4861338c7de17b77da3fb492}
       \field{sortinit}{2}
       \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{journaltitle}{Reliability Engineering \& System Safety}
-      \field{title}{Safety assurance of machine learning for autonomous systems}
-      \field{year}{2025}
+      \field{journaltitle}{IEEE Access}
+      \field{title}{Safety Assurance of Artificial Intelligence-Based Systems: A Systematic Literature Review on the State of the Art and Guidelines for Future Work}
+      \field{volume}{10}
+      \field{year}{2022}
+      \field{pages}{130733\bibrangedash 130770}
+      \range{pages}{38}
       \verb{doi}
-      \verb 10.1016/j.ress.2025.111114
+      \verb 10.1109/ACCESS.2022.3229233
+      \endverb
+    \endentry
+    \entry{grimmeisen2023continuousrisk}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=1eb9e861926cf2594d597220f96c8353}{%
+           family={Grimmeisen},
+           familyi={G\bibinitperiod},
+           given={Philipp},
+           giveni={P\bibinitperiod}}}%
+        {{hash=e395e2f4cbf6e4c849ddfa1a507029e7}{%
+           family={Golwalkar},
+           familyi={G\bibinitperiod},
+           given={Rucha},
+           giveni={R\bibinitperiod}}}%
+        {{hash=17d5a35cb372c98ceb8c2c4b53764963}{%
+           family={Ma},
+           familyi={M\bibinitperiod},
+           given={Yuliang},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=3660ab46632e264322c080620d70ef6a}{%
+           family={Morozov},
+           familyi={M\bibinitperiod},
+           given={Andrey},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{d0e9ee550c2cce80be9cefc240640d88}
+      \strng{fullhash}{fae7227756601197a3651bf9c4110f2b}
+      \strng{bibnamehash}{fae7227756601197a3651bf9c4110f2b}
+      \strng{authorbibnamehash}{fae7227756601197a3651bf9c4110f2b}
+      \strng{authornamehash}{d0e9ee550c2cce80be9cefc240640d88}
+      \strng{authorfullhash}{fae7227756601197a3651bf9c4110f2b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2023 IEEE 19th International Conference on Automation Science and Engineering (CASE)}
+      \field{title}{Automated and Continuous Risk Assessment for ROS-Based Software-Defined Robotic Systems}
+      \field{year}{2023}
+      \field{pages}{1\bibrangedash 7}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1109/CASE56687.2023.10260416
       \endverb
     \endentry
   \enddatalist

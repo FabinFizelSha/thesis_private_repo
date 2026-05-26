@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.22)  27 MAY 2026 00:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.22)  27 MAY 2026 01:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1773,20 +1773,20 @@ Package logreq Info: Writing requests to 'Thesis_report_Fabin.run.xml'.
  ) 
 Here is how much of TeX's memory you used:
  49840 strings out of 474222
- 1102127 string characters out of 5748733
- 2180062 words of memory out of 5000000
- 71080 multiletter control sequences out of 15000+600000
- 627811 words of font info for 178 fonts, out of 8000000 for 9000
+ 1102358 string characters out of 5748733
+ 2180175 words of memory out of 5000000
+ 71083 multiletter control sequences out of 15000+600000
+ 627537 words of font info for 176 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  108i,8n,107p,10914b,2621s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/tex-gyre/qhvb.pfb></usr/share/texmf/font
 s/type1/public/tex-gyre/qplb.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/
 qplr.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/qplri.pfb></usr/share/te
 xmf/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on Thesis_report_Fabin.pdf (20 pages, 3230616 bytes).
+Output written on Thesis_report_Fabin.pdf (20 pages, 3231942 bytes).
 PDF statistics:
- 349 PDF objects out of 1000 (max. 8388607)
- 302 compressed objects within 4 object streams
- 62 named destinations out of 1000 (max. 500000)
+ 352 PDF objects out of 1000 (max. 8388607)
+ 305 compressed objects within 4 object streams
+ 63 named destinations out of 1000 (max. 500000)
  37609 words of extra memory for PDF output out of 42996 (max. 10000000)
 
