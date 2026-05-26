@@ -596,6 +596,17 @@ INPUT ./chapters/Theory.tex
 INPUT ./chapters/Theory.tex
 INPUT chapters/Theory.tex
 INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ec-qplri.tfm
+INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ec-qhvb.tfm
+INPUT ./example_images/HRC_safety_productivity.png
+INPUT ./example_images/HRC_safety_productivity.png
+INPUT ./example_images/HRC_safety_productivity.png
+INPUT ./example_images/HRC_safety_productivity.png
+INPUT ./example_images/HRC_safety_productivity.png
+INPUT ./example_images/hrc_safety_zones_generated.png
+INPUT ./example_images/hrc_safety_zones_generated.png
+INPUT ./example_images/hrc_safety_zones_generated.png
+INPUT ./example_images/hrc_safety_zones_generated.png
+INPUT ./example_images/hrc_safety_zones_generated.png
 INPUT ./chapters/Methodology.tex
 INPUT ./chapters/Methodology.tex
 INPUT ./chapters/Methodology.tex
@@ -610,7 +621,9 @@ INPUT /usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ectt1095.tfm
+INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ec-qplr-sc.tfm
 INPUT /usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc
+INPUT /usr/share/texmf/fonts/enc/dvips/tex-gyre/q-ec-sc.enc
 INPUT Thesis_report_Fabin.aux
 INPUT ./Thesis_report_Fabin.out
 INPUT ./Thesis_report_Fabin.out

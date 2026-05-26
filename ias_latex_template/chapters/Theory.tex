@@ -1,2 +1,109 @@
 \chapter{Theoretical Background}
 
+
+\section{Autonomous Systems and Safety}
+
+{\small
+
+Autonomous systems (AS) can be understood as systems that are capable of making decisions independently from direct human control \cite{osborne2022decisionmaking}. In robotic systems, this autonomy is typically achieved through a combination of sensing, perception, planning, decision-making, and actuation. For example, an autonomous mobile robot may perceive obstacles, select an alternative path, and continue its task without requiring continuous human input. This ability allows autonomous robots to operate more flexibly in dynamic and partially unknown environments. However, it also makes safety assurance more complex, because the system behaviour is no longer determined only by predefined commands, but also by runtime perception, environmental conditions, and decision-making processes.
+
+Safety is a fundamental requirement in AS because robots interact with humans, physical objects, infrastructure, and the surrounding environment. In dependability theory, safety is commonly defined as the absence of catastrophic consequences for users and the environment \cite{avizienis2004dependability}. In the context of autonomous robotic systems, safety therefore refers not only to whether the robot performs its intended task, but also to whether it performs the task without creating unacceptable risk. This distinction is important because a robot may be functionally successful while still being unsafe. For example, a robot arm in a shared workspace may complete a pick-and-place task correctly, but the system cannot be considered safe if its motion exposes a nearby human operator to an unacceptable collision risk.
+
+From a risk assessment perspective, safety is closely related to the identification of hazards, the estimation of risk, and the implementation of suitable risk reduction measures \cite{iso12100}. In robotic applications, this requires considering both the severity of possible harm and the likelihood that a hazardous situation may occur. Robot-specific safety standards further define requirements and protective measures for industrial and collaborative robotic systems \cite{iso10218_1_2025,iso10218_2_2025,iso15066}. However, safety in AS is strongly dependent on operational context. A motion, speed, or decision that is safe in one situation may become hazardous when a human enters the workspace, when an object is misplaced, or when perception uncertainty increases. Therefore, safety in autonomous robotic systems must be understood as a property that depends on both the technical system and the changing environment in which it operates.
+
+}
+
+\subsection{Human-Robot Collaboration}
+
+{\small
+
+Industry 5.0 is shifting industrial development toward a more human-centric, sustainable, and resilient model, while continuing to support productivity and worker well-being \cite{europeancommission2021industry5}. Within this perspective, Human-Robot Collaboration (HRC) becomes an important requirement for using robotic technologies to support and empower workers rather than simply replacing human labour \cite{europeancommission2021industry5}. Collaborative robotic systems can assist humans in repetitive, strenuous, or hazardous tasks, thereby improving workplace flexibility, ergonomics, and the distribution of work between humans and machines. In industrial settings, HRC has also been discussed as a response to skill gaps, skilled-worker retention, and the need to make manufacturing work more attractive to younger generations \cite{kumar2021hrc}. This makes HRC a relevant foundation for future autonomous systems, where robots increasingly need to interpret human presence, environmental changes, and task-specific context during operation.
+
+However, HRC also introduces important challenges in industrial settings. Industrial HRC must address three closely related aspects: ensuring human safety, maintaining trust in automation, and preserving productivity \cite{kumar2021hrc}. Among these, human safety remains a primary concern because close physical interaction increases the possibility of unintended human-robot collisions, unexpected robot motion, or interruptions in the robot's behaviour. Such situations can increase the risk of injury and may negatively affect the human operator's trust in the system. At the same time, safety measures must be balanced with productivity requirements, since overly restrictive measures such as excessive speed reductions, large separation distances, or frequent safety stops can reduce system efficiency and interrupt the intended collaborative workflow \cite{kumar2021hrc}. The relationship between safety, trust in automation, and productivity is illustrated in Figure~\ref{fig:hrc_challenges}. This trade-off shows that HRC cannot be addressed only as a productivity or automation problem; it also requires systematic risk assessment methods that can identify hazardous situations and define suitable risk reduction measures.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/HRC_safety_productivity.png}
+    \caption{Main challenges in HRC\cite{kumar2021hrc}.}
+    \label{fig:hrc_challenges}
+\end{figure}
+
+}
+
+\subsection{Conventional Risk Assessment and Risk Reduction}
+
+{\small
+
+Conventional risk assessment in robotic systems is generally performed before deployment and is based on the intended use, foreseeable misuse, system limits, operating environment, and known hazards of the system. According to ISO 12100, the risk assessment process includes hazard identification, risk estimation, and risk evaluation, followed by the selection of suitable risk reduction measures \cite{iso12100}. In the context of industrial and collaborative robots, this process is supported by robot-specific safety standards that define requirements for robot systems, collaborative applications, and protective measures \cite{iso10218_1_2025,iso10218_2_2025,iso15066}.
+
+Risk reduction is usually implemented through a combination of inherently safe design, technical protective measures, and information for use. In HRC, this can include limiting robot speed and force, defining safe separation distances, using protective stops, and applying physical or electronic safeguards around the robot workspace. These measures are essential because they provide a systematic way to reduce the likelihood or severity of hazardous human-robot interactions before the system is put into operation.
+
+However, conventional risk assessment is mainly based on assumptions made during design and deployment. These assumptions include expected human behaviour, known object configurations, defined workspaces, and predefined task conditions. As a result, conventional risk assessment is effective for identifying known and reasonably foreseeable hazards, but it becomes limited when the operating context changes significantly during runtime. This limitation is especially relevant for autonomous robotic systems, where the robot may operate in dynamic environments and make decisions based on sensor data and perception results.
+
+}
+\subsection{Existing Safety Measures in HRC}
+
+{\small
+
+In industrial HRC, risk reduction strategies are commonly implemented through two main approaches: the use of collaborative robots and the use of physical or electronic safeguarding measures \cite{kumar2021hrc}. Collaborative robots, also referred to as cobots, are designed to operate in direct cooperation with humans within a defined shared workspace. Their safety is supported through hardware and software features such as reduced momentum, force sensing, back-drivable actuators, and protective stop functions that interrupt robot motion when unexpected contact or resistance is detected.
+
+The safeguarding-based approach focuses on monitoring the robot workspace so that robot motion can be adapted or stopped before hazardous human-robot collisions occur. In practice, this is achieved using physical and electronic safeguarding devices that define protected zones around the robot work cell. Examples include safeguarded perimeter door switches, light curtains, pressure-sensitive floors, 2-D scanning LiDAR, and 3-D safety vision systems. These mechanisms are important for reducing the risk of human injury, but they often rely on predefined safety zones, fixed distance thresholds, or conservative stopping rules \cite{kumar2021hrc}.
+
+A common method used for workspace monitoring is Speed and Separation Monitoring (SSM). In SSM, the distance between the human and the robot is monitored continuously, and the robot speed is reduced or stopped when the separation distance becomes too small. In a static SSM approach, the monitored zones are usually predefined before operation. For example, a robot may operate at full speed when no human is detected in the outer zone, slow down when a human enters a warning zone, and stop when the human enters a protective stop zone\cite{kumar2021hrc}. This approach is simple and practical, but it can be conservative because the safety zones are not always adapted to the actual robot motion, human motion, task state, or sensor uncertainty.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/hrc_safety_zones_generated.png}
+    \caption{Illustrative representation of safety zones in a collaborative robot workspace.}
+    \label{fig:hrc_safety_zones}
+\end{figure}
+
+Dynamic SSM addresses this limitation by adapting the protective separation distance or the robot speed according to the current operating situation. Instead of relying only on fixed zones, dynamic SSM considers factors such as the actual distance between the human and the robot, robot velocity, human motion, stopping time, and uncertainty in the sensed position of obstacles or operators. Marvel discusses SSM performance in terms of both safety and productivity, representing collision potential through separation metrics and sensor uncertainty \cite{marvel2013ssm}. This shows that SSM is not only a binary stop-or-run mechanism, but also a method whose effectiveness depends on how accurately the system evaluates separation, uncertainty, and the productivity cost of safety actions.
+
+Although dynamic SSM provides a more flexible basis for HRC safety than purely static safety zones, it also requires reliable perception, continuous monitoring, and suitable runtime decision-making. Therefore, existing safety measures show the importance of moving from fixed protective assumptions toward context-aware risk assessment mechanisms that can consider the actual operational situation of the robot, humans, and surrounding environment.
+
+}
+
+\subsection{Impact of Artificial Intelligence}
+
+{\small
+
+The limitations of conventional risk assessment become more significant when artificial intelligence is introduced into robotic perception, planning, or control. As discussed in the previous sections, conventional risk assessment and many existing HRC safety measures rely on design-time assumptions, predefined operating conditions, fixed safety zones, and known hazardous scenarios. These assumptions are suitable for many structured industrial applications, but they become harder to maintain when the robot is able to interpret its environment and adapt its behaviour during operation.
+
+AI-based components can support functions such as object detection, scene interpretation, motion prediction, task planning, and adaptive decision-making. In HRC, these capabilities can improve flexibility because the robot can react to changes in human position, object configuration, and task context. However, they also introduce additional uncertainty into the safety assessment process. The behaviour of an AI-enabled robotic system may depend on sensor quality, perception confidence, training data, model generalization, distribution shifts, previously unseen objects, changes in human behaviour, or software updates after deployment. As a result, the complete range of possible system behaviours cannot always be fully specified during pre-deployment risk assessment \cite{paterson2025amlas}.
+
+This does not mean that conventional risk assessment becomes obsolete. Pre-deployment analysis remains necessary for identifying known hazards, defining system limits, selecting baseline safeguards, and verifying compliance with relevant safety standards. However, for adaptive autonomous robotic systems, this analysis is not sufficient on its own. A risk assessment mechanism must also be able to consider the current operational context, including the robot state, human presence, object locations, spatial relationships, perception uncertainty, and environmental changes.
+
+This motivates dynamic and context-aware risk assessment, where runtime information is incorporated into the evaluation of risk during system operation. Such an approach requires a structured environmental representation that can provide machine-readable information about the current scene. In this thesis, this requirement motivates the use of a spatial risk-annotated scene graph, which can represent relevant objects, spatial relations, and risk-related context to support dynamic risk assessment in autonomous robotic systems.
+
+}
+\section{Section2}
+\small{
+
+
+}
+\section{Section3}
+\small{
+
+
+}
+\section{Section4}
+\small{
+
+
+}
+\section{Section5}
+\small{
+
+
+}
+\section{Section6}
+\small{
+
+
+}
+\section{Section7}
+\small{
+
+
+}

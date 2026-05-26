@@ -1,17 +1,19 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'Thesis_report_Fabin.blg'
-[51] biber:340> INFO - === Mon May 25, 2026, 00:20:36
-[62] Biber.pm:419> INFO - Reading 'Thesis_report_Fabin.bcf'
-[101] Biber.pm:979> INFO - Found 3 citekeys in bib section 0
-[110] Biber.pm:4419> INFO - Processing section 0
-[117] Biber.pm:4610> INFO - Looking for bibtex file 'bibliography.bib' for section 0
-[118] bibtex.pm:1713> INFO - LaTeX decoding ...
-[124] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
-[157] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[157] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[157] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
-[157] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
-[162] bbl.pm:660> INFO - Writing 'Thesis_report_Fabin.bbl' with encoding 'UTF-8'
-[163] bbl.pm:763> INFO - Output to Thesis_report_Fabin.bbl
-[163] Biber.pm:131> WARN - BibTeX subsystem: /tmp/biber_tmp_vD27/f4d088b3f9f145b5c3058da33afd57d4_57054.utf8, line 30, warning: 795 characters of junk seen at toplevel
-[163] Biber.pm:133> INFO - WARNINGS: 1
+[53] biber:340> INFO - === Wed May 27, 2026, 00:36:28
+[63] Biber.pm:419> INFO - Reading 'Thesis_report_Fabin.bcf'
+[106] Biber.pm:979> INFO - Found 12 citekeys in bib section 0
+[115] Biber.pm:4419> INFO - Processing section 0
+[122] Biber.pm:4610> INFO - Looking for bibtex file 'bibliography.bib' for section 0
+[123] bibtex.pm:1713> INFO - LaTeX decoding ...
+[137] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
+[208] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[208] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[208] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[208] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[216] bbl.pm:660> INFO - Writing 'Thesis_report_Fabin.bbl' with encoding 'UTF-8'
+[220] bbl.pm:763> INFO - Output to Thesis_report_Fabin.bbl
+[220] Biber.pm:131> WARN - Duplicate entry key: 'inam2018risk' in file 'bibliography.bib', skipping ...
+[220] Biber.pm:131> WARN - Duplicate entry key: 'marvel2013ssm' in file 'bibliography.bib', skipping ...
+[220] Biber.pm:131> WARN - BibTeX subsystem: /tmp/biber_tmp_IjDS/f4d088b3f9f145b5c3058da33afd57d4_20182.utf8, line 30, warning: 795 characters of junk seen at toplevel
+[220] Biber.pm:133> INFO - WARNINGS: 3
