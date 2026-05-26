@@ -1,0 +1,434 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{ifr2025robots}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=ec665a4d6ae588c7e58ebff533460a47}{%
+           family={{International Federation of Robotics}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {International Federation of Robotics}%
+      }
+      \strng{namehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{fullhash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{bibnamehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{authorbibnamehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{authornamehash}{ec665a4d6ae588c7e58ebff533460a47}
+      \strng{authorfullhash}{ec665a4d6ae588c7e58ebff533460a47}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{World Robotics 2025: Press Conference Presentation}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://ifr.org/downloads/press_docs/PressConference2025_presentation.pdf
+      \endverb
+      \verb{url}
+      \verb https://ifr.org/downloads/press_docs/PressConference2025_presentation.pdf
+      \endverb
+    \endentry
+    \entry{stanford2025aiindex}{manual}{}
+      \name{author}{1}{}{%
+        {{hash=3c104df4de39ebe0735048bc5e779288}{%
+           family={{Stanford Institute for Human-Centered Artificial Intelligence}},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Stanford University}%
+      }
+      \strng{namehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{fullhash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{bibnamehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{authorbibnamehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{authornamehash}{3c104df4de39ebe0735048bc5e779288}
+      \strng{authorfullhash}{3c104df4de39ebe0735048bc5e779288}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Artificial Intelligence Index Report 2025}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://hai.stanford.edu/ai-index
+      \endverb
+      \verb{url}
+      \verb https://hai.stanford.edu/ai-index
+      \endverb
+    \endentry
+    \entry{iso12100}{standard}{}
+      \name{author}{1}{}{%
+        {{hash=7058e4bd76f877c52b621c942b30613c}{%
+           family={{International Organization for Standardization}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {International Organization for Standardization}%
+      }
+      \strng{namehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{fullhash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{bibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorbibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authornamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorfullhash}{7058e4bd76f877c52b621c942b30613c}
+      \field{extraname}{1}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ISO 12100: Safety of machinery -- General principles for design -- Risk assessment and risk reduction}
+      \field{year}{2010}
+    \endentry
+    \entry{osborne2022decisionmaking}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=7088a38ab3deffc1d4f6932deb5dcba6}{%
+           family={Osborne},
+           familyi={O\bibinitperiod},
+           given={Matthew},
+           giveni={M\bibinitperiod}}}%
+        {{hash=8f0298f5af2a3445fef08429b0874528}{%
+           family={Hawkins},
+           familyi={H\bibinitperiod},
+           given={Richard\bibnamedelima David},
+           giveni={R\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=8f3f647ab32b2579e34200ff2dfe05a6}{%
+           family={McDermid},
+           familyi={M\bibinitperiod},
+           given={John\bibnamedelima Alexander},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{1b6f0fa51a9106eb98e13f7b6196e48f}
+      \strng{fullhash}{6f71aa560eafb65f9d0dd143e09e5d5d}
+      \strng{bibnamehash}{6f71aa560eafb65f9d0dd143e09e5d5d}
+      \strng{authorbibnamehash}{6f71aa560eafb65f9d0dd143e09e5d5d}
+      \strng{authornamehash}{1b6f0fa51a9106eb98e13f7b6196e48f}
+      \strng{authorfullhash}{6f71aa560eafb65f9d0dd143e09e5d5d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computer Safety, Reliability, and Security}
+      \field{series}{Lecture Notes in Computer Science}
+      \field{title}{Analysing the Safety of Decision-Making in Autonomous Systems}
+      \field{volume}{13414}
+      \field{year}{2022}
+      \field{pages}{3\bibrangedash 16}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1007/978-3-031-14835-4_1
+      \endverb
+    \endentry
+    \entry{avizienis2004dependability}{article}{}
+      \name{author}{4}{}{%
+        {{hash=38fa98062590d37d4d14772d3d2466d4}{%
+           family={Avizienis},
+           familyi={A\bibinitperiod},
+           given={Algirdas},
+           giveni={A\bibinitperiod}}}%
+        {{hash=88ac1497be18842438f286d0b41a2c06}{%
+           family={Laprie},
+           familyi={L\bibinitperiod},
+           given={Jean-Claude},
+           giveni={J\bibinithyphendelim C\bibinitperiod}}}%
+        {{hash=76332c6371627eade995a45d9e642654}{%
+           family={Randell},
+           familyi={R\bibinitperiod},
+           given={Brian},
+           giveni={B\bibinitperiod}}}%
+        {{hash=186c616f1893ab90fedbb256a5d7d55d}{%
+           family={Landwehr},
+           familyi={L\bibinitperiod},
+           given={Carl},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{2c98a92bd60a6491075dc7e0a60207ff}
+      \strng{fullhash}{0207c0848cdc10a80f5b71f387dfdf21}
+      \strng{bibnamehash}{0207c0848cdc10a80f5b71f387dfdf21}
+      \strng{authorbibnamehash}{0207c0848cdc10a80f5b71f387dfdf21}
+      \strng{authornamehash}{2c98a92bd60a6491075dc7e0a60207ff}
+      \strng{authorfullhash}{0207c0848cdc10a80f5b71f387dfdf21}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Dependable and Secure Computing}
+      \field{number}{1}
+      \field{title}{Basic Concepts and Taxonomy of Dependable and Secure Computing}
+      \field{volume}{1}
+      \field{year}{2004}
+      \field{pages}{11\bibrangedash 33}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1109/TDSC.2004.2
+      \endverb
+    \endentry
+    \entry{iso10218_1_2025}{standard}{}
+      \name{author}{1}{}{%
+        {{hash=7058e4bd76f877c52b621c942b30613c}{%
+           family={{International Organization for Standardization}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {International Organization for Standardization}%
+      }
+      \strng{namehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{fullhash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{bibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorbibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authornamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorfullhash}{7058e4bd76f877c52b621c942b30613c}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ISO 10218-1:2025 Robotics -- Safety requirements -- Part 1: Industrial robots}
+      \field{urlday}{25}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.iso.org/standard/73933.html
+      \endverb
+      \verb{url}
+      \verb https://www.iso.org/standard/73933.html
+      \endverb
+    \endentry
+    \entry{iso10218_2_2025}{standard}{}
+      \name{author}{1}{}{%
+        {{hash=7058e4bd76f877c52b621c942b30613c}{%
+           family={{International Organization for Standardization}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {International Organization for Standardization}%
+      }
+      \strng{namehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{fullhash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{bibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorbibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authornamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorfullhash}{7058e4bd76f877c52b621c942b30613c}
+      \field{extraname}{3}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ISO 10218-2:2025 Robotics -- Safety requirements -- Part 2: Industrial robot applications and robot cells}
+      \field{urlday}{25}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.iso.org/standard/73934.html
+      \endverb
+      \verb{url}
+      \verb https://www.iso.org/standard/73934.html
+      \endverb
+    \endentry
+    \entry{iso15066}{standard}{}
+      \name{author}{1}{}{%
+        {{hash=7058e4bd76f877c52b621c942b30613c}{%
+           family={{International Organization for Standardization}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {International Organization for Standardization}%
+      }
+      \strng{namehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{fullhash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{bibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorbibnamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authornamehash}{7058e4bd76f877c52b621c942b30613c}
+      \strng{authorfullhash}{7058e4bd76f877c52b621c942b30613c}
+      \field{extraname}{4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{ISO/TS 15066:2016 Robots and robotic devices -- Collaborative robots}
+      \field{urlday}{25}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2016}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.iso.org/standard/62996.html
+      \endverb
+      \verb{url}
+      \verb https://www.iso.org/standard/62996.html
+      \endverb
+    \endentry
+    \entry{europeancommission2021industry5}{report}{}
+      \name{author}{1}{}{%
+        {{hash=a1b813a6e85874b4c945aec2cdbea74c}{%
+           family={{European Commission}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {European Commission}%
+      }
+      \strng{namehash}{a1b813a6e85874b4c945aec2cdbea74c}
+      \strng{fullhash}{a1b813a6e85874b4c945aec2cdbea74c}
+      \strng{bibnamehash}{a1b813a6e85874b4c945aec2cdbea74c}
+      \strng{authorbibnamehash}{a1b813a6e85874b4c945aec2cdbea74c}
+      \strng{authornamehash}{a1b813a6e85874b4c945aec2cdbea74c}
+      \strng{authorfullhash}{a1b813a6e85874b4c945aec2cdbea74c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Industry 5.0: Towards a sustainable, human-centric and resilient European industry}
+      \field{urlday}{25}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://op.europa.eu/en/publication-detail/-/publication/468a892a-5097-11eb-b59f-01aa75ed71a1
+      \endverb
+      \verb{url}
+      \verb https://op.europa.eu/en/publication-detail/-/publication/468a892a-5097-11eb-b59f-01aa75ed71a1
+      \endverb
+    \endentry
+    \entry{kumar2021hrc}{article}{}
+      \name{author}{3}{}{%
+        {{hash=6b3b2e98b25258c824c01c4931bed75d}{%
+           family={Kumar},
+           familyi={K\bibinitperiod},
+           given={Shitij\bibnamedelima Pravin},
+           giveni={S\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=6fd26041be49cbec71c72b7bbe5573b0}{%
+           family={Savur},
+           familyi={S\bibinitperiod},
+           given={Celal},
+           giveni={C\bibinitperiod}}}%
+        {{hash=29fe0a8675f19f1b0400e111ed6bb957}{%
+           family={Sahin},
+           familyi={S\bibinitperiod},
+           given={Ferat},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{fcb865ff9cc43917748c124e7893ab1b}
+      \strng{fullhash}{299637f907463ccf0d4833bd0e793cef}
+      \strng{bibnamehash}{299637f907463ccf0d4833bd0e793cef}
+      \strng{authorbibnamehash}{299637f907463ccf0d4833bd0e793cef}
+      \strng{authornamehash}{fcb865ff9cc43917748c124e7893ab1b}
+      \strng{authorfullhash}{299637f907463ccf0d4833bd0e793cef}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Systems, Man, and Cybernetics: Systems}
+      \field{number}{1}
+      \field{title}{Survey of Human--Robot Collaboration in Industrial Settings: Awareness, Intelligence, and Compliance}
+      \field{volume}{51}
+      \field{year}{2021}
+      \field{pages}{280\bibrangedash 297}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1109/TSMC.2020.3041231
+      \endverb
+    \endentry
+    \entry{marvel2013ssm}{article}{}
+      \name{author}{1}{}{%
+        {{hash=c5de07560862fe3e0d163394a2ae9d9f}{%
+           family={Marvel},
+           familyi={M\bibinitperiod},
+           given={Jeremy\bibnamedelima A.},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{c5de07560862fe3e0d163394a2ae9d9f}
+      \strng{fullhash}{c5de07560862fe3e0d163394a2ae9d9f}
+      \strng{bibnamehash}{c5de07560862fe3e0d163394a2ae9d9f}
+      \strng{authorbibnamehash}{c5de07560862fe3e0d163394a2ae9d9f}
+      \strng{authornamehash}{c5de07560862fe3e0d163394a2ae9d9f}
+      \strng{authorfullhash}{c5de07560862fe3e0d163394a2ae9d9f}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Automation Science and Engineering}
+      \field{number}{2}
+      \field{title}{Performance Metrics of Speed and Separation Monitoring in Shared Workspaces}
+      \field{volume}{10}
+      \field{year}{2013}
+      \field{pages}{405\bibrangedash 414}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/TASE.2013.2237904
+      \endverb
+    \endentry
+    \entry{paterson2025amlas}{article}{}
+      \name{author}{5}{}{%
+        {{hash=504557731647a486c6b42f9dd8d135eb}{%
+           family={Paterson},
+           familyi={P\bibinitperiod},
+           given={Colin},
+           giveni={C\bibinitperiod}}}%
+        {{hash=49aae173103551743b8e73e2ceeeb8d6}{%
+           family={Hawkins},
+           familyi={H\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f315388ed58e984dfd54787f33ae1c73}{%
+           family={Picardi},
+           familyi={P\bibinitperiod},
+           given={Chiara},
+           giveni={C\bibinitperiod}}}%
+        {{hash=c06280f94aaa404d25ad427ec5d3a969}{%
+           family={Calinescu},
+           familyi={C\bibinitperiod},
+           given={Radu},
+           giveni={R\bibinitperiod}}}%
+        {{hash=b66a79d00f63f6132d69a412fcffa57c}{%
+           family={Habli},
+           familyi={H\bibinitperiod},
+           given={Ibrahim},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{c9ddaa99697d421dc16eb1b11f9caff0}
+      \strng{fullhash}{5a03f40ff36c0cb06eac8920fdc63913}
+      \strng{bibnamehash}{5a03f40ff36c0cb06eac8920fdc63913}
+      \strng{authorbibnamehash}{5a03f40ff36c0cb06eac8920fdc63913}
+      \strng{authornamehash}{c9ddaa99697d421dc16eb1b11f9caff0}
+      \strng{authorfullhash}{5a03f40ff36c0cb06eac8920fdc63913}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Reliability Engineering \& System Safety}
+      \field{title}{Safety assurance of machine learning for autonomous systems}
+      \field{year}{2025}
+      \verb{doi}
+      \verb 10.1016/j.ress.2025.111114
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
