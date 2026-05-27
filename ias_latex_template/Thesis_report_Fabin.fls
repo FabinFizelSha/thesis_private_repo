@@ -574,6 +574,7 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/mathpazo/zplmb7t.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/mathpazo/zplmb7t.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/mathpazo/zplmb7t.tfm
 OUTPUT Thesis_report_Fabin.toc
+INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ec-qplri.tfm
 INPUT ./Thesis_report_Fabin.lof
 INPUT ./Thesis_report_Fabin.lof
 INPUT Thesis_report_Fabin.lof
@@ -595,7 +596,6 @@ INPUT ./chapters/Theory.tex
 INPUT ./chapters/Theory.tex
 INPUT ./chapters/Theory.tex
 INPUT chapters/Theory.tex
-INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ec-qplri.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ec-qhvb.tfm
 INPUT ./example_images/HRC_safety_productivity.png
 INPUT ./example_images/HRC_safety_productivity.png

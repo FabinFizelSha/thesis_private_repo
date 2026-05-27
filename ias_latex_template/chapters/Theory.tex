@@ -77,11 +77,75 @@ As a result, conventional risk assessment should be understood as a necessary ba
 At the same time, AI can also support dynamic risk assessment when its outputs are structured, bounded, and interpretable. AI-based perception and reasoning methods can help identify relevant objects, detect environmental changes, classify scene elements, and localise risk-relevant information around the robot. In this thesis, this motivates the use of a spatial risk-annotated scene graph, which can represent objects, spatial relations, uncertainty, and risk-related context in a machine-readable form to support dynamic risk assessment in autonomous robotic systems.
 
 }
-\section{Section2}
-\small{
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Existing Risk-Annotated Scene Graph Framework}
+
+{\small
+
+This section introduces the existing risk-annotated scene graph framework that forms the basis of this thesis \cite{previous_rsg_thesis}. The purpose is to explain the conceptual pipeline of the original work, including how visual input is processed, how objects and relationships are extracted, and how risk-related information is represented in the generated scene graph. This provides the necessary background for understanding the extensions proposed in this thesis.
+
+The discussion focuses on the high-level concepts of the original framework rather than implementation-specific details. In particular, it describes the role of perception, segmentation, retrieval-augmented perception, vision-language model reasoning, scene graph construction, and risk annotation. The limitations of the existing framework are also considered, especially with respect to portability, scalability, spatial consistency, uncertainty representation, and runtime applicability.
 
 }
+
+\subsection{Information Flow in the Baseline Framework}
+
+
+{\small
+
+The baseline framework follows a modular processing pipeline in which RGB-D data is received, processed, interpreted, and integrated into a risk-annotated scene graph. The input to the system is an RGB-D observation of the environment, consisting of a colour image and its corresponding depth image. In the original implementation, this input can be provided through a dataset or submitted through an external interface. The external communication is handled through a FastAPI-based interface, which allows incoming samples and processing requests to be passed into the internal pipeline. This design separates data input and client communication from the perception and scene graph generation modules.
+
+After an RGB-D input sample is received, the frame is handled as a task in the processing pipeline. The colour image is first used for object segmentation. For this purpose, the framework uses the Segment Anything Model (SAM) to generate object masks or image regions that may correspond to relevant entities in the scene. These masks are then used to create image cutouts for detected object candidates. The associated depth image, camera parameters, and pose information support later spatial processing, including coordinate conversion, visibility checking, and the spatial grounding of graph elements.
+
+The segmented object candidates are then processed using a Retrieval-Augmented Perception (RAP) mechanism and a Vision-Language Model (VLM). RAP retrieves relevant or similar labels from a visual knowledge base for the detected object cutouts. This provides additional label candidates and prior visual context for the later interpretation stage. In parallel, the existing scene graph is reduced to a cutout that contains only the nodes and edges relevant to the current camera view. This scene-graph cutout is generated using the current pose and depth image, so that only likely visible graph elements are passed forward for inference.
+
+The VLM receives the RGB image together with the scene-graph cutout and the possible labels retrieved for the detected object candidates. It is then used to interpret the current scene and produce structured information about visible entities, semantic labels, relationships, confidence values, and risk-relevant properties. The VLM output is parsed into a graph-like representation and then merged with the existing scene graph. During this update, existing nodes and edges can be modified, newly detected entities can be added, and graph information can be updated according to the latest observation.
+
+Finally, the extracted and updated information is maintained as a risk-annotated scene graph. In this representation, relevant objects are modelled as nodes, while spatial, semantic, or risk-related relationships are represented as edges or attributes. The depth component of the RGB-D input is important because it supports spatial grounding of detected objects and enables approximate geometric relationships to be represented in the graph. The resulting graph provides a machine-readable representation of the observed scene and can be used as structured input for downstream reasoning or risk assessment. The overall information flow can therefore be summarised as RGB-D input, task handling, object segmentation, object cutout generation, RAP-based label retrieval, scene-graph cutout generation, VLM-based interpretation, and scene-graph update.
+
+The main design elements of the baseline framework are its modular worker-based structure, its separation between external communication and internal processing, its use of foundation models for segmentation and semantic interpretation, its retrieval-based support for object labelling, and its graph-based representation of RGB-D scene information. These elements make the framework suitable as a basis for risk-aware scene understanding.
+
+}
+\subsection{FastAPI-Based Interface}
+
+{\small
+
+In the baseline framework, FastAPI is used as the external communication interface between client applications and the internal scene graph generation pipeline. The FastAPI component is implemented through the API worker, which receives incoming requests, performs basic validation and conversion of the submitted data, and forwards valid RGB-D samples to the internal processing queue. In this design, the API layer is separated from the computationally expensive perception and scene graph generation modules.
+
+The most important endpoint is the frame submission endpoint, which receives an RGB image, a depth image, timestamp information, and camera pose information. The API worker decodes the submitted RGB-D data, converts the depth image into a suitable numerical representation, validates the pose format, assigns a unique frame identifier, and stores the frame state as queued. The prepared frame is then inserted into the shared queue for later processing by the queue worker. As a result, FastAPI does not directly execute segmentation, retrieval, VLM inference, or scene graph merging. Instead, it acts as an asynchronous entry point that allows external clients to submit observations without being tightly coupled to the internal processing pipeline.
+
+In addition to frame submission, the FastAPI interface provides endpoints for monitoring and retrieving system state. These include endpoints for checking whether the server is running, retrieving the latest scene graph, submitting robot-related information, querying the current robot node, checking the queue status, and tracking the processing state of individual frames. This makes the API layer responsible not only for accepting input data, but also for exposing the current state of the framework to external clients.
+
+The FastAPI application is started using Uvicorn, which runs the configured application on the selected host and port. This allows the scene graph framework to operate as a network-accessible service. The use of a REST-based interface makes the original implementation relatively easy to test and connect to external programs, while keeping the perception and reasoning modules independent from the input source.
+
+}
+
+\subsection{SAM-Based Object Segmentation}
+
+\subsection{Retrieval-Augmented Perception}
+
+\subsection{Vision-Language Model Reasoning}
+
+\subsection{Scene Graph Construction and Risk Annotation}
+
+\subsection{Limitations of the Baseline Framework}
+
+
+
+
 \section{Section3}
 \small{
 

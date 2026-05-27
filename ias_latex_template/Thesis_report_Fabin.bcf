@@ -2393,6 +2393,7 @@
     <bcf:citekey order="23" intorder="1">marvel2013ssm</bcf:citekey>
     <bcf:citekey order="24" intorder="1">silvaneto2022aisafetyassurance</bcf:citekey>
     <bcf:citekey order="25" intorder="1">grimmeisen2023continuousrisk</bcf:citekey>
+    <bcf:citekey order="26" intorder="1">previous_rsg_thesis</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

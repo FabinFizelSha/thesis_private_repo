@@ -471,6 +471,32 @@
       \verb 10.1109/CASE56687.2023.10260416
       \endverb
     \endentry
+    \entry{previous_rsg_thesis}{thesis}{}
+      \name{author}{1}{}{%
+        {{hash=2b4e0ae96323260facee5912172d0ed9}{%
+           family={{André Schiel}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {University of Stuttgart}%
+      }
+      \list{location}{1}{%
+        {Stuttgart, Germany}%
+      }
+      \strng{namehash}{2b4e0ae96323260facee5912172d0ed9}
+      \strng{fullhash}{2b4e0ae96323260facee5912172d0ed9}
+      \strng{bibnamehash}{2b4e0ae96323260facee5912172d0ed9}
+      \strng{authorbibnamehash}{2b4e0ae96323260facee5912172d0ed9}
+      \strng{authornamehash}{2b4e0ae96323260facee5912172d0ed9}
+      \strng{authorfullhash}{2b4e0ae96323260facee5912172d0ed9}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Online Risk-Annotated Scene Graohs for Autonomous Systems}}
+      \field{type}{{Master's thesis}}
+      \field{year}{{2026}}
+    \endentry
   \enddatalist
 \endrefsection
 \endinput
