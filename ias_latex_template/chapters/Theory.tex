@@ -91,7 +91,7 @@ At the same time, AI can also support dynamic risk assessment when its outputs a
 
 
 
-\section{Existing Risk-Annotated Scene Graph Framework}
+\section{Risk-Annotated Scene Graph Framework Baseline}
 
 {\small
 
@@ -108,6 +108,13 @@ The discussion focuses on the high-level concepts of the original framework rath
 
 The baseline framework follows a modular processing pipeline in which RGB-D data is received, processed, interpreted, and integrated into a risk-annotated scene graph. The input to the system is an RGB-D observation of the environment, consisting of a colour image and its corresponding depth image. In the original implementation, this input can be provided through a dataset or submitted through an external interface. The external communication is handled through a FastAPI-based interface, which allows incoming samples and processing requests to be passed into the internal pipeline. This design separates data input and client communication from the perception and scene graph generation modules.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/existing_work_overview_enhanced.png}
+    \caption{Information flow of the existing risk-annotated scene graph framework. Adapted from \cite{previous_rsg_thesis}.}
+    \label{fig:existing_rsg_framework}
+\end{figure}
+
 After an RGB-D input sample is received, the frame is handled as a task in the processing pipeline. The colour image is first used for object segmentation. For this purpose, the framework uses the Segment Anything Model (SAM) to generate object masks or image regions that may correspond to relevant entities in the scene. These masks are then used to create image cutouts for detected object candidates. The associated depth image, camera parameters, and pose information support later spatial processing, including coordinate conversion, visibility checking, and the spatial grounding of graph elements.
 
 The segmented object candidates are then processed using a Retrieval-Augmented Perception (RAP) mechanism and a Vision-Language Model (VLM). RAP retrieves relevant or similar labels from a visual knowledge base for the detected object cutouts. This provides additional label candidates and prior visual context for the later interpretation stage. In parallel, the existing scene graph is reduced to a cutout that contains only the nodes and edges relevant to the current camera view. This scene-graph cutout is generated using the current pose and depth image, so that only likely visible graph elements are passed forward for inference.
@@ -119,29 +126,84 @@ Finally, the extracted and updated information is maintained as a risk-annotated
 The main design elements of the baseline framework are its modular worker-based structure, its separation between external communication and internal processing, its use of foundation models for segmentation and semantic interpretation, its retrieval-based support for object labelling, and its graph-based representation of RGB-D scene information. These elements make the framework suitable as a basis for risk-aware scene understanding.
 
 }
-\subsection{FastAPI-Based Interface}
+\subsection{FastAPI}
 
-{\small
+FastAPI is a modern Python web framework used for building application programming interfaces (APIs) \cite{fastapi_docs}. It allows external clients to communicate with a software system through network-accessible endpoints, typically using HTTP requests. In robotics and perception systems, this can be useful when a perception pipeline is executed as a separate service and must receive RGB-D observations, processing requests, or configuration information from external programs.
 
-In the baseline framework, FastAPI is used as the external communication interface between client applications and the internal scene graph generation pipeline. The FastAPI component is implemented through the API worker, which receives incoming requests, performs basic validation and conversion of the submitted data, and forwards valid RGB-D samples to the internal processing queue. In this design, the API layer is separated from the computationally expensive perception and scene graph generation modules.
+One advantage of FastAPI is that structured interfaces can be developed quickly in Python. The expected format of incoming requests can be defined explicitly, which is useful when external clients submit complex data such as RGB-D images, timestamps, and pose information. FastAPI also supports asynchronous web-server operation, making it suitable for service-based applications that handle multiple requests, communicate with external processes, or expose machine-learning components through a network interface \cite{fastapi_docs}. In the baseline risk-annotated scene graph framework, this provides a practical way to expose the scene graph generation pipeline as an external service while keeping the client application separated from the internal perception, segmentation, VLM, and scene graph modules.
 
-The most important endpoint is the frame submission endpoint, which receives an RGB image, a depth image, timestamp information, and camera pose information. The API worker decodes the submitted RGB-D data, converts the depth image into a suitable numerical representation, validates the pose format, assigns a unique frame identifier, and stores the frame state as queued. The prepared frame is then inserted into the shared queue for later processing by the queue worker. As a result, FastAPI does not directly execute segmentation, retrieval, VLM inference, or scene graph merging. Instead, it acts as an asynchronous entry point that allows external clients to submit observations without being tightly coupled to the internal processing pipeline.
+However, a FastAPI-based interface also has limitations for direct integration with autonomous robotic systems. Robotic software usually requires continuous sensor streams, low-latency communication, synchronised multi-modal data, distributed robot nodes, and predictable timing behaviour. A REST-based API is well suited for request-response communication \cite{fastapi_docs}, but it is less natural for high-frequency RGB-D streams and real-time control loops. Therefore, FastAPI is useful as a modular service interface in the baseline framework, but it is not ideal as the primary communication mechanism for portable robotic deployment. This motivates the later porting of the framework to ROS 2, where RGB-D data, pose information, scene graph updates, and system status can be handled using robot-native communication mechanisms.
 
-In addition to frame submission, the FastAPI interface provides endpoints for monitoring and retrieving system state. These include endpoints for checking whether the server is running, retrieving the latest scene graph, submitting robot-related information, querying the current robot node, checking the queue status, and tracking the processing state of individual frames. This makes the API layer responsible not only for accepting input data, but also for exposing the current state of the framework to external clients.
-
-The FastAPI application is started using Uvicorn, which runs the configured application on the selected host and port. This allows the scene graph framework to operate as a network-accessible service. The use of a REST-based interface makes the original implementation relatively easy to test and connect to external programs, while keeping the perception and reasoning modules independent from the input source.
-
-}
 
 \subsection{SAM-Based Object Segmentation}
 
+{\small
+
+The Segment Anything Model (SAM) is a foundation model for image segmentation introduced by Kirillov et al. \cite{kirillov2023segmentanything}. It is designed as a promptable segmentation model that can generate masks from inputs such as points, bounding boxes, or masks. Since SAM is not limited to a fixed set of object classes, it is useful for open-ended visual perception tasks where the objects in a scene may not be known in advance.
+
+In the baseline risk-annotated scene graph framework, SAM is used to extract candidate object regions from the RGB component of the RGB-D input. For each retained object candidate, the framework keeps an object crop, a bounding box, a binary segmentation mask, and a confidence-related score. The crop is used for later visual interpretation, the bounding box and mask describe the image-space extent of the object candidate, and the score indicates the quality or stability of the segmentation.
+
+SAM therefore provides the low-level object proposal stage of the pipeline. However, it does not provide object identities, semantic relationships, risk labels, physical meaning, or 3D positions. Depth data, retrieval-based labels, and VLM-based interpretation are required before the segmented regions can be represented as meaningful nodes and relations in a risk-annotated scene graph.
+
+}
+
 \subsection{Retrieval-Augmented Perception}
+
+{\small
+
+Retrieval-Augmented Perception (RAP) in the baseline framework follows the broader idea of retrieval-augmented methods, where stored information is retrieved and used to support the interpretation of new input. This idea is closely related to retrieval-augmented generation, introduced by Lewis et al. for knowledge-intensive natural language processing tasks, where generated outputs are supported by information retrieved from an external knowledge source \cite{lewis2020rag}. In the baseline framework, this principle is transferred from text-based generation to visual perception. Instead of interpreting each segmented object only from the current RGB-D observation, the system retrieves relevant information from previously stored visual observations and uses it as additional context for object interpretation.
+
+After SAM generates candidate object regions, these object cutouts are passed to the RAP mechanism. RAP compares the current visual object candidates with entries in a visual knowledge base and retrieves similar or relevant object labels. These retrieved labels act as prior information for the later VLM-based interpretation stage. In this way, RAP supports object consistency across observations and reduces the dependence on the VLM having to infer every object label from the current image alone.
+
+The main advantage of RAP is that it introduces memory-like behaviour into the perception pipeline. If an object or a visually similar object has been observed before, the retrieved information can help guide the interpretation of the current scene. This is useful for risk-annotated scene graph generation because object identity and consistency are important when maintaining a structured representation of the environment over time. However, RAP does not independently solve object recognition or risk assessment. Its output must still be interpreted together with the current RGB-D observation, the segmented object regions, and the VLM output before the information can be inserted into the scene graph.
+
+}
 
 \subsection{Vision-Language Model Reasoning}
 
+
+{\small
+
+Vision-Language Models (VLMs) are multimodal models that combine visual and textual information to support image understanding through natural language. Unlike conventional object recognition models that predict labels from a fixed set of classes, VLMs can interpret visual content using prompts, descriptions, or structured instructions. Instruction-following VLMs such as LLaVA demonstrate how visual inputs can be connected with language-model reasoning through multimodal instruction tuning \cite{liu2023llava}. This makes VLMs useful for open-ended scene understanding, where the system must identify objects, infer relationships, and reason about context beyond predefined categories.
+
+Within the baseline framework, the VLM acts as the semantic reasoning component. It converts visual and contextual information into structured scene-level outputs, including object identities, attributes, relationships, confidence values, and risk-relevant descriptions. These outputs provide the semantic information required for constructing and updating the risk-annotated scene graph.
+
+The baseline study evaluated LLaVA 1.6 Mistral 7B, Qwen 2.5-VL 7B, and Phi-4 Vision Multimodal for the scene graph generation task. The comparison considered input- and output-format compatibility, repetition and hallucination behaviour, and the stability of location-format output. Based on this evaluation, the Qwen model series was identified as the best performing option for the baseline framework \cite{previous_rsg_thesis}. Later testing used Qwen 3-VL to use the newer available model version while preserving the framework's model-interchangeable design \cite{previous_rsg_thesis}.
+
+However, VLM-based reasoning can produce inconsistent descriptions, miss small objects, or infer relationships that are not fully supported by the visual input. Therefore, VLM output cannot be treated as directly reliable safety information. It must be bounded, checked, and converted into a consistent graph representation before it can support downstream risk assessment. This motivates the refinement of VLM outputs in this thesis.
+
+}
+
 \subsection{Scene Graph Construction and Risk Annotation}
 
+{\small
+The baseline framework represents the scene graph as a directed graph, where entities in the environment are modelled as nodes and relationships between entities are modelled as edges \cite{previous_rsg_thesis}. The original implementation uses NetworkX, a Python library for network analysis and graph manipulation, which supports incremental graph operations such as adding, updating, and removing nodes and edges \cite{hagberg2008networkx}.
+
+For external communication, the internal graph is converted into a dictionary-based representation. This is necessary because a native NetworkX graph object is not directly suitable for robust API transfer. The dictionary representation preserves the logical structure of the graph by storing node and edge information separately, making it easier to return through the FastAPI interface and process by external clients.
+
+Each node stores semantic, spatial, and risk-related information. Important node attributes include a persistent identifier, object label, semantic description, semantic pose, 3D position, risk metadata, appearance score, confidence score, and layer type. The semantic description describes the visual identity of the entity, while the semantic pose describes its current physical state, such as standing, lying, open, closed, or moving. Edges store relationships between nodes, including the source node, target node, relationship label, and distance between the connected entities.
+
+The graph update process must handle perception errors such as false positives and false negatives. To improve robustness, the baseline framework uses an appearance score-based graph combination strategy. When an object is repeatedly observed with consistent properties, its appearance score is increased. When it is missing from the latest VLM output, its score is decreased. A node is removed only when its appearance score falls below a predefined threshold, which prevents isolated missed detections from immediately deleting objects from the graph.
+
+Overall, the scene graph construction strategy combines semantic information, spatial information, and risk-related metadata in a machine-readable representation. This makes the baseline framework suitable for incremental risk-aware scene understanding, while also motivating later extensions for spatial consistency, uncertainty handling, and scalability in larger environments.
+
+}
+
 \subsection{Limitations of the Baseline Framework}
+
+{\small
+
+Although the baseline framework provides a suitable foundation for risk-annotated scene graph generation, it has several limitations when considered for deployment in autonomous robotic systems. The first limitation is related to portability. The original framework is exposed mainly through a FastAPI-based service interface, which is useful for dataset-based testing and external client communication. However, autonomous robotic systems typically rely on robot middleware for continuous sensor streams, synchronised data exchange, distributed nodes, and runtime coordination. As a result, the baseline interface is not directly aligned with robot-native communication patterns, making integration with real robotic platforms less straightforward.
+
+A second limitation concerns scalability across larger environments. The baseline framework processes RGB-D observations and updates a scene graph based on the current frame, camera pose, and visible graph elements. This is suitable for local scene understanding, but it does not by itself provide a complete mechanism for building and maintaining a spatially consistent graph across multiple rooms, corridors, or revisited locations. As the operating area increases, the system requires stronger spatial anchoring so that objects observed at different positions and times can be associated with the correct location in a global environment representation.
+
+Closely related to this is the absence of a dedicated loop closure mechanism. In mobile robotic operation, the robot may revisit a previously observed area after accumulating pose drift. Without loop closure, the system may treat revisited objects or locations as new observations, or may update the scene graph using spatial information that is no longer globally consistent. This limits the framework's ability to maintain a reliable long-term scene graph in larger environments. For this reason, integration with SLAM-based spatial data and loop closure detection is necessary for extending the framework beyond local frame-by-frame scene understanding.
+
+The baseline framework also has limitations with respect to uncertainty representation. Object candidates are generated from segmentation, interpreted by a VLM, and then merged into the scene graph using confidence-related and appearance-based information. This supports basic persistence handling, because objects that are repeatedly observed can be treated as more stable than objects that appear only briefly. However, this does not provide a full probabilistic representation of object existence, object class, or spatial position. For downstream risk assessment, such probabilistic information is important because the risk associated with an object may depend not only on its detected class, but also on the likelihood of its presence, the uncertainty of its location, and the reliability of its classification. Representing important objects with probability distributions or uncertainty estimates would allow the risk assessment mechanism to distinguish between confidently detected objects, weakly observed objects, and objects whose position or classification remains uncertain.
+
+Finally, the baseline framework depends strongly on the quality and consistency of VLM output. VLM-generated scene graph information may contain formatting errors, hallucinated relationships, missed objects, or inconsistent descriptions. Although parsing and graph-combination mechanisms can reduce some of these effects, the output still needs to be bounded and checked before it can be used as reliable input for risk assessment. These limitations motivate the extensions proposed in this thesis: porting the framework to ROS 2, integrating SLAM-based spatial information and loop closure, introducing probabilistic object representation, refining VLM output constraints, and considering near-real-time operation during system design.
+
+}
 
 
 

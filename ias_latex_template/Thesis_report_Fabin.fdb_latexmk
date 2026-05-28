@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber Thesis_report_Fabin"] 1779920715.42173 "Thesis_report_Fabin.bcf" "Thesis_report_Fabin.bbl" "Thesis_report_Fabin" 1779922065.73125 0
-  "Thesis_report_Fabin.bcf" 1779922065.59512 109229 f06b0b37133f6d70eafe485cb75f513b "pdflatex"
-  "bibliography.bib" 1779920520.28608 12443 e5d1f97dd6f52ec702154149f494d41c ""
+["biber Thesis_report_Fabin"] 1780061847.93636 "Thesis_report_Fabin.bcf" "Thesis_report_Fabin.bbl" "Thesis_report_Fabin" 1780062485.12601 0
+  "Thesis_report_Fabin.bcf" 1780062484.99192 110103 bb4577667ec48b44aa1b8b61f134bd87 "pdflatex"
+  "bibliography.bib" 1780061843.68808 15885 c595dd9c72fe4dee14920be2bb49b234 ""
   (generated)
   "Thesis_report_Fabin.bbl"
   "Thesis_report_Fabin.blg"
   (rewritten before read)
-["pdflatex"] 1779922063.5617 "Thesis_report_Fabin.tex" "Thesis_report_Fabin.pdf" "Thesis_report_Fabin" 1779922065.73156 0
+["pdflatex"] 1780062482.64192 "Thesis_report_Fabin.tex" "Thesis_report_Fabin.pdf" "Thesis_report_Fabin" 1780062485.12633 0
   "/etc/texmf/web2c/texmf.cnf" 1779465110.20949 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/palatino/pplb9t.tfm" 1136768653 2040 c3786843fde023582f6b55ff84d7bc8b ""
@@ -287,20 +287,21 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1779465126.55966 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1779465157 8213269 cd87e51f7acd51556c94309c9b3ea6ef ""
-  "Thesis_report_Fabin.aux" 1779922065.58912 21289 e556bba6e8e790f885e4ea3beb461c69 "pdflatex"
-  "Thesis_report_Fabin.bbl" 1779920716.07227 20377 dcd403010f3e7f204b759215e0dc829d "biber Thesis_report_Fabin"
-  "Thesis_report_Fabin.lof" 1779922065.59747 540 d87e18c6db1ca5bfe4b34fbe51586b82 "pdflatex"
-  "Thesis_report_Fabin.lot" 1779922065.59747 235 d6989944697d980c122f930d473e81b0 "pdflatex"
-  "Thesis_report_Fabin.out" 1779922065.11012 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "Thesis_report_Fabin.run.xml" 1779922065.59747 2604 3316da312b9c08fb08004e1be09176bf "pdflatex"
+  "Thesis_report_Fabin.aux" 1780062484.98492 22821 df838c5eaf5135dbe2008b8bec4c10e3 "pdflatex"
+  "Thesis_report_Fabin.bbl" 1780061848.63107 30890 9aa0f9ba55624925e31990e0fc6593a7 "biber Thesis_report_Fabin"
+  "Thesis_report_Fabin.lof" 1780062484.99352 755 773982eca0ee0e875ac17d98fca0b322 "pdflatex"
+  "Thesis_report_Fabin.lot" 1780062484.99352 235 d6989944697d980c122f930d473e81b0 "pdflatex"
+  "Thesis_report_Fabin.out" 1780062484.11492 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "Thesis_report_Fabin.run.xml" 1780062484.99352 2604 3316da312b9c08fb08004e1be09176bf "pdflatex"
   "Thesis_report_Fabin.tex" 1779697294.28773 1767 f8aab3d37e7066813f6c6de0ef362aa0 ""
-  "Thesis_report_Fabin.toc" 1779922065.59747 2792 d9d2f24157fef8e60510e551e909c9b4 "pdflatex"
+  "Thesis_report_Fabin.toc" 1780062484.99352 2777 830353e8027edb169ec712ab2ba1465c "pdflatex"
   "chapters/Abstract.tex" 1779697294.28773 1878 cfc6459cdee7e69b398730f1953a5dbc ""
   "chapters/Experiments.tex" 1779697294.28773 23 905c5616f55855b9c8c04df84dc99469 ""
   "chapters/Introduction.tex" 1779703911.03957 5400 4f2615bce698b53e940b5dc342fba21e ""
   "chapters/Methodology.tex" 1779914739.64234 1032 aa9d62e2e570d164388c59568e9ec62b ""
-  "chapters/Theory.tex" 1779922060.2602 21238 1bcff90afa5ac7bd5c4fb6517f4e18c9 ""
+  "chapters/Theory.tex" 1780062481.59892 33256 91b28fd0351e234e82e9f4b6eddeb0e0 ""
   "example_images/HRC_safety_productivity.png" 1779823059.90753 863145 5a362705cef0f90cff1c94b37a783179 ""
+  "example_images/existing_work_overview_enhanced.png" 1780047276.44292 558319 33145f1b97ecd9d441399ad1d51ff65b ""
   "example_images/hrc_safety_zones_generated.png" 1779834950.61333 2137890 fa8d0229a1428291ef988a8bb0a007a8 ""
   "iasthesis.sty" 1779642571.25748 17606 9e9e750e07a257baaf2cd73069359d05 ""
   "settings.tex" 1779697294.28773 5459 dd5e66589075c2985461cb5c1309971f ""
