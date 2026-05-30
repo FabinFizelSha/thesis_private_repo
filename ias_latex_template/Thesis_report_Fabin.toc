@@ -18,22 +18,32 @@
 \contentsline {subsection}{\numberline {2.2.3}ROS 1 and ROS 2}{9}{subsection.2.2.3}%
 \contentsline {section}{\numberline {2.3}Spatial Scene Graphs}{10}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Scene Graphs}{10}{subsection.2.3.1}%
-\contentsline {section}{\numberline {2.4}Risk-Annotated Scene Graph Framework Baseline}{11}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Information Flow in the Baseline Framework}{11}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}FastAPI}{13}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}SAM-Based Object Segmentation}{14}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4}Retrieval-Augmented Perception}{14}{subsection.2.4.4}%
-\contentsline {subsection}{\numberline {2.4.5}Vision-Language Model Reasoning}{15}{subsection.2.4.5}%
-\contentsline {subsection}{\numberline {2.4.6}Scene Graph Construction and Risk Annotation}{15}{subsection.2.4.6}%
-\contentsline {subsection}{\numberline {2.4.7}Limitations of the Baseline Framework}{16}{subsection.2.4.7}%
-\contentsline {section}{\numberline {2.5}Section4}{17}{section.2.5}%
-\contentsline {section}{\numberline {2.6}Section5}{17}{section.2.6}%
-\contentsline {section}{\numberline {2.7}Section6}{17}{section.2.7}%
-\contentsline {section}{\numberline {2.8}Section7}{17}{section.2.8}%
-\contentsline {chapter}{\numberline {3}Methodology}{18}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Baseline System and Proposed Extensions}{18}{section.3.1}%
-\contentsline {chapter}{\numberline {4}Experiments}{19}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Conclusions}{20}{chapter.5}%
-\contentsline {chapter}{\nonumberline Bibliography}{21}{chapter*.9}%
-\contentsline {chapter}{\numberline {A}Example appendix chapter}{24}{appendix.A}%
+\contentsline {section}{\numberline {2.4}Hydra-Based Spatial Scene Graph Generation}{11}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Input Data and Processing Overview}{11}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Layered 3D Scene Graph Representation}{13}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Metric-Semantic Mesh and Object Layer Construction}{13}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Places and Topological Free-Space Representation}{14}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}Room Detection Algorithm}{14}{subsection.2.4.5}%
+\contentsline {subsection}{\numberline {2.4.6}Loop Closure Detection and Scene Graph Optimization}{15}{subsection.2.4.6}%
+\contentsline {subsection}{\numberline {2.4.7}Real-Time Architecture and Graph Visualization}{16}{subsection.2.4.7}%
+\contentsline {subsection}{\numberline {2.4.8}Adaptation for RGB-D and IMU Input from a Real Robot}{17}{subsection.2.4.8}%
+\contentsline {subsection}{\numberline {2.4.9}Relevance to the Proposed Framework}{18}{subsection.2.4.9}%
+\contentsline {section}{\numberline {2.5}Risk-Annotated Scene Graph Framework Baseline}{18}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Information Flow in the Baseline Framework}{19}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}FastAPI}{20}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}SAM-Based Object Segmentation}{21}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {2.5.4}Retrieval-Augmented Perception}{21}{subsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.5.5}Vision-Language Model Reasoning}{22}{subsection.2.5.5}%
+\contentsline {subsection}{\numberline {2.5.6}Scene Graph Construction and Risk Annotation}{23}{subsection.2.5.6}%
+\contentsline {subsection}{\numberline {2.5.7}Limitations of the Baseline Framework}{23}{subsection.2.5.7}%
+\contentsline {section}{\numberline {2.6}Section4}{25}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Section5}{25}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Section6}{25}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Section7}{25}{section.2.9}%
+\contentsline {chapter}{\numberline {3}Methodology}{26}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Baseline System and Proposed Extensions}{26}{section.3.1}%
+\contentsline {chapter}{\numberline {4}Experiments}{27}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Conclusions}{28}{chapter.5}%
+\contentsline {chapter}{\nonumberline Bibliography}{29}{chapter*.10}%
+\contentsline {chapter}{\numberline {A}Example appendix chapter}{32}{appendix.A}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
