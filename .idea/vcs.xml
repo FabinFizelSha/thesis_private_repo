@@ -2,5 +2,20 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/teaserpp/_deps/googletest-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/teaserpp/_deps/pmc-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/teaserpp/_deps/spectra-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/teaserpp/_deps/tinyply-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/config_utilities" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/hydra" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/hydra_ros" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/ianvs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/kimera_pgmo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/kimera_rpgo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/pose_graph_tools" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/semantic_inference" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/spark_dsg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/spatial_hash" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/teaser_plusplus" vcs="Git" />
   </component>
 </project>
