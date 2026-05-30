@@ -1,22 +1,22 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'Thesis_report_Fabin.blg'
-[58] biber:340> INFO - === Fri May 29, 2026, 20:46:06
-[71] Biber.pm:419> INFO - Reading 'Thesis_report_Fabin.bcf'
-[114] Biber.pm:979> INFO - Found 23 citekeys in bib section 0
-[122] Biber.pm:4419> INFO - Processing section 0
-[130] Biber.pm:4610> INFO - Looking for bibtex file 'bibliography.bib' for section 0
-[132] bibtex.pm:1713> INFO - LaTeX decoding ...
-[153] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
-[314] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[314] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[314] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
-[314] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
-[326] bbl.pm:660> INFO - Writing 'Thesis_report_Fabin.bbl' with encoding 'UTF-8'
-[332] bbl.pm:763> INFO - Output to Thesis_report_Fabin.bbl
-[333] Biber.pm:131> WARN - Duplicate entry key: 'inam2018risk' in file 'bibliography.bib', skipping ...
-[333] Biber.pm:131> WARN - Duplicate entry key: 'marvel2013ssm' in file 'bibliography.bib', skipping ...
-[333] Biber.pm:131> WARN - Duplicate entry key: 'silvaneto2022aisafetyassurance' in file 'bibliography.bib', skipping ...
-[333] Biber.pm:131> WARN - Duplicate entry key: 'radford2021clip' in file 'bibliography.bib', skipping ...
-[333] Biber.pm:131> WARN - legacy year field '{2026}' in entry 'previous_rsg_thesis' is not an integer - this will probably not sort properly.
-[333] Biber.pm:131> WARN - BibTeX subsystem: /tmp/biber_tmp_upi0/f4d088b3f9f145b5c3058da33afd57d4_21623.utf8, line 30, warning: 795 characters of junk seen at toplevel
-[333] Biber.pm:133> INFO - WARNINGS: 6
+[54] biber:340> INFO - === Sat May 30, 2026, 15:26:12
+[64] Biber.pm:419> INFO - Reading 'Thesis_report_Fabin.bcf'
+[109] Biber.pm:979> INFO - Found 24 citekeys in bib section 0
+[117] Biber.pm:4419> INFO - Processing section 0
+[124] Biber.pm:4610> INFO - Looking for bibtex file 'bibliography.bib' for section 0
+[126] bibtex.pm:1713> INFO - LaTeX decoding ...
+[148] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography.bib'
+[282] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[282] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[282] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[282] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[293] bbl.pm:660> INFO - Writing 'Thesis_report_Fabin.bbl' with encoding 'UTF-8'
+[300] bbl.pm:763> INFO - Output to Thesis_report_Fabin.bbl
+[300] Biber.pm:131> WARN - Duplicate entry key: 'inam2018risk' in file 'bibliography.bib', skipping ...
+[300] Biber.pm:131> WARN - Duplicate entry key: 'marvel2013ssm' in file 'bibliography.bib', skipping ...
+[300] Biber.pm:131> WARN - Duplicate entry key: 'silvaneto2022aisafetyassurance' in file 'bibliography.bib', skipping ...
+[300] Biber.pm:131> WARN - Duplicate entry key: 'radford2021clip' in file 'bibliography.bib', skipping ...
+[300] Biber.pm:131> WARN - legacy year field '{2026}' in entry 'previous_rsg_thesis' is not an integer - this will probably not sort properly.
+[300] Biber.pm:131> WARN - BibTeX subsystem: /tmp/biber_tmp_0Uzf/f4d088b3f9f145b5c3058da33afd57d4_14225.utf8, line 30, warning: 795 characters of junk seen at toplevel
+[300] Biber.pm:133> INFO - WARNINGS: 6
