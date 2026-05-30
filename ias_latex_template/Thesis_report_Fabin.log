@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.22)  29 MAY 2026 15:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.22)  29 MAY 2026 20:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1678,53 +1678,60 @@ chapter 2.
 
 
 ]
-<example_images/HRC_safety_productivity.png, id=167, 1806.75pt x 877.2775pt>
+<example_images/HRC_safety_productivity.png, id=182, 1806.75pt x 877.2775pt>
 File: example_images/HRC_safety_productivity.png Graphic file (type png)
 <use example_images/HRC_safety_productivity.png>
 Package pdftex.def Info: example_images/HRC_safety_productivity.png  used on in
 put line 26.
 (pdftex.def)             Requested size: 418.25555pt x 203.08142pt.
  [4 <./example_images/HRC_safety_productivity.png (PNG copy)>] [5]
-<example_images/hrc_safety_zones_generated.png, id=186, 1541.76pt x 1027.84pt>
+<example_images/hrc_safety_zones_generated.png, id=200, 1541.76pt x 1027.84pt>
 File: example_images/hrc_safety_zones_generated.png Graphic file (type png)
 <use example_images/hrc_safety_zones_generated.png>
 Package pdftex.def Info: example_images/hrc_safety_zones_generated.png  used on
  input line 56.
 (pdftex.def)             Requested size: 418.25555pt x 278.83792pt.
- [6 <./example_images/hrc_safety_zones_generated.png (PNG copy)>] [7]
-Overfull \hbox (21.79437pt too wide) in paragraph at lines 100--101
+ [6 <./example_images/hrc_safety_zones_generated.png (PNG copy)>] [7] [8] [9]
+<example_images/scene-graph-example.png, id=233, 1787.67876pt x 886.31125pt>
+File: example_images/scene-graph-example.png Graphic file (type png)
+<use example_images/scene-graph-example.png>
+Package pdftex.def Info: example_images/scene-graph-example.png  used on input 
+line 158.
+(pdftex.def)             Requested size: 418.25555pt x 207.36354pt.
+ [10 <./example_images/scene-graph-example.png (PNG copy)>]
+Overfull \hbox (21.79437pt too wide) in paragraph at lines 192--193
 []\T1/qpl/m/n/10 (-20) The dis-cus-sion fo-cuses on the high-level con-cepts of
  the orig-i-nal frame-work rather than implementation-
  []
 
 
-Overfull \hbox (1.93953pt too wide) in paragraph at lines 100--101
+Overfull \hbox (1.93953pt too wide) in paragraph at lines 192--193
 \T1/qpl/m/n/10 (-20) specific de-tails. In par-tic-u-lar, it de-scribes the rol
 e of per-cep-tion, seg-men-ta-tion, retrieval-augmented
  []
 
-<example_images/existing_work_overview_enhanced.png, id=203, 1805.74625pt x 108
+<example_images/existing_work_overview_enhanced.png, id=242, 1805.74625pt x 108
 4.05pt>
 File: example_images/existing_work_overview_enhanced.png Graphic file (type png
 )
 <use example_images/existing_work_overview_enhanced.png>
 Package pdftex.def Info: example_images/existing_work_overview_enhanced.png  us
-ed on input line 113.
+ed on input line 205.
 (pdftex.def)             Requested size: 418.25555pt x 251.07962pt.
-[8] [9 <./example_images/existing_work_overview_enhanced.png>] [10] [11]
-[12] [13]) (./chapters/Methodology.tex [14]
+[11] [12 <./example_images/existing_work_overview_enhanced.png>] [13] [14]
+[15] [16]) (./chapters/Methodology.tex [17]
 chapter 3.
-) (./chapters/Experiments.tex [15
+) (./chapters/Experiments.tex [18
 
 
 ]
 chapter 4.
-) [16
+) [19
 
 
 ]
 chapter 5.
-[17
+[20
 
 
 ]
@@ -1765,7 +1772,7 @@ Package biblatex Warning: No driver for 'standard'.
 Package biblatex Warning: No driver for 'standard'.
 (biblatex)                Using fallback driver on input line 67.
 
-[18
+[21
 
 
 
@@ -1778,12 +1785,12 @@ Overfull \hbox (23.86905pt too wide) in paragraph at lines 68--68
 10.95 (-20) arXiv preprint arXiv:2304.02643\T1/qpl/m/n/10.95 (-20) ,
  []
 
-[19]
+[22] [23]
 chapter A.
-[20
+[24
 
 
-] [21
+] [25
 
 
 ] (./Thesis_report_Fabin.aux)
@@ -1798,21 +1805,21 @@ Package logreq Info: Writing requests to 'Thesis_report_Fabin.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 49923 strings out of 474222
- 1104341 string characters out of 5748733
- 2183696 words of memory out of 5000000
- 71120 multiletter control sequences out of 15000+600000
- 629229 words of font info for 188 fonts, out of 8000000 for 9000
+ 49986 strings out of 474222
+ 1105809 string characters out of 5748733
+ 2187038 words of memory out of 5000000
+ 71147 multiletter control sequences out of 15000+600000
+ 633692 words of font info for 200 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  108i,9n,107p,10914b,2626s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/tex-gyre/qhvb.pfb></usr/share/texmf/font
 s/type1/public/tex-gyre/qplb.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/
 qplr.pfb></usr/share/texmf/fonts/type1/public/tex-gyre/qplri.pfb></usr/share/te
 xmf/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on Thesis_report_Fabin.pdf (27 pages, 3779637 bytes).
+Output written on Thesis_report_Fabin.pdf (31 pages, 5177544 bytes).
 PDF statistics:
- 455 PDF objects out of 1000 (max. 8388607)
- 398 compressed objects within 4 object streams
- 85 named destinations out of 1000 (max. 500000)
- 37678 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 521 PDF objects out of 1000 (max. 8388607)
+ 457 compressed objects within 5 object streams
+ 99 named destinations out of 1000 (max. 500000)
+ 39771 words of extra memory for PDF output out of 42996 (max. 10000000)
 

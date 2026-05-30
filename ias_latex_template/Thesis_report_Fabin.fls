@@ -607,6 +607,12 @@ INPUT ./example_images/hrc_safety_zones_generated.png
 INPUT ./example_images/hrc_safety_zones_generated.png
 INPUT ./example_images/hrc_safety_zones_generated.png
 INPUT ./example_images/hrc_safety_zones_generated.png
+INPUT /usr/share/texmf/fonts/tfm/public/tex-gyre/ec-qplri.tfm
+INPUT ./example_images/scene-graph-example.png
+INPUT ./example_images/scene-graph-example.png
+INPUT ./example_images/scene-graph-example.png
+INPUT ./example_images/scene-graph-example.png
+INPUT ./example_images/scene-graph-example.png
 INPUT ./example_images/existing_work_overview_enhanced.png
 INPUT ./example_images/existing_work_overview_enhanced.png
 INPUT ./example_images/existing_work_overview_enhanced.png

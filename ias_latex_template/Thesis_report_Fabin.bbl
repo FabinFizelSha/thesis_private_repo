@@ -34,8 +34,8 @@
       \strng{authorbibnamehash}{ec665a4d6ae588c7e58ebff533460a47}
       \strng{authornamehash}{ec665a4d6ae588c7e58ebff533460a47}
       \strng{authorfullhash}{ec665a4d6ae588c7e58ebff533460a47}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{World Robotics 2025: Press Conference Presentation}
@@ -62,8 +62,8 @@
       \strng{authorbibnamehash}{3c104df4de39ebe0735048bc5e779288}
       \strng{authornamehash}{3c104df4de39ebe0735048bc5e779288}
       \strng{authorfullhash}{3c104df4de39ebe0735048bc5e779288}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Artificial Intelligence Index Report 2025}
@@ -91,8 +91,8 @@
       \strng{authornamehash}{7058e4bd76f877c52b621c942b30613c}
       \strng{authorfullhash}{7058e4bd76f877c52b621c942b30613c}
       \field{extraname}{1}
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{ISO 12100: Safety of machinery -- General principles for design -- Risk assessment and risk reduction}
@@ -125,8 +125,8 @@
       \strng{authorbibnamehash}{6f71aa560eafb65f9d0dd143e09e5d5d}
       \strng{authornamehash}{1b6f0fa51a9106eb98e13f7b6196e48f}
       \strng{authorfullhash}{6f71aa560eafb65f9d0dd143e09e5d5d}
-      \field{sortinit}{8}
-      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Computer Safety, Reliability, and Security}
@@ -169,8 +169,8 @@
       \strng{authorbibnamehash}{0207c0848cdc10a80f5b71f387dfdf21}
       \strng{authornamehash}{2c98a92bd60a6491075dc7e0a60207ff}
       \strng{authorfullhash}{0207c0848cdc10a80f5b71f387dfdf21}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{IEEE Transactions on Dependable and Secure Computing}
@@ -471,6 +471,234 @@
       \verb 10.1109/CASE56687.2023.10260416
       \endverb
     \endentry
+    \entry{quigley2009ros}{inproceedings}{}
+      \name{author}{8}{}{%
+        {{hash=9404eebbe5c52f5580a6f6515ebcbb80}{%
+           family={Quigley},
+           familyi={Q\bibinitperiod},
+           given={Morgan},
+           giveni={M\bibinitperiod}}}%
+        {{hash=03be3bc097356f7d1ec26652c7045241}{%
+           family={Conley},
+           familyi={C\bibinitperiod},
+           given={Ken},
+           giveni={K\bibinitperiod}}}%
+        {{hash=a8ad4a5f43253f69552460c946e34e49}{%
+           family={Gerkey},
+           familyi={G\bibinitperiod},
+           given={Brian},
+           giveni={B\bibinitperiod}}}%
+        {{hash=960c70f75f497debf10c247f8076241e}{%
+           family={Faust},
+           familyi={F\bibinitperiod},
+           given={Josh},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0d11ace6e44e4742ea1692d7ddf4819e}{%
+           family={Foote},
+           familyi={F\bibinitperiod},
+           given={Tully},
+           giveni={T\bibinitperiod}}}%
+        {{hash=fae0a680822c97400d0807bb44b87838}{%
+           family={Leibs},
+           familyi={L\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+        {{hash=1afca7d350a45f78259bb8af3f168e7d}{%
+           family={Wheeler},
+           familyi={W\bibinitperiod},
+           given={Rob},
+           giveni={R\bibinitperiod}}}%
+        {{hash=49e889356ff39df159461bc2895c7e16}{%
+           family={Ng},
+           familyi={N\bibinitperiod},
+           given={Andrew\bibnamedelima Y.},
+           giveni={A\bibinitperiod\bibinitdelim Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{b774a9d43f5be3e4c87661f157618116}
+      \strng{fullhash}{a91a45c430d95c385cb29e58b6b9fd6e}
+      \strng{bibnamehash}{a91a45c430d95c385cb29e58b6b9fd6e}
+      \strng{authorbibnamehash}{a91a45c430d95c385cb29e58b6b9fd6e}
+      \strng{authornamehash}{b774a9d43f5be3e4c87661f157618116}
+      \strng{authorfullhash}{a91a45c430d95c385cb29e58b6b9fd6e}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{ICRA Workshop on Open Source Software}
+      \field{title}{ROS: An Open-Source Robot Operating System}
+      \field{year}{2009}
+    \endentry
+    \entry{macenski2022ros2}{article}{}
+      \name{author}{5}{}{%
+        {{hash=7b84d10a03303cd00f198fefb38a5da3}{%
+           family={Macenski},
+           familyi={M\bibinitperiod},
+           given={Steven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=0d11ace6e44e4742ea1692d7ddf4819e}{%
+           family={Foote},
+           familyi={F\bibinitperiod},
+           given={Tully},
+           giveni={T\bibinitperiod}}}%
+        {{hash=a8ad4a5f43253f69552460c946e34e49}{%
+           family={Gerkey},
+           familyi={G\bibinitperiod},
+           given={Brian},
+           giveni={B\bibinitperiod}}}%
+        {{hash=4e2c9f9d04cf548117105f50a9c8a7a1}{%
+           family={Lalancette},
+           familyi={L\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+        {{hash=fe838d86b89f8983167a3747e11998bb}{%
+           family={Woodall},
+           familyi={W\bibinitperiod},
+           given={William},
+           giveni={W\bibinitperiod}}}%
+      }
+      \strng{namehash}{4a195e02383364d4009f77ca22451e11}
+      \strng{fullhash}{c321d95ccac4f92536f0f1ed99f34d05}
+      \strng{bibnamehash}{c321d95ccac4f92536f0f1ed99f34d05}
+      \strng{authorbibnamehash}{c321d95ccac4f92536f0f1ed99f34d05}
+      \strng{authornamehash}{4a195e02383364d4009f77ca22451e11}
+      \strng{authorfullhash}{c321d95ccac4f92536f0f1ed99f34d05}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science Robotics}
+      \field{number}{66}
+      \field{title}{Robot Operating System 2: Design, Architecture, and Uses in the Wild}
+      \field{volume}{7}
+      \field{year}{2022}
+      \field{pages}{eabm6074}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1126/scirobotics.abm6074
+      \endverb
+    \endentry
+    \entry{puck2021ros2realtime}{inproceedings}{}
+      \name{author}{8}{}{%
+        {{hash=a9cff24c6e89d957f89b704fd4122665}{%
+           family={Puck},
+           familyi={P\bibinitperiod},
+           given={Lennart},
+           giveni={L\bibinitperiod}}}%
+        {{hash=eede491ec57a372fff789ed02fca232b}{%
+           family={Keller},
+           familyi={K\bibinitperiod},
+           given={Philip},
+           giveni={P\bibinitperiod}}}%
+        {{hash=bec7774d6f2ab7e172861dff732d38e5}{%
+           family={Schnell},
+           familyi={S\bibinitperiod},
+           given={Tristan},
+           giveni={T\bibinitperiod}}}%
+        {{hash=d21c891721732243ebbbf78ddb6bc90e}{%
+           family={Plasberg},
+           familyi={P\bibinitperiod},
+           given={C.},
+           giveni={C\bibinitperiod}}}%
+        {{hash=0cdaade491e56a644638551f11d2ac12}{%
+           family={Tanev},
+           familyi={T\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=e89cf28cd113c9e69cd896ea4a5cc77a}{%
+           family={Heppner},
+           familyi={H\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+        {{hash=f01dd0f05b058e2e33033378b567aedb}{%
+           family={Roennau},
+           familyi={R\bibinitperiod},
+           given={Arne},
+           giveni={A\bibinitperiod}}}%
+        {{hash=4f1d7c0e9dbdf64ba7a54e1f1a3b76d5}{%
+           family={Dillmann},
+           familyi={D\bibinitperiod},
+           given={Ruediger},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{38eb72ff02f67cf4e605a4f7a9b6609c}
+      \strng{fullhash}{ed54e4619130547e5c8a038bdb62d331}
+      \strng{bibnamehash}{ed54e4619130547e5c8a038bdb62d331}
+      \strng{authorbibnamehash}{ed54e4619130547e5c8a038bdb62d331}
+      \strng{authornamehash}{38eb72ff02f67cf4e605a4f7a9b6609c}
+      \strng{authorfullhash}{ed54e4619130547e5c8a038bdb62d331}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2021 IEEE 17th International Conference on Automation Science and Engineering (CASE)}
+      \field{title}{Performance Evaluation of Real-Time ROS2 Robotic Control in a Time-Synchronized Distributed Network}
+      \field{year}{2021}
+      \field{pages}{1670\bibrangedash 1676}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1109/CASE49439.2021.9551447
+      \endverb
+    \endentry
+    \entry{johnson2015scenegraphs}{inproceedings}{}
+      \name{author}{7}{}{%
+        {{hash=90edc587e1d523d4e173b1fe6e733445}{%
+           family={Johnson},
+           familyi={J\bibinitperiod},
+           given={Justin},
+           giveni={J\bibinitperiod}}}%
+        {{hash=e9cf8ade7c94f1084ea6832928a36fef}{%
+           family={Krishna},
+           familyi={K\bibinitperiod},
+           given={Ranjay},
+           giveni={R\bibinitperiod}}}%
+        {{hash=93fa445b3e108af4e0bc57e8fc211c74}{%
+           family={Stark},
+           familyi={S\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=2afdae52015b97674d81efea449edce2}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Li-Jia},
+           giveni={L\bibinithyphendelim J\bibinitperiod}}}%
+        {{hash=bd5560c0c54d9552cb7194da66c1b047}{%
+           family={Shamma},
+           familyi={S\bibinitperiod},
+           given={David\bibnamedelima A.},
+           giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=bb1df70dce464605ddd9cf83485d8db1}{%
+           family={Bernstein},
+           familyi={B\bibinitperiod},
+           given={Michael\bibnamedelima S.},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=cd00ce5bc45f687c432e52e0fa1a7aa6}{%
+           family={Fei-Fei},
+           familyi={F\bibinithyphendelim F\bibinitperiod},
+           given={Li},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{703afbca586b4470d0f3fab18063c292}
+      \strng{fullhash}{840d34aa6f771751170f4e82b0f6f543}
+      \strng{bibnamehash}{840d34aa6f771751170f4e82b0f6f543}
+      \strng{authorbibnamehash}{840d34aa6f771751170f4e82b0f6f543}
+      \strng{authornamehash}{703afbca586b4470d0f3fab18063c292}
+      \strng{authorfullhash}{840d34aa6f771751170f4e82b0f6f543}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition}
+      \field{title}{Image Retrieval Using Scene Graphs}
+      \field{year}{2015}
+      \field{pages}{3668\bibrangedash 3678}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1109/CVPR.2015.7298990
+      \endverb
+    \endentry
     \entry{previous_rsg_thesis}{thesis}{}
       \name{author}{1}{}{%
         {{hash=2b4e0ae96323260facee5912172d0ed9}{%
@@ -489,8 +717,8 @@
       \strng{authorbibnamehash}{2b4e0ae96323260facee5912172d0ed9}
       \strng{authornamehash}{2b4e0ae96323260facee5912172d0ed9}
       \strng{authorfullhash}{2b4e0ae96323260facee5912172d0ed9}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{{Online Risk-Annotated Scene Graohs for Autonomous Systems}}
@@ -509,8 +737,8 @@
       \strng{authorbibnamehash}{f275f2a55ee4abdf8875dce6987e2f5f}
       \strng{authornamehash}{f275f2a55ee4abdf8875dce6987e2f5f}
       \strng{authorfullhash}{f275f2a55ee4abdf8875dce6987e2f5f}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{FastAPI Documentation}
@@ -595,8 +823,8 @@
       \strng{authorbibnamehash}{692138df0ed19b3bc1376656faef591c}
       \strng{authornamehash}{ae3509cef74d700bc72e166cef519778}
       \strng{authorfullhash}{35aa6f56cd021270d387680af0c2260a}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{eprintclass}{cs.CV}
@@ -677,8 +905,8 @@
       \strng{authorbibnamehash}{aa6cbfbfada4b209505238d4429dc4a3}
       \strng{authornamehash}{f238c3bfc4b30650dd17e65c4aadfc66}
       \strng{authorfullhash}{22489b764620b23a8cc8547a492f0763}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Advances in Neural Information Processing Systems}
@@ -717,8 +945,8 @@
       \strng{authorbibnamehash}{6db541ecf0741fe14b8b2a6452dc056f}
       \strng{authornamehash}{5210b7379e6d782545413890e930fb8d}
       \strng{authorfullhash}{6db541ecf0741fe14b8b2a6452dc056f}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Advances in Neural Information Processing Systems}
@@ -753,8 +981,8 @@
       \strng{authorbibnamehash}{3a1b2e51fcffd45628935c7b6334f944}
       \strng{authornamehash}{4e53a9c7f8f76fc36bfb13bfc9694edc}
       \strng{authorfullhash}{3a1b2e51fcffd45628935c7b6334f944}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Proceedings of the 7th Python in Science Conference}

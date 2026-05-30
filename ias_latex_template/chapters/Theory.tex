@@ -85,6 +85,98 @@ At the same time, AI can also support dynamic risk assessment when its outputs a
 
 
 
+\section{Robot Operating System}
+
+{\small
+
+The Robot Operating System (ROS) is an open-source software framework for developing and integrating robotic systems. Despite its name, ROS is not a traditional operating system; it functions as a middleware layer that provides communication mechanisms, software libraries, development tools, and conventions for building modular robot software \cite{quigley2009ros}. In this thesis, ROS is relevant because the risk-annotated scene graph framework must be integrated with continuous RGB-D sensor streams, pose information, SLAM modules, system status information, and downstream risk assessment components. Therefore, ROS provides the conceptual and technical basis for replacing the service-oriented baseline interface with a robot-native integration approach.
+
+}
+
+\subsection{ROS as Robotic Middleware}
+
+{\small
+
+A ROS-based robotic system is typically organised as a collection of nodes. A node is an executable software component that performs a specific function, such as publishing camera data, processing sensor input, estimating robot pose, performing SLAM, planning motion, controlling actuators, or visualising system state. This node-based structure allows complex robotic systems to be decomposed into smaller modules that can be developed, tested, and replaced independently. For example, an RGB-D camera node can publish sensor data, a SLAM node can estimate the robot pose and map, and a scene graph node can use this information to update a structured representation of the environment.
+
+Communication between nodes is performed using messages. A message defines the structure of the exchanged data, such as an image, pose, velocity command, point cloud, or status value. ROS provides standard message types for common robotic data, while also allowing custom message definitions for application-specific information. This is important for robotic integration because different modules can exchange data in a predictable and structured way.
+
+}
+
+\subsection{ROS Communication Mechanisms}
+
+{\small
+
+ROS provides several communication mechanisms for different interaction patterns. Topics are used for continuous data streams and follow a publish-subscribe model. A node publishes messages to a topic, and one or more other nodes subscribe to that topic. This is suitable for sensor data such as RGB images, depth images, LiDAR scans, odometry, IMU data, and system status. In the context of this thesis, RGB-D observations, pose information, and scene graph updates can naturally be represented as topic-based communication because they are produced repeatedly during robot operation.
+
+Services provide request-response communication. A service is useful when one node needs to request a specific operation from another node and receive a result, such as resetting a scene graph, saving the current graph, or requesting the current system state. Unlike topics, services are not intended for continuous streaming, but for discrete interactions where a response is expected.
+
+Actions are used for long-running tasks that may require feedback or cancellation. An action consists of a goal, feedback during execution, and a final result. This mechanism is commonly used for navigation tasks, where a robot receives a goal pose, reports progress, and eventually returns whether the goal was reached. In a scene graph framework, actions could be useful for longer operations such as processing a selected dataset sequence or generating a scene graph for a defined exploration segment.
+
+ROS also uses parameters to configure node behaviour. Parameters can define topic names, thresholds, model settings, update rates, frame identifiers, or other runtime options. This allows the same node to be reused in different experimental setups without changing the source code. Launch files are then used to start multiple nodes together with their required parameters, making it easier to reproduce complete robotic system configurations.
+
+}
+
+\subsection{ROS 1 and ROS 2}
+
+{\small
+
+ROS 1 was the first widely adopted version of ROS and became an important standard for robotics research and prototyping. In ROS 1, node discovery is coordinated through a central ROS Master, which allows publishers and subscribers to find each other before communicating. This architecture supported rapid development and experimentation, but it was mainly designed for research-oriented systems and did not fully address several requirements of modern robotic deployment, such as reliable distributed execution, multi-robot communication, real-time behaviour, security, and production-oriented system design.
+
+ROS 2 was developed to address these limitations and to support more robust robotic applications \cite{macenski2022ros2}. A major architectural difference is that ROS 2 uses the Data Distribution Service (DDS) as its communication middleware. DDS enables decentralised discovery, configurable Quality of Service (QoS), and improved support for distributed robotic systems. This means that ROS 2 nodes can discover each other without relying on a central master, which improves suitability for multi-robot systems and distributed deployment.
+
+Quality of Service is an important feature of ROS 2 communication. QoS settings allow developers to control how messages are delivered, for example whether communication should prioritize reliability or low latency. This is important because different robotic data streams have different requirements. A camera stream may prefer recent data and tolerate dropped frames, while system status or safety-related information may require more reliable delivery. ROS 2 also improves support for lifecycle management, embedded platforms, real-time control, and security compared with ROS 1 \cite{macenski2022ros2}. At the same time, practical studies of ROS 2 robotic control show that latency and jitter still need to be evaluated carefully in distributed and time-sensitive applications \cite{puck2021ros2realtime}.
+
+In the context of this thesis, ROS 2 is relevant because the risk-annotated scene graph framework must operate as part of a robotic system rather than as an isolated external service. RGB-D data, pose information, system status, and scene graph updates need to be exchanged continuously between different software components. ROS 2 provides a robot-native communication structure for this purpose, allowing the framework to be integrated with perception sensors, SLAM modules, robot state estimation, visualization tools, and downstream risk assessment mechanisms.
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Spatial Scene Graphs}
+\small{
+
+\subsection{Scene Graphs}
+
+{\small
+
+A scene graph is a structured representation of a visual scene in which objects are represented as nodes and relationships between objects are represented as edges \cite{johnson2015scenegraphs}. Instead of describing an image or environment only as a collection of detected objects, a scene graph also captures how these objects are related to each other. For example, a scene may contain nodes such as \textit{person}, \textit{chair}, and \textit{table}, while edges may describe relations such as \textit{sitting on}, \textit{next to}, or \textit{under}. Johnson et al. demonstrated the usefulness of scene graphs for image retrieval by representing image content through objects, attributes, and relationships rather than relying only on low-level image features or isolated object labels \cite{johnson2015scenegraphs}.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/scene-graph-example.png}
+    \caption{Scene graph example\cite{johnson2015scenegraphs}.}
+    \label{fig:scene_graph_example}
+\end{figure}
+The main advantage of a scene graph is that it provides a machine-readable representation of both entities and context. Object detections alone can indicate which objects are present, but they do not fully describe the structure of the scene. In contrast, a scene graph can represent object attributes, spatial arrangements, and semantic relationships in a compact graph format \cite{johnson2015scenegraphs}. This makes it useful for tasks that require reasoning about the environment, because downstream modules can query not only whether an object exists, but also how it is positioned or related to other objects.
+
+Scene graphs are also advantageous because they provide an interpretable bridge between perception and higher-level reasoning. Raw sensor data such as images or point clouds is difficult for symbolic reasoning modules to use directly. A scene graph abstracts this raw data into nodes, edges, and attributes that can be inspected, updated, and processed algorithmically. This is especially useful in robotic systems, where perception results must often be connected to planning, navigation, manipulation, or risk assessment.
+
+In the context of this thesis, scene graphs are relevant because dynamic risk assessment requires more than object detection. Risk may depend on object identity, spatial proximity, support relations, containment, occlusion, human presence, and the current configuration of the environment. A graph-based representation allows such information to be stored in a structured form. When extended with spatial information, uncertainty estimates, and risk annotations, the scene graph becomes a suitable basis for representing the current operational context of an autonomous robotic system.
+
+}
+
+
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -208,11 +300,6 @@ Finally, the baseline framework depends strongly on the quality and consistency 
 
 
 
-\section{Section3}
-\small{
-
-
-}
 \section{Section4}
 \small{
 

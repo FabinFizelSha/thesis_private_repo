@@ -2365,47 +2365,56 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">bibliography.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="3" intorder="1">ifr2025robots</bcf:citekey>
     <bcf:citekey order="4" intorder="1">ifr2025robots</bcf:citekey>
-    <bcf:citekey order="5" intorder="1">stanford2025aiindex</bcf:citekey>
-    <bcf:citekey order="6" intorder="1">ifr2025robots</bcf:citekey>
-    <bcf:citekey order="7" intorder="1">iso12100</bcf:citekey>
-    <bcf:citekey order="8" intorder="1">osborne2022decisionmaking</bcf:citekey>
-    <bcf:citekey order="9" intorder="1">avizienis2004dependability</bcf:citekey>
-    <bcf:citekey order="10" intorder="1">iso12100</bcf:citekey>
-    <bcf:citekey order="11" intorder="1">iso10218_1_2025</bcf:citekey>
-    <bcf:citekey order="11" intorder="2">iso10218_2_2025</bcf:citekey>
-    <bcf:citekey order="11" intorder="3">iso15066</bcf:citekey>
-    <bcf:citekey order="12" intorder="1">europeancommission2021industry5</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">ifr2025robots</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">stanford2025aiindex</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">ifr2025robots</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">iso12100</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">osborne2022decisionmaking</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">avizienis2004dependability</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">iso12100</bcf:citekey>
+    <bcf:citekey order="12" intorder="1">iso10218_1_2025</bcf:citekey>
+    <bcf:citekey order="12" intorder="2">iso10218_2_2025</bcf:citekey>
+    <bcf:citekey order="12" intorder="3">iso15066</bcf:citekey>
     <bcf:citekey order="13" intorder="1">europeancommission2021industry5</bcf:citekey>
-    <bcf:citekey order="14" intorder="1">kumar2021hrc</bcf:citekey>
+    <bcf:citekey order="14" intorder="1">europeancommission2021industry5</bcf:citekey>
     <bcf:citekey order="15" intorder="1">kumar2021hrc</bcf:citekey>
     <bcf:citekey order="16" intorder="1">kumar2021hrc</bcf:citekey>
     <bcf:citekey order="17" intorder="1">kumar2021hrc</bcf:citekey>
     <bcf:citekey order="18" intorder="1">kumar2021hrc</bcf:citekey>
-    <bcf:citekey order="19" intorder="1">iso12100</bcf:citekey>
-    <bcf:citekey order="20" intorder="1">iso10218_1_2025</bcf:citekey>
-    <bcf:citekey order="20" intorder="2">iso10218_2_2025</bcf:citekey>
-    <bcf:citekey order="20" intorder="3">iso15066</bcf:citekey>
-    <bcf:citekey order="21" intorder="1">kumar2021hrc</bcf:citekey>
+    <bcf:citekey order="19" intorder="1">kumar2021hrc</bcf:citekey>
+    <bcf:citekey order="20" intorder="1">iso12100</bcf:citekey>
+    <bcf:citekey order="21" intorder="1">iso10218_1_2025</bcf:citekey>
+    <bcf:citekey order="21" intorder="2">iso10218_2_2025</bcf:citekey>
+    <bcf:citekey order="21" intorder="3">iso15066</bcf:citekey>
     <bcf:citekey order="22" intorder="1">kumar2021hrc</bcf:citekey>
     <bcf:citekey order="23" intorder="1">kumar2021hrc</bcf:citekey>
-    <bcf:citekey order="24" intorder="1">marvel2013ssm</bcf:citekey>
-    <bcf:citekey order="25" intorder="1">silvaneto2022aisafetyassurance</bcf:citekey>
-    <bcf:citekey order="26" intorder="1">grimmeisen2023continuousrisk</bcf:citekey>
-    <bcf:citekey order="27" intorder="1">previous_rsg_thesis</bcf:citekey>
-    <bcf:citekey order="28" intorder="1">previous_rsg_thesis</bcf:citekey>
-    <bcf:citekey order="29" intorder="1">previous_rsg_thesis</bcf:citekey>
-    <bcf:citekey order="30" intorder="1">fastapi_docs</bcf:citekey>
-    <bcf:citekey order="31" intorder="1">fastapi_docs</bcf:citekey>
-    <bcf:citekey order="32" intorder="1">fastapi_docs</bcf:citekey>
-    <bcf:citekey order="33" intorder="1">kirillov2023segmentanything</bcf:citekey>
-    <bcf:citekey order="34" intorder="1">lewis2020rag</bcf:citekey>
-    <bcf:citekey order="35" intorder="1">liu2023llava</bcf:citekey>
-    <bcf:citekey order="36" intorder="1">previous_rsg_thesis</bcf:citekey>
+    <bcf:citekey order="24" intorder="1">kumar2021hrc</bcf:citekey>
+    <bcf:citekey order="25" intorder="1">marvel2013ssm</bcf:citekey>
+    <bcf:citekey order="26" intorder="1">silvaneto2022aisafetyassurance</bcf:citekey>
+    <bcf:citekey order="27" intorder="1">grimmeisen2023continuousrisk</bcf:citekey>
+    <bcf:citekey order="28" intorder="1">quigley2009ros</bcf:citekey>
+    <bcf:citekey order="29" intorder="1">macenski2022ros2</bcf:citekey>
+    <bcf:citekey order="30" intorder="1">macenski2022ros2</bcf:citekey>
+    <bcf:citekey order="31" intorder="1">puck2021ros2realtime</bcf:citekey>
+    <bcf:citekey order="32" intorder="1">johnson2015scenegraphs</bcf:citekey>
+    <bcf:citekey order="33" intorder="1">johnson2015scenegraphs</bcf:citekey>
+    <bcf:citekey order="34" intorder="1">johnson2015scenegraphs</bcf:citekey>
+    <bcf:citekey order="35" intorder="1">johnson2015scenegraphs</bcf:citekey>
+    <bcf:citekey order="36" intorder="1">johnson2015scenegraphs</bcf:citekey>
     <bcf:citekey order="37" intorder="1">previous_rsg_thesis</bcf:citekey>
     <bcf:citekey order="38" intorder="1">previous_rsg_thesis</bcf:citekey>
-    <bcf:citekey order="39" intorder="1">hagberg2008networkx</bcf:citekey>
+    <bcf:citekey order="39" intorder="1">previous_rsg_thesis</bcf:citekey>
+    <bcf:citekey order="40" intorder="1">fastapi_docs</bcf:citekey>
+    <bcf:citekey order="41" intorder="1">fastapi_docs</bcf:citekey>
+    <bcf:citekey order="42" intorder="1">fastapi_docs</bcf:citekey>
+    <bcf:citekey order="43" intorder="1">kirillov2023segmentanything</bcf:citekey>
+    <bcf:citekey order="44" intorder="1">lewis2020rag</bcf:citekey>
+    <bcf:citekey order="45" intorder="1">liu2023llava</bcf:citekey>
+    <bcf:citekey order="46" intorder="1">previous_rsg_thesis</bcf:citekey>
+    <bcf:citekey order="47" intorder="1">previous_rsg_thesis</bcf:citekey>
+    <bcf:citekey order="48" intorder="1">previous_rsg_thesis</bcf:citekey>
+    <bcf:citekey order="49" intorder="1">hagberg2008networkx</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">
