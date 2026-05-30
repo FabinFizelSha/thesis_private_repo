@@ -85,6 +85,134 @@ At the same time, AI can also support dynamic risk assessment when its outputs a
 
 
 
+
+
+
+
+\section{Existing Work on Spatial Scene Graphs}
+
+{\small
+
+Spatial scene graphs extend image-level scene graph representations by grounding objects, relationships, and higher-level spatial concepts in 3D space. This is important for robotic systems because a robot must not only recognise objects, but also understand where they are located, how they are arranged, and how they relate to larger spatial structures such as rooms or buildings. Several previous works have proposed methods for generating 3D scene graphs from reconstructed environments, RGB-D observations, or open-vocabulary perception pipelines. Although these works do not directly focus on risk annotation, they provide important methodological foundations for the spatial scene graph generation problem addressed in this thesis.
+
+}
+
+\subsection{3D Scene Graph by Armeni et al.}
+
+{\small
+
+Armeni et al. introduced one of the foundational formulations of 3D scene graphs for building-scale indoor scene understanding \cite{armeni2019threedscenegraph}. Their work extends the conventional scene graph concept from 2D image representations to 3D environments. Instead of representing only objects and pairwise relations in an image, the proposed 3D scene graph organises semantic and spatial information across multiple levels of abstraction, including buildings, rooms, objects, and cameras.
+
+The method uses a reconstructed 3D mesh and registered panoramic images as input. Visual information from the images is associated with the 3D mesh, allowing semantic labels and object-level information to be grounded in physical space. The resulting graph represents not only which objects are present, but also where they are located and how they are connected to larger spatial entities such as rooms. This makes the representation more suitable for indoor spatial understanding than a purely image-level graph.
+
+A key contribution of this work is the introduction of a hierarchical representation for complete indoor environments. Object nodes can be connected to room nodes, cameras can be connected to the regions they observe, and spatial relationships can be represented explicitly. This supports queries such as which objects are present in a room, how cameras observe the environment, or how semantic information is distributed across a building.
+
+For the present thesis, Armeni et al. are mainly relevant as a conceptual foundation for spatial scene graph structure. Their work shows how semantic information can be organised across object, room, camera, and building levels. However, the method is primarily designed for building-scale scene understanding from reconstructed data, rather than online robotic operation. Therefore, its main contribution to this thesis is the idea of spatial hierarchy, while real-time construction, loop closure, uncertainty handling, and risk annotation require additional methods.
+
+}
+
+\subsection{SceneGraphFusion}
+
+{\small
+
+SceneGraphFusion by Wu et al. focuses on incremental 3D scene graph prediction from RGB-D sequences \cite{wu2021scenegraphfusion}. This makes it particularly relevant to robotic perception, because RGB-D cameras provide both colour and depth information and are commonly used for indoor robotic systems. Unlike methods that generate a scene graph from a single image or from a completed offline reconstruction, SceneGraphFusion builds and updates the graph incrementally as new RGB-D frames are observed.
+
+The method first uses RGB-D input to support 3D reconstruction and instance-level scene understanding. As the camera observes the environment from different viewpoints, partial observations are fused into a growing 3D representation. Object instances are represented as graph nodes, while relationships between objects are represented as graph edges. The method then predicts object and relationship semantics using graph neural network-based reasoning, combining geometric, visual, and semantic information from the reconstructed scene.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/scenegraphfusion_pipeline.png}
+    \caption{Overview of the SceneGraphFusion pipeline, showing RGB-D input, incremental geometric segmentation, point-cloud segments as graph nodes, feature extraction, graph neural network-based relationship prediction, and temporal fusion into an incremental 3D scene graph. Reproduced from \cite{wu2021scenegraphfusion}.}
+    \label{fig:scenegraphfusion_pipeline}
+\end{figure}
+
+A key contribution of SceneGraphFusion is its incremental formulation. Robotic perception is naturally sequential: a robot observes only part of the environment at each time step, and the representation must be updated as new views become available. SceneGraphFusion addresses this problem by treating scene graph generation as a progressive RGB-D fusion task rather than as a single-frame prediction problem. This allows the graph to become more complete as additional observations are integrated.
+
+An important part of the method is its temporal scene graph fusion strategy. Because the framework predicts the semantic labels of segments and relationships multiple times over a sequence, different observations may produce different or contradictory predictions. To handle this, SceneGraphFusion stores a probability distribution and a weight for each predicted class or relationship predicate. When a new prediction is available, the stored probability is updated using a weighted running average. Using $\hat{\mu}_t$ for the new prediction probability and $\hat{w}_t$ for its weight, the updated probability can be written as
+
+\[
+\mu_t =
+\frac{\hat{\mu}_t \hat{w}_t + \mu_{t-1} w_{t-1}}
+{\hat{w}_t + w_{t-1}},
+\]
+
+and the corresponding weight is updated as
+
+\[
+w_t = \min(w_{\max}, \hat{w}_t + w_{t-1}),
+\]
+
+where $w_{\max}$ is the maximum allowed weight \cite{wu2021scenegraphfusion}. This temporal fusion mechanism allows repeated observations to strengthen stable predictions while reducing the influence of isolated inconsistent predictions.
+
+The temporal fusion strategy is relevant to this thesis as an example of how repeated observations can be combined to improve the stability of a scene graph over time. Instead of storing only a single deterministic label for each object or relationship, SceneGraphFusion preserves a probability distribution over possible classes or predicates. This allows the representation to retain information about semantic uncertainty and to reduce the effect of isolated inconsistent predictions. Such an approach is useful to study because dynamic risk assessment may depend not only on the selected object or relation label, but also on how confident the system is in that prediction.
+
+For this thesis, SceneGraphFusion is therefore considered as an important reference for alternative approaches to incremental scene graph generation. It demonstrates how RGB-D observations can be fused over time and how semantic predictions for graph nodes and edges can be stabilized using temporal probability fusion. However, its main focus remains object-relation prediction in reconstructed indoor scenes. The present thesis investigates a different objective: extending risk-annotated scene graph generation toward spatial grounding, long-term object persistence, loop-closure-aware consistency, uncertainty representation, and dynamic risk assessment in robotic environments.
+
+}
+
+
+\subsection{ConceptGraphs}
+
+{\small
+
+ConceptGraphs by Gu et al. introduces open-vocabulary 3D scene graphs for perception and planning \cite{gu2024conceptgraphs}. The work is motivated by the need for 3D scene representations that can be queried using flexible language-based concepts, rather than only a fixed set of predefined labels. This is relevant for robotic applications because the objects and categories encountered during operation may not always be known in advance. Instead of treating scene understanding only as a closed-set classification problem, ConceptGraphs connects 3D spatial mapping with language-aligned visual representations.
+
+The method builds 3D scene graphs from posed RGB-D observations. Each RGB-D frame provides colour information, depth information, and a known camera pose. Object-level information is first extracted from individual 2D views using foundation-model-based perception. These detections or segmentations provide candidate object regions in the image. The depth image and camera pose are then used to lift these 2D observations into 3D space. In this way, image-level object information is transformed into spatially grounded object candidates.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/conceptgraphs_pipeline.png}
+    \caption{Overview of the ConceptGraphs pipeline, showing open-vocabulary detection and segmentation from posed RGB-D observations, multi-view object association, object fusion, construction of a 3D scene graph, and downstream applications such as segmentation, grounding, navigation, and manipulation. Reproduced from \cite{gu2024conceptgraphs}.}
+    \label{fig:conceptgraphs_pipeline}
+\end{figure}
+
+A central part of the method is multi-view association. Since the same physical object can be visible in several RGB-D frames, the system must decide whether a newly detected object corresponds to an existing object in the 3D map or whether it should be inserted as a new object. ConceptGraphs performs this association using spatial and visual information, so that repeated observations of the same object can be fused into a single 3D object node. This reduces duplicate object creation and allows the graph to become more consistent as more views are processed.
+
+The resulting graph contains object nodes that are grounded in 3D space while also carrying language-aligned features. These features allow the graph to be queried using natural-language descriptions. For example, instead of searching only for a fixed class label, a downstream module can use more flexible text queries related to object identity, appearance, or function. This makes the representation useful for tasks such as object grounding, navigation, manipulation, and language-conditioned planning.
+
+For this thesis, ConceptGraphs is relevant because it shows one approach for combining 3D scene graph generation with foundation-model-based semantic understanding. This is related to the proposed risk-annotated scene graph framework, where visual-language reasoning is also used to enrich the scene representation. However, the focus of ConceptGraphs is mainly open-vocabulary perception and planning, whereas the present thesis focuses on generating a spatial scene graph that can support risk annotation, uncertainty representation, and dynamic risk assessment. Therefore, ConceptGraphs is useful as a reference for semantic flexibility in 3D scene graphs, while the risk-oriented interpretation and safety relevance remain the focus of the proposed work.
+
+}
+
+\subsection{OpenGraph}
+
+{\small
+
+OpenGraph by Deng et al. proposes an open-vocabulary hierarchical 3D graph representation for large-scale outdoor environments \cite{deng2024opengraph}. While ConceptGraphs focuses on open-vocabulary 3D scene graphs from posed RGB-D observations, OpenGraph addresses outdoor scenes where the environment is larger, less structured, and contains many object instances. This makes the work relevant as an example of how open-vocabulary graph representations can be extended beyond indoor rooms or small-scale manipulation settings.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/opengraph_pipeline.png}
+    \caption{Overview of the OpenGraph pipeline, showing caption-enhanced object comprehension from RGB images, object-centric 3D map construction using posed point clouds, and hierarchical scene representation formation for large-scale outdoor environments. Reproduced from \cite{deng2024opengraph}.}
+    \label{fig:opengraph_pipeline}
+\end{figure}
+
+The method first extracts object instances and textual captions from visual images. These captions are then encoded to support language-based reasoning about the detected instances. The 2D information is connected to 3D space by projecting image-based instance information onto LiDAR point clouds using multi-sensor calibration. In this way, OpenGraph builds an incremental object-centric 3D map in which objects are associated with both geometric information and language-related features.
+
+A key feature of OpenGraph is its hierarchical organisation. The representation is not limited to isolated object nodes. Instead, the environment is structured using a hierarchy that includes object-level information and larger spatial regions derived from lane graph connectivity. This is useful in large outdoor environments, where direct object-level retrieval alone may be insufficient for navigation or spatial querying. The hierarchical graph structure allows the system to represent both local object information and broader environmental organisation.
+
+For this thesis, OpenGraph is relevant because it shows how open-vocabulary semantic information can be combined with 3D graph representations in a large-scale robotic setting. Although the target environment is outdoor and the sensing setup relies on camera-LiDAR data rather than RGB-D input, the underlying idea is closely related: semantic information from visual-language models is grounded in 3D space and organised as a graph. This supports the motivation for using graph-based spatial representations when semantic reasoning must be connected to physical environments.
+
+At the same time, OpenGraph has a different focus from the present thesis. Its main objective is open-vocabulary understanding, object retrieval, and hierarchical representation in outdoor environments. The present thesis instead focuses on spatial risk-annotated scene graph generation for robotic risk assessment. Therefore, OpenGraph is useful as a reference for large-scale and open-vocabulary graph construction, while the risk-related interpretation, uncertainty handling, and indoor RGB-D robotic integration remain separate contributions of this work.
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Robot Operating System}
 
 {\small
@@ -146,21 +274,22 @@ In the context of this thesis, ROS 2 is relevant because the risk-annotated scen
 
 
 
-\section{Spatial Scene Graphs}
-
-
-\subsection{Scene Graphs}
+\section{Scene Graphs}
 
 {\small
 
 A scene graph is a structured representation of a visual scene in which objects are represented as nodes and relationships between objects are represented as edges \cite{johnson2015scenegraphs}. Instead of describing an image or environment only as a collection of detected objects, a scene graph also captures how these objects are related to each other. For example, a scene may contain nodes such as \textit{person}, \textit{chair}, and \textit{table}, while edges may describe relations such as \textit{sitting on}, \textit{next to}, or \textit{under}. Johnson et al. demonstrated the usefulness of scene graphs for image retrieval by representing image content through objects, attributes, and relationships rather than relying only on low-level image features or isolated object labels \cite{johnson2015scenegraphs}.
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{example_images/scene-graph-example.png}
-    \caption{Scene graph example\cite{johnson2015scenegraphs}.}
+    \caption{Scene graph example. Reproduced from \cite{johnson2015scenegraphs}.}
     \label{fig:scene_graph_example}
 \end{figure}
+
 The main advantage of a scene graph is that it provides a machine-readable representation of both entities and context. Object detections alone can indicate which objects are present, but they do not fully describe the structure of the scene. In contrast, a scene graph can represent object attributes, spatial arrangements, and semantic relationships in a compact graph format \cite{johnson2015scenegraphs}. This makes it useful for tasks that require reasoning about the environment, because downstream modules can query not only whether an object exists, but also how it is positioned or related to other objects.
+
+Scene graphs have been used in several computer vision and language-vision tasks, including image retrieval, visual relationship understanding, visual question answering, and image captioning. Datasets such as Visual Genome support this direction by providing dense annotations of objects, attributes, relationships, region descriptions, scene graphs, and question-answer pairs \cite{krishna2017visualgenome}. Beyond 2D images, scene graphs have also been extended to 3D environments, where objects, rooms, cameras, and their relationships can be represented in a unified spatial structure \cite{armeni2019threedscenegraph}. This makes scene graphs relevant not only for image-level understanding, but also for robotic and spatial perception tasks.
 
 Scene graphs are also advantageous because they provide an interpretable bridge between perception and higher-level reasoning. Raw sensor data such as images or point clouds is difficult for symbolic reasoning modules to use directly. A scene graph abstracts this raw data into nodes, edges, and attributes that can be inspected, updated, and processed algorithmically. This is especially useful in robotic systems, where perception results must often be connected to planning, navigation, manipulation, or risk assessment.
 
@@ -179,30 +308,32 @@ In the context of this thesis, scene graphs are relevant because dynamic risk as
 
 
 
-
 \section{Hydra-Based Spatial Scene Graph Generation}
 
 {\small
 
-Hydra is a real-time spatial perception system for constructing and optimizing 3D scene graphs from robotic sensor data \cite{hughes2022hydra}. It is relevant to this thesis because it addresses several requirements that are also important for spatial risk-annotated scene graph generation, including incremental construction, scalability to larger environments, loop closure correction, and near-real-time operation. While the baseline risk-annotated scene graph framework focuses on semantic and risk-related interpretation of RGB-D observations, Hydra provides a spatial backbone for building persistent environment-level representations.
+Hydra is a real-time spatial perception system for constructing and optimizing 3D scene graphs from robotic sensor data \cite{hughes2022hydra}. It is relevant to this thesis because it addresses key requirements for spatial risk-annotated scene graph generation, including incremental construction, scalability to larger environments, loop closure correction, and near-real-time operation. While the baseline risk-annotated scene graph framework focuses on semantic and risk-related interpretation of RGB-D observations, Hydra provides a spatial backbone for building persistent environment-level representations.
+
+Hydra represents the environment as a layered 3D scene graph rather than only as a set of detected objects. The graph connects metric geometry, objects, agents, places, rooms, and building-level structure. This allows the system to maintain both low-level geometric information and higher-level semantic and topological abstractions, as illustrated in Figure~\ref{fig:hydra_layered_scene_graph}.
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{example_images/hydra_3d_scene_graph.png}
     \caption{Example of a layered 3D scene graph generated by Hydra, showing abstraction levels from metric-semantic 3D mesh to objects and agents, places, rooms, and buildings. Reproduced from \cite{hughes2022hydra}.}
     \label{fig:hydra_layered_scene_graph}
 \end{figure}
-}
 
+}
 
 \subsection{Input Data and Processing Overview}
 
 {\small
 
-Hydra is designed to operate on continuous sensor data from a moving robot. The main inputs are visual data and inertial measurements. In the Hydra architecture, image data and IMU data are processed by low-level perception modules to support visual-inertial odometry, semantic segmentation, and depth reconstruction \cite{hughes2022hydra}. The odometry estimate provides the robot trajectory, while depth and semantic information are used to construct metric-semantic spatial representations of the environment.
+Hydra operates on continuous sensor data from a moving robot. In the architecture described by Hughes et al., the raw inputs are images and IMU measurements, which are processed by low-level perception modules to estimate robot motion, reconstruct depth, and obtain semantic segmentation \cite{hughes2022hydra}. The motion estimate provides the transformations required to place observations into a common spatial reference frame, while depth information provides the 3D structure of the environment.
 
-The processing pipeline can be understood as a layered transformation from raw sensor data to a structured spatial graph. First, low-level perception estimates robot motion and produces depth and semantic information. Second, mid-level perception constructs local geometric and semantic representations, including a metric-semantic mesh, object nodes, and a places graph. Third, high-level perception performs loop closure detection, scene graph optimization, and room detection. The final output is a persistent layered 3D scene graph that represents the environment at multiple levels of abstraction.
+Semantic information is provided before the 3D scene graph layers are constructed. In simulation, these semantic labels can come from ground-truth annotations generated by the simulated environment. In real-world experiments, Hydra uses HRNet for semantic segmentation with labels from the ADE20K scene parsing dataset \cite{hughes2022hydra,wang2021hrnet,zhou2017ade20k}. These semantic labels are combined with depth information to construct a metric-semantic 3D representation, where reconstructed geometry is associated with semantic classes such as wall, floor, furniture, or other object categories.
 
-Hydra does not use sensor data only to describe the current camera view. Instead, observations are integrated over time to build a persistent representation of the explored environment. This is important because a mobile robot must reason about spaces, objects, and places that may no longer be visible in the current frame. In this way, Hydra connects continuous perception with long-term spatial representation.
+The overall processing pipeline transforms sensor-level data into graph-level spatial knowledge. Low-level perception estimates motion, depth, and semantic labels. Mid-level perception constructs the metric-semantic mesh, object layer, and places graph. High-level perception performs loop closure detection, scene graph optimization, and room detection. In this way, Hydra integrates observations over time to build a persistent layered representation of both the current surroundings and previously explored parts of the environment.
 
 }
 
@@ -210,99 +341,38 @@ Hydra does not use sensor data only to describe the current camera view. Instead
 
 {\small
 
-The main output of Hydra is a layered 3D scene graph. In this representation, nodes represent spatial concepts at different levels of abstraction, and edges represent relationships between those concepts. Hydra uses a hierarchy consisting of a metric-semantic 3D mesh, objects and agents, places, rooms, and buildings \cite{hughes2022hydra}. This structure allows the environment to be represented not only as geometry, but also as a semantic and topological model.
+The main output of Hydra is a layered 3D scene graph, where nodes represent spatial concepts at different levels of abstraction and edges represent relationships between them. The lowest layer is the metric-semantic 3D mesh, which represents the physical geometry of the environment together with semantic labels. Above this, the object and agent layer represents detected objects and the robot trajectory. Object nodes can include semantic labels, centroids, and bounding boxes, while the agent is represented by a pose graph describing the robot's motion \cite{hughes2022hydra}.
 
-The lowest layer is the metric-semantic 3D mesh. This layer represents the physical geometry of the environment while also associating semantic labels with the reconstructed surfaces. Above this, the object and agent layer represents physical objects and the robot trajectory. Object nodes can include semantic labels, centroids, and bounding boxes, while the agent is represented by a pose graph describing the robot's motion through the environment.
+The places layer provides a sparse topological representation of obstacle-free space. A place represents a traversable location in the environment, and an edge between two places indicates straight-line traversability. The room layer groups places into larger spatial regions, while the building layer provides the highest-level abstraction. This hierarchy is useful because different robotic tasks require different levels of detail: metric geometry supports local navigation, places support topological reasoning, and objects and rooms support semantic interpretation.
 
-The places layer is a sparse topological representation of free space. A place represents an obstacle-free location in the environment, and an edge between two places indicates that straight-line traversal between them is possible. The room layer groups places into larger spatial regions, and the building layer connects the room-level representation into a single environment-level abstraction. This hierarchy is useful because different robotic tasks require different levels of detail. Local navigation can use metric geometry, topological planning can use places, semantic reasoning can use objects and rooms, and high-level decision-making can use the full layered graph.
-
-}
-
-\subsection{Metric-Semantic Mesh and Object Layer Construction}
-
-{\small
-
-Hydra constructs the metric-semantic 3D mesh incrementally rather than building a complete global map in a batch process. A key design choice is the use of a local active window around the robot. Within this active window, Hydra maintains volumetric spatial representations such as a Truncated Signed Distance Field (TSDF) and an Euclidean Signed Distance Function (ESDF). The use of a local window reduces memory usage because the system does not need to maintain an ESDF of the entire environment at all times \cite{hughes2022hydra}.
-
-The metric-semantic mesh is extracted from the local volumetric representation. Semantic information is integrated with the geometry so that parts of the mesh can be associated with semantic classes. Object nodes are then extracted from the metric-semantic mesh by clustering mesh vertices that belong to the same semantic class. For each putative object, Hydra estimates object-level properties such as a centroid and bounding box. If a newly observed object overlaps with an existing object node of the same semantic class, it can be merged with the existing object node. Otherwise, it is inserted as a new object node.
-
-This process is important for spatial scene graph construction because it moves from dense geometric data to compact object-level entities. Instead of only storing surfaces or point clouds, the graph can represent objects as discrete semantic nodes with spatial properties. For this thesis, such object-level information can later be extended with risk annotations, uncertainty values, or VLM-derived semantic properties.
+Hydra separates scene graph construction into a frontend and a backend. The frontend incrementally assembles an odometric scene graph from the latest mesh, object, places, and agent-pose information. The backend corrects this representation when loop closures are detected by optimizing selected graph elements and propagating the correction to the remaining layers \cite{hughes2022hydra}. This separation allows continuous local graph construction while still supporting slower global correction.
 
 }
 
-\subsection{Places and Topological Free-Space Representation}
+\subsection{Incremental Construction of Spatial Layers}
 
 {\small
 
-The places layer is one of the most important components of Hydra for robotic spatial reasoning. A place can be understood as an obstacle-free location in the environment that belongs to the navigable free space. Edges between place nodes represent traversability, meaning that the robot can move between connected places without crossing an obstacle. Therefore, the places layer functions as a sparse topological map of the environment.
+Hydra constructs the scene graph incrementally rather than rebuilding the full environment in a batch process. A key design choice is the use of a local active window around the robot. Within this active window, Hydra maintains volumetric spatial representations such as a Truncated Signed Distance Field (TSDF) and an Euclidean Signed Distance Function (ESDF). This limits memory usage because the system does not need to maintain an ESDF of the entire environment at all times \cite{hughes2022hydra}.
 
-Hydra extracts places from the ESDF using a Generalized Voronoi Diagram (GVD). The ESDF stores the distance from each voxel to the nearest obstacle. The GVD consists of voxels that are approximately equidistant from multiple obstacles. Intuitively, this creates a skeleton of the free space, because points on the GVD lie near the centre of corridors, rooms, and passages rather than close to walls or obstacles \cite{hughes2022hydra}. This makes the GVD useful for extracting topological structure from dense geometric information.
+The metric-semantic mesh is extracted from the local volumetric representation. Object nodes are then generated by clustering mesh vertices that belong to the same semantic class. For each putative object, Hydra retains the semantic label inherited from the metric-semantic mesh and estimates geometric properties such as the centroid and bounding box. New observations can be merged with existing object nodes if they overlap spatially and belong to the same semantic class; otherwise, they are inserted as new object nodes.
 
-After the GVD is computed inside the active window, Hydra sparsifies it into a graph of places. A subset of GVD voxels is selected as place nodes, and edges are added to represent connectivity between them. Candidate nodes are selected based on geometric and topological conditions, such as the number of obstacle basis points or whether the local neighbourhood matches a corner-like structure. Edge construction then connects nearby place nodes through the GVD structure. If a straight-line edge deviates too much from the GVD path, an intermediate node is inserted to better preserve the shape of the free-space skeleton.
+The places layer is extracted from the ESDF using a Generalized Voronoi Diagram (GVD). The ESDF stores the distance from each voxel, or small 3D map cell, to the nearest obstacle. Voxels that are approximately equidistant from multiple obstacles form the GVD, which lies near the medial axis of free space. In indoor environments, this means that GVD voxels tend to lie near the centre of corridors, rooms, and passages rather than close to walls or obstacles. Hydra sparsifies this structure into a graph of places by selecting representative GVD voxels as place nodes and connecting them with edges when straight-line traversal is possible. Therefore, places are not object detections; they are topological free-space locations extracted from the geometry of the environment \cite{hughes2022hydra}.
 
-This places graph is useful because it is much smaller than a dense map while still preserving important navigational structure. For spatial risk assessment, the places layer can provide context about where the robot, objects, and humans are located relative to traversable regions, corridors, rooms, and passages. It can also support reasoning about whether a risky object is located in a navigable area, near a doorway, or in a region that affects robot motion.
+Room detection is then performed using the places graph. The key idea is that rooms can be identified by analysing how free-space connectivity changes when obstacles are virtually inflated. When the obstacle dilation distance increases, narrow openings such as doors gradually close. This causes the places graph to split into connected components, which can correspond to individual rooms. Hydra evaluates multiple dilation distances, selects a stable partition of the places graph, and assigns remaining unlabeled places using graph clustering based on modularity. In this way, room-level structure is extracted from the topology of free space rather than from direct image-based room classification or from processing the complete dense map \cite{hughes2022hydra}.
 
 }
 
-\subsection{Room Detection Algorithm}
+
+\subsection{Loop Closure, Optimization, and Real-Time Architecture}
 
 {\small
 
-Hydra constructs the room layer from the places graph. The main idea is that rooms can be detected by analysing how free-space connectivity changes when obstacles are virtually inflated. When obstacles are dilated, narrow openings such as doors gradually close. As these openings close, the free-space graph separates into connected components, and these components can correspond to individual rooms \cite{hughes2022hydra}.
+As a robot moves through an environment, odometry errors can accumulate and cause drift in the estimated map and scene graph. Hydra addresses this through loop closure detection and scene graph optimization. Loop closure detection uses hierarchical descriptors derived from multiple graph layers, including visual appearance, nearby object semantics, and places geometry. Candidate loop closures are then geometrically verified using visual features or object-based registration \cite{hughes2022hydra}.
 
-The algorithm operates on the places graph rather than directly on the full dense map. Each place node stores a distance to its closest obstacle. Therefore, virtual obstacle dilation can be implemented by removing place nodes whose obstacle distance is smaller than a chosen dilation distance. If the dilation distance is denoted by $\delta$, then all places with obstacle distance below $\delta$ are removed from the graph because they would no longer remain in free space after dilation.
+Once a loop closure is accepted, Hydra optimizes the scene graph using an embedded deformation graph. This deformation graph contains selected elements such as the agent pose graph, mesh control points, and places layer. The optimization corrects accumulated drift and propagates the correction to the rest of the scene graph. Object centroids and bounding boxes can be recomputed after deformation, overlapping nodes can be merged, and rooms can be updated from the corrected places graph.
 
-Hydra applies several dilation distances and analyses the resulting pruned places graphs. For each dilation distance, the algorithm counts the connected components in the pruned graph. A suitable dilation should cause rooms to become separated while preserving the main structure of each room. To reduce sensitivity to one specific parameter choice, Hydra computes the median number of connected components across multiple dilation distances and selects a graph whose number of components matches this value. These components form the initial room candidates.
-
-However, some place nodes may be removed during dilation and therefore remain unlabeled. Hydra assigns these remaining nodes using a partially seeded graph clustering method based on modularity. The connected components obtained after dilation are used as initial room seeds, and unlabeled nodes are assigned to the room community that best improves graph modularity. This allows the system to obtain room-level segmentation from the sparse places graph without requiring a full dense room segmentation process.
-
-This room detection method has two important advantages. First, it reasons over 3D free space rather than relying only on a 2D floor-plan projection, which can reduce the influence of clutter. Second, because it operates on the sparse places graph, it is more scalable than processing the entire dense map. However, the method is mainly topological. It can fail in open-plan environments where different semantic rooms are not separated by clear geometric boundaries. This limitation is important for this thesis because risk-relevant areas may sometimes need semantic labels, such as laboratory, corridor, workspace, or storage area, which are not directly provided by the room detection algorithm alone.
-
-}
-
-\subsection{Loop Closure Detection and Scene Graph Optimization}
-
-{\small
-
-A major challenge in mobile robot mapping is pose drift. As the robot moves through an environment, small odometry errors accumulate and can cause the estimated map, object locations, and graph structure to become spatially inconsistent. Loop closure occurs when the robot recognises that it has returned to a previously visited area. Hydra uses loop closure not only to correct the robot trajectory, but also to correct the complete 3D scene graph \cite{hughes2022hydra}.
-
-Hydra performs loop closure detection using hierarchical descriptors derived from multiple graph layers. For each agent node in the robot trajectory, the system stores a keyframe and computes descriptors that describe the surrounding scene. These descriptors include low-level visual appearance, nearby object semantics, and geometric information from the places layer. Loop closure detection proceeds in a top-down manner: the system compares higher-level descriptors and then moves through object and visual descriptors to identify possible matches.
-
-After a possible loop closure is found, Hydra performs bottom-up geometric verification. If visual feature matching is sufficient, the relative pose between the current and previous observations can be estimated from image features. If visual verification fails, object-based registration can be attempted using object-level correspondences. This is useful because visual appearance alone can be unreliable under viewpoint changes, illumination changes, or texture-poor environments.
-
-Once a loop closure is accepted, Hydra optimizes the scene graph using an embedded deformation graph. The deformation graph includes selected parts of the full scene graph, such as the agent pose graph, mesh control points, and a sparse subset of the places layer. The optimization corrects spatial drift and then propagates the correction to the remaining graph layers. Object centroids and bounding boxes are recomputed after deformation, overlapping nodes are merged, and rooms can be re-detected from the corrected places graph. This is important because a layered scene graph must remain consistent across all layers. Correcting only the robot trajectory would not be sufficient if objects, places, rooms, and mesh geometry remained misaligned.
-
-}
-
-\subsection{Real-Time Architecture and Graph Visualization}
-
-{\small
-
-Hydra uses a highly parallelized architecture that separates perception into low-level, mid-level, and high-level processes \cite{hughes2022hydra}. Low-level perception operates close to sensor rate and includes tasks such as feature tracking, visual-inertial odometry frontend processing, semantic segmentation, and depth reconstruction. These processes operate on the latest sensor data and must run quickly to support continuous robot operation.
-
-Mid-level perception runs at a lower rate and constructs local spatial structures. This includes the visual-inertial odometry backend, metric-semantic mesh construction, places subgraph construction, object detection, and the scene graph frontend. These modules integrate information over a short time horizon and build an odometric version of the scene graph. High-level perception runs more slowly because it depends on larger parts of the accumulated map. This includes loop closure detection, scene graph backend optimization, and room detection.
-
-This separation is important because global optimization and room detection may become more expensive as the map grows. By separating fast local processing from slower global correction, Hydra prevents expensive operations from blocking the sensor-rate perception pipeline. This ``thinking fast and slow'' design is highly relevant to this thesis because risk-annotated scene graph generation must also balance semantic richness, VLM processing, spatial consistency, and near-real-time operation.
-
-Hydra visualizes the resulting 3D scene graph as a layered spatial representation. The metric-semantic mesh forms the base of the representation, while objects, agents, places, rooms, and buildings are visualized as graph layers above it. Edges show relationships within and across layers, such as object-to-place, place-to-room, and room-to-building connections. This visualization is useful for qualitative inspection because it allows the user to check whether the mesh aligns with the environment, whether objects are placed correctly, whether the places graph captures navigable structure, and whether rooms are segmented meaningfully.
-
-}
-
-\subsection{Adaptation for RGB-D and IMU Input from a Real Robot}
-
-{\small
-
-If Hydra is used with RGB-D and IMU data from an actual robot, several practical adaptations are required. First, the sensor streams must be synchronized. The colour image, depth image, IMU measurements, and pose estimate must refer to consistent time intervals. If the data are not time-aligned, the reconstructed 3D structure may become distorted because depth measurements and pose estimates may correspond to different robot positions.
-
-Second, camera calibration and frame transformations must be available. The RGB-D camera intrinsics are required to project depth pixels into 3D points. The extrinsic transformation between the RGB camera, depth camera, IMU, and robot base frame must also be known. In a ROS 2-based system, these transformations are usually represented through the \texttt{tf} tree. Without correct transformations, object positions and spatial graph nodes may be placed incorrectly in the global map.
-
-Third, the depth image must be valid and aligned with the colour image or semantic segmentation output. If semantic labels are predicted from the RGB image, but 3D points are generated from an unaligned depth image, semantic labels may be assigned to the wrong geometry. Therefore, either the depth image should be registered to the RGB frame, or the system must explicitly transform between the RGB and depth camera frames.
-
-Fourth, Hydra requires a source of odometry or visual-inertial odometry. In the original system, visual-inertial odometry and external odometry sources are used to estimate the robot trajectory. For a real robot, this could come from an RGB-D visual-inertial odometry pipeline, wheel odometry fused with IMU, an external SLAM system, or another state-estimation module. The quality of this pose estimate directly affects the quality of the spatial scene graph. Loop closure can correct accumulated drift, but poor odometry may still degrade local mapping and object association.
-
-Fifth, a semantic segmentation source is required if the original Hydra-style metric-semantic mesh construction is used. Hydra assumes semantically labelled visual input for assigning semantic labels to reconstructed geometry. In the proposed thesis framework, this part may need to be adapted because semantic object interpretation is provided by SAM, RAP, and VLM-based reasoning rather than by a conventional pixel-wise semantic segmentation network. Therefore, one design option is to use Hydra for geometric and topological spatial structure, while the existing risk-annotated scene graph pipeline provides object-level semantic and risk information.
-
-Finally, the output representation must be adapted so that Hydra's spatial graph can communicate with the risk-annotated scene graph. This requires mapping Hydra entities such as objects, places, rooms, and robot poses into the graph representation used by the risk assessment pipeline. For example, Hydra can provide global object position, room association, and loop-closure-corrected spatial consistency, while the VLM-based framework can provide object descriptions, semantic relations, risk metadata, and uncertainty estimates. The practical integration therefore requires careful definition of shared node identifiers, coordinate frames, timestamps, and update rules.
+Hydra is organized as a highly parallelized architecture with low-level, mid-level, and high-level perception processes. Low-level perception operates close to sensor rate and includes visual-inertial odometry, semantic segmentation, and depth reconstruction. Mid-level perception constructs local spatial structures such as the mesh, object layer, places graph, and scene graph frontend. High-level perception performs loop closure detection, backend optimization, and room detection. This separation prevents slower global operations from blocking faster local perception, which is important for near-real-time robotic operation.
 
 }
 
@@ -312,16 +382,9 @@ Finally, the output representation must be adapted so that Hydra's spatial graph
 
 Hydra provides a strong methodological reference for this thesis because it demonstrates how a robot can construct a persistent spatial scene graph in real time. The most relevant ideas are the layered graph representation, incremental construction of spatial layers, local active-window mapping, places extraction from free-space topology, room detection from the places graph, loop closure correction, and separation between fast local processing and slower global optimization.
 
-However, Hydra and the proposed thesis framework have different primary goals. Hydra focuses on real-time spatial perception and the construction of a globally consistent 3D scene graph. The proposed thesis framework focuses on extending an existing risk-annotated scene graph pipeline so that it can support robotic integration, larger environments, uncertainty representation, VLM-based semantic interpretation, and dynamic risk assessment. Therefore, Hydra can be used as a spatial backbone or design reference, while the risk-annotated scene graph framework contributes the semantic and risk-oriented interpretation layer.
-
-In this thesis, the intention is to reuse the spatial mapping and scene graph construction principles from Hydra while extending the representation with risk-related information. The resulting framework should preserve the advantages of Hydra, such as spatial consistency, scalability, loop closure correction, and real-time architectural separation, while adding the ability to represent risk-relevant objects, uncertainty, and semantic relations required for downstream dynamic risk assessment.
+In this thesis, Hydra is useful as a spatial backbone for extending the existing risk-annotated scene graph framework. The baseline framework provides semantic and risk-oriented interpretation, while Hydra provides spatial consistency, scalability, and loop closure support. Combining these ideas motivates a spatial risk-annotated scene graph that can represent risk-relevant objects, semantic relations, uncertainty, and spatial context across larger robotic environments.
 
 }
-
-
-
-
-
 
 
 
@@ -418,17 +481,25 @@ However, VLM-based reasoning can produce inconsistent descriptions, miss small o
 \subsection{Scene Graph Construction and Risk Annotation}
 
 {\small
-The baseline framework represents the scene graph as a directed graph, where entities in the environment are modelled as nodes and relationships between entities are modelled as edges \cite{previous_rsg_thesis}. The original implementation uses NetworkX, a Python library for network analysis and graph manipulation, which supports incremental graph operations such as adding, updating, and removing nodes and edges \cite{hagberg2008networkx}.
 
-For external communication, the internal graph is converted into a dictionary-based representation. This is necessary because a native NetworkX graph object is not directly suitable for robust API transfer. The dictionary representation preserves the logical structure of the graph by storing node and edge information separately, making it easier to return through the FastAPI interface and process by external clients.
+The baseline framework represents the scene graph as a directed graph, where entities in the environment are modelled as nodes and relationships between entities are modelled as edges \cite{previous_rsg_thesis}. The original implementation uses NetworkX, a Python library for network analysis and graph manipulation, which supports incremental graph operations such as adding, updating, and removing nodes and edges \cite{hagberg2008networkx}. For external communication, the internal graph is converted into a dictionary-based representation, where node and edge information are stored separately. This makes the graph easier to return through the FastAPI interface and process by external clients.
 
-Each node stores semantic, spatial, and risk-related information. Important node attributes include a persistent identifier, object label, semantic description, semantic pose, 3D position, risk metadata, appearance score, confidence score, and layer type. The semantic description describes the visual identity of the entity, while the semantic pose describes its current physical state, such as standing, lying, open, closed, or moving. Edges store relationships between nodes, including the source node, target node, relationship label, and distance between the connected entities.
+Each node stores semantic, spatial, and risk-related information. Important node attributes include a persistent identifier, object label, semantic description, semantic pose, 3D position, risk metadata, appearance score, confidence score, and layer type. The semantic description describes the visual identity of the entity, while the semantic pose describes its current physical state, such as standing, lying, open, closed, or moving. Edges store relationships between nodes, including the source node, target node, relationship label, distance between the connected entities, and an appearance score.
 
-The graph update process must handle perception errors such as false positives and false negatives. To improve robustness, the baseline framework uses an appearance score-based graph combination strategy. When an object is repeatedly observed with consistent properties, its appearance score is increased. When it is missing from the latest VLM output, its score is decreased. A node is removed only when its appearance score falls below a predefined threshold, which prevents isolated missed detections from immediately deleting objects from the graph.
+The scene graph is updated after each VLM inference step. First, a local graph cutout is generated and sent to the VLM together with the current visual input. The VLM returns an updated graph containing detected or modified nodes and edges. Before this result is merged into the complete scene graph, the predicted graph is converted from image-space information into 3D coordinates using the depth image and camera pose. The converted VLM output is then compared with the graph cutout that was originally sent to the VLM.
 
-Overall, the scene graph construction strategy combines semantic information, spatial information, and risk-related metadata in a machine-readable representation. This makes the baseline framework suitable for incremental risk-aware scene understanding, while also motivating later extensions for spatial consistency, uncertainty handling, and scalability in larger environments.
+The graph combination follows an update-or-insert strategy. For each node in the VLM output, the framework checks whether a node with the same identifier already exists in the complete scene graph. If the node already exists, its attributes are updated using the latest VLM output and its appearance score is increased. If the node does not yet exist, it is inserted into the complete scene graph as a new node with an initial appearance score. This allows newly detected objects or humans to be added while persistent entities are reinforced over time.
+
+The framework also checks for nodes that were present in the VLM input cutout but are missing from the VLM output. These nodes are interpreted as not being detected in the current update. Instead of removing them immediately, the framework decreases their appearance score. A node is removed only when its appearance score falls below a predefined threshold. This prevents isolated missed detections from immediately deleting objects from the graph and provides basic temporal persistence.
+
+The same principle is applied to edges. For each edge returned by the VLM, the framework checks whether the edge already exists between the corresponding source and target nodes. If it exists, the relationship label and distance are updated and the edge appearance score is increased. If it does not exist, a new edge is added with an initial appearance score. The edge distance is calculated from the 3D positions of the connected nodes, allowing spatial relationships to be stored together with semantic relationship labels.
+
+Edges that were present in the input cutout but are missing from the VLM output are weakened by decreasing their appearance score. If the score falls below the threshold, the edge is removed. Therefore, the baseline framework handles temporal consistency mainly through appearance-based persistence. Repeatedly observed nodes and edges become more stable, while missing or transient entities are gradually removed. However, this mechanism does not maintain a full probability distribution over possible object classes or relationship labels. It provides basic robustness against false positives and false negatives, but it does not yet provide a complete probabilistic representation of semantic or spatial uncertainty.
+
+Overall, the scene graph construction strategy combines semantic information, spatial information, and risk-related metadata in a machine-readable representation. The update mechanism allows the graph to evolve over time as new RGB-D observations are processed. This makes the baseline framework suitable for incremental risk-aware scene understanding, while also motivating later extensions for spatial consistency, probabilistic uncertainty handling, and scalability in larger environments.
 
 }
+
 
 \subsection{Limitations of the Baseline Framework}
 
@@ -449,16 +520,61 @@ Finally, the baseline framework depends strongly on the quality and consistency 
 
 
 
-\section{Section4}
-\small{
 
+
+
+
+\section{NVIDIA Jetson AGX Thor}
+
+{\small
+
+NVIDIA Jetson AGX Thor is an embedded edge-AI computing platform designed for physical AI, robotics, and real-time multimodal perception. It belongs to the NVIDIA Jetson family, where CPU, GPU, memory, I/O, and AI acceleration are integrated into a compact module for onboard robotic computation. Jetson AGX Thor is based on the NVIDIA Blackwell architecture and provides up to 2070 FP4 sparse TFLOPS of AI compute, 128 GB of memory, and a configurable power range of 40 W to 130 W \cite{nvidia_jetson_thor}. This makes it suitable for computationally demanding robotic workloads such as sensor processing, visual perception, generative AI, and vision-language reasoning at the edge.
+
+Compared with Jetson AGX Orin, which was used as the target platform in the baseline framework, Jetson AGX Thor provides significantly higher compute and memory capacity. Jetson AGX Orin provides up to 275 TOPS of AI performance and is widely used for embedded robotics, computer vision, and autonomous machines \cite{nvidia_jetson_orin}. In comparison, NVIDIA reports that Jetson Thor provides up to 7.5 times higher AI compute and 3.5 times better energy efficiency than Jetson AGX Orin \cite{nvidia_jetson_thor}. This additional capacity is relevant for the proposed framework because the system may need to run RGB-D perception, SAM-based segmentation, retrieval-augmented perception, VLM reasoning, Hydra-based spatial mapping, and risk-annotated scene graph generation on the same robotic platform.
+
+Jetson AGX Thor is also relevant because it provides stronger support for transformer-based and multimodal AI workloads. Jetson AI Lab lists Qwen3-VL models (suggest as best performing in baseline framework), including Qwen3-VL 4B and Qwen3-VL 8B, as available for Jetson AGX Thor through Quick Start Runner and vLLM-based serving configurations \cite{jetson_ai_lab_models}. This is important for the proposed work because the baseline framework relies on VLM-based semantic reasoning, and a more capable embedded platform can reduce the dependency on an external workstation for model inference. Therefore, Jetson AGX Thor provides a suitable hardware basis for extending the baseline system toward onboard robotic deployment.
 
 }
-\section{Section5}
-\small{
 
 
+
+
+
+
+
+
+
+
+
+
+\section{Scene Graphs for Downstream Safety Reasoning}
+
+{\small
+
+This section discusses how a generated scene graph can be used as structured input for downstream risk assessment. SafetyDetect by Mullen et al. is considered as an example of scene-graph-based safety reasoning \cite{mullen2024safetydetect}. The work proposes a dataset and LLM-based approach for detecting anomalous situations in home environments, such as food left outside storage, a stove left on, or harmful objects being accessible to children. In the proposed pipeline, object relations from a scene graph are provided to an LLM, which classifies situations as normal, dangerous, unsanitary, or dangerous for children.
+
+The relevance of SafetyDetect lies in its demonstration that object relations can be important for safety-related reasoning. Many risks cannot be inferred from object identity alone, because the same object may be safe or unsafe depending on its relation to other objects, humans, or locations. A scene graph is therefore useful because it represents these relations explicitly and provides a structured intermediate representation for a downstream reasoning module.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{example_images/safetydetect_pipeline.png}
+    \caption{SafetyDetect pipeline showing the agent point of view, scene graph construction, prompt formation, and LLM-based anomaly classification. Reproduced from \cite{mullen2024safetydetect}.}
+    \label{fig:safetydetect_pipeline}
+\end{figure}
+
+At the same time, SafetyDetect highlights the importance of the scene graph generation stage. The authors state that their method is limited by perception, particularly by how the scene graph is created \cite{mullen2024safetydetect}. For example, a scene graph may represent that an object is inside a room and on the floor, but it may not indicate whether the object is blocking a doorway and creating a tripping hazard. This shows that the downstream safety assessment depends not only on the reasoning capability of the LLM, but also on whether the scene graph contains the required objects, relations, spatial details, and obstruction information.
+
+This limitation is important for the present thesis. SafetyDetect mainly focuses on reasoning after a scene graph has already been generated. In simulation, the scene graph is provided by the VirtualHome environment, while in the real-world TurtleBot experiment an existing scene graph generation method is used before the graph is passed to the LLM. Therefore, SafetyDetect is more relevant as an example of downstream safety reasoning than as a method for constructing a persistent spatial scene graph.
+
+Consequently, SafetyDetect can be understood as evidence for the downstream value of scene-graph-based representations in safety reasoning. However, it also indicates that the effectiveness of such reasoning depends strongly on the quality of the generated scene graph. This supports the central motivation of the present thesis: improving scene graph generation, spatial grounding, persistence, and uncertainty representation is a necessary step toward more reliable dynamic risk assessment in robotic systems.
 }
+
+
+
+
+
+
+
 \section{Section6}
 \small{
 
