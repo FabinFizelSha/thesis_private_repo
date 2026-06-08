@@ -1,0 +1,408 @@
+# BSD 3-Clause License
+#
+# Copyright (c) 2021-2024, Massachusetts Institute of Technology.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+#
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+#
+# 3. Neither the name of the copyright holder nor the names of its
+#    contributors may be used to endorse or promote products derived from
+#    this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+"""Various visualization utilities."""
+
+import functools
+import logging
+import math
+import random
+from dataclasses import dataclass
+from typing import Any
+
+import cv2
+import distinctipy
+import matplotlib.colors
+import matplotlib.pyplot as plt
+import numpy as np
+import spark_config as sc
+from matplotlib.patches import Rectangle
+
+# useful colornames
+EXPANDED_COLORS = {
+    "black": [0, 0, 0],
+    "white": [255, 255, 255],
+    "blue": [0, 0, 225],
+    "orange": [255, 140, 0],
+    "green": [0, 200, 0],
+    "red": [225, 0, 0],
+    "purple": [120, 0, 120],
+    "brown": [139, 69, 19],
+    "grey": [128, 128, 128],
+    "yellow": [225, 225, 0],
+    "magenta": [225, 0, 225],
+    "cyan": [0, 255, 255],
+    "lightgrey": [220, 220, 220],
+    "darkgrey": [100, 100, 100],
+    "lightblue": [135, 206, 235],
+    "darkblue": [0, 0, 128],
+    "lightgreen": [0, 255, 0],
+    "darkgreen": [0, 108, 0],
+    "lightred": [255, 120, 120],
+    "darkred": [128, 0, 0],
+    "lightpurple": [186, 85, 211],
+    "darkpurple": [75, 0, 130],
+}
+
+
+def _int_color(color):
+    return [int(math.floor(255.0 * x)) for x in color[:3]]
+
+
+def _float_color(color):
+    return [float(x) / 255.0 for x in color[:3]]
+
+
+def _colors_equal(c1, c2):
+    c1_int = _int_color(c1)
+    c2_int = _int_color(c2)
+    return c1_int == c2_int
+
+
+def _line_length(x):
+    return len(x) + sum([len(w) for w in x])
+
+
+def _wrap(label, width=15):
+    words = label.split(" ")
+    lines = []
+
+    line = []
+    for word in words:
+        if len(line) == 0:
+            line.append(word)
+            continue
+
+        curr_length = len(word) + _line_length(line)
+        if curr_length > width:
+            lines.append(" ".join(line))
+            line = [word]
+        else:
+            line.append(word)
+
+    if len(line) > 0:
+        lines.append(" ".join(line))
+
+    return "\n".join(lines)
+
+
+@dataclass
+class ColorConfig(sc.Config):
+    """
+    Make an RGB color from provided information.
+
+    Accepts various color types:
+      - `raw`: `color_info` is a 3-channel RGB value between 0 and 1
+      - 'raw_int`: `color_info` is a 3-channel integer RGB value between 0 and 255
+      - `expanded`: `color_info` is a color name from the EXPANDED_COLORS map
+      - `mpl`: `color_info` is a color name in the CSS4_COLORS palette
+
+    Args:
+        color_type (str): Color "factory" to use
+        color_info (Union[List[Union[int, float]], str]): Raw RGB values or color name
+
+    Returns:
+        List[float]: Three-channel RGB value between 0 and 1.
+    """
+
+    source: str
+    color: Any
+
+    def create(self):
+        """Construct an actual float color."""
+        if self.source == "raw":
+            return [float(x) for x in self.color[:3]]
+
+        if self.source == "raw_int":
+            return _float_color(self.color)
+
+        if self.source == "expanded":
+            color = EXPANDED_COLORS.get(self.color)
+            if color is None:
+                logging.warning(f"failed to find '{self.color}' in EXPANDED_COLORS")
+                return None
+
+            return [x / 255.0 for x in color]
+
+        if self.source == "mpl":
+            color = matplotlib.colors.CSS4_COLORS.get(self.color)
+            if color is not None:
+                logging.warning(f"failed to find {self.color} in CSS4_COLORS")
+                return None
+
+            return [x for x in matplotlib.colors.to_rgb(color)]
+
+        logging.warning(f"invalid color type '{self.source}'")
+        return None
+
+
+@dataclass
+class PaletteConfig(sc.Config):
+    """Configuration for labelspace palette."""
+
+    groups: Any
+    palette: Any = None
+    specified_colors: Any = None
+
+
+def make_palette(config, seed=None):
+    """Make a color palette for the provided label space."""
+    colors_by_group = {
+        group["name"]: group.create() for group in config.specified_colors
+    }
+    colors_by_group = {k: v for k, v in colors_by_group.items() if v is not None}
+    N_groups = len(config.group)
+    N_new = N_groups - len(colors_by_group)
+
+    palette = (
+        [_float_color(c) for c in config.pallete] if config.pallete is not None else []
+    )
+    if len(palette) < N_new:
+        if palette is not None:
+            logging.warning("invalid palette size ({len(palette)} < {N_new}")
+
+        group_colors = [v for _, v in colors_by_group.items()]
+        chosen_colors = palette + group_colors
+        num_to_find = N_groups - len(chosen_colors)
+        # we also don't want white and black as colors
+        new_colors = distinctipy.get_colors(
+            num_to_find,
+            exclude_colors=chosen_colors + [(0.0, 0.0, 0.0), (1.0, 1.0, 1.0)],
+        )
+        palette += new_colors
+
+    if seed is not None:
+        random.seed(seed)
+        random.shuffle(palette)
+
+    colors = [_int_color(x) for x in palette]
+
+    color_index = 0
+    for group in config.groups:
+        group_name = group["name"]
+
+        if group_name in colors_by_group:
+            continue
+
+        colors_by_group[group_name] = [float(x) for x in colors[color_index][:3]]
+        color_index += 1
+
+    return colors_by_group
+
+
+def verify_palette(color_palette):
+    """Check that every label has a distinct color."""
+    invalid = set([])
+    for name, color in color_palette.items():
+        for other, other_color in color_palette.items():
+            if name == other:
+                continue
+
+            if not _colors_equal(color, other_color):
+                continue
+
+            invalid.add(name)
+            invalid.add(other)
+            logging.error(f"[ERROR]: {name} and {other} share color {color}")
+
+    return len(invalid) == 0
+
+
+def make_colormap_legend(
+    colormap,
+    nrows=None,
+    ncols=4,
+    cell_width=60,
+    cell_height=22,
+    dpi=300,
+    fontsize=8,
+    wrapsize=14,
+    offset=1,
+    alpha=1.0,
+    sort=False,
+):
+    """
+    Create a color legend using.
+
+    Args:
+        colormap (Dict[str, Tuple[float, float, float]]): Map between names and colors
+        nrows (int): Number of rows to force in the grid
+        ncols (Optional[int]): Number of columns to try to force in the grid
+        cell_width (int): Width of the background rectangle
+        cell_height (int): Height of the background rectangle
+        dpi (int): Resolution of the legend
+        fontsize (int): Text size of each label
+        wrapsize (int): Maximum characters per line before wrapping takes effect
+        offset (int): Offset of label from edge of cell
+        alpha (int): Overall alpha of the colormap
+        sort (bool): Sort cell order alphabetically
+    """
+    N = len(colormap)
+    if nrows is None or nrows * ncols < N:
+        nrows = N // ncols + int(N % ncols > 0)
+
+    width = cell_width * ncols
+    height = cell_height * nrows
+    figsize = (width / dpi, height / dpi)
+
+    fig = plt.figure(dpi=dpi, figsize=figsize)
+    ax = fig.subplots()
+    ax.set_axis_off()
+
+    fig.subplots_adjust(0.0, 0.0, 1.0, 1.0)
+    ax.set_xlim(0, cell_width * ncols)
+    ax.set_ylim(cell_height * (nrows - 0.5), -cell_height / 2.0)
+
+    labels = sorted([x for x in colormap]) if sort else [x for x in colormap]
+    for i, label in enumerate(labels):
+        # figure out index in grid
+        col = i % ncols
+        row = i // ncols
+        # compute cell coordinates
+        start_x = cell_width * col
+        y = row * cell_height
+
+        # get background and appropriate foreground colors
+        color = colormap[label][:3]
+        prod = (1 / alpha) * functools.reduce(lambda x, y: x * y, color, 1)
+        textcolor = (0.3, 0.3, 0.3) if prod > 0.1 else (1.0, 1.0, 1.0)
+
+        text = _wrap(label, width=wrapsize)
+        ax.text(
+            start_x + offset,
+            y,
+            text,
+            fontsize=fontsize,
+            horizontalalignment="left",
+            verticalalignment="center",
+            color=textcolor,
+        )
+
+        ax.add_patch(
+            Rectangle(
+                xy=(start_x, y - cell_height / 2),
+                width=cell_width,
+                height=cell_height,
+                facecolor=color,
+                alpha=alpha,
+            )
+        )
+
+    return fig
+
+
+def get_semantic_overlay_img(category_names, ret, img):
+    """
+    Process the result from instance segmenter and generate color image.
+    The returned color image contain bounding boxes, masks, and category labels.
+    """
+
+    categories = ret.categories
+    masks = ret.masks
+    boxes = ret.boxes
+    confidences = ret.confidences
+
+    if masks is None:
+        # no bounding boxes to draw
+        return img
+
+    # Convert RGB to BGR for OpenCV
+    vis_img_bgr = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+
+    # Generate random colors for each class
+    np.random.seed(42)  # for consistent colors
+    colors = np.random.randint(0, 255, size=(len(category_names), 3), dtype=np.uint8)
+
+    # Overlay segmentation masks
+    if masks is not None:
+        for i, mask_tensor in enumerate(masks.data):
+            box = boxes[i]
+            cls = int(categories[i].cpu().numpy())
+
+            # Get color for the class
+            color = colors[cls].tolist()
+
+            # Get mask and resize it to the image dimensions
+            mask_np = mask_tensor.cpu().numpy().astype(np.uint8)
+            mask_resized = cv2.resize(
+                mask_np,
+                (vis_img_bgr.shape[1], vis_img_bgr.shape[0]),
+                interpolation=cv2.INTER_NEAREST,
+            )
+
+            # Find contours to create a mask overlay
+            contours, _ = cv2.findContours(
+                mask_resized, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+            )
+
+            # Create a transparent overlay
+            overlay = vis_img_bgr.copy()
+            cv2.drawContours(overlay, contours, -1, color, -1)
+
+            # Blend the overlay with the original image
+            alpha = 0.5
+            vis_img_bgr = cv2.addWeighted(overlay, alpha, vis_img_bgr, 1 - alpha, 0)
+
+    # Draw bounding boxes and labels
+    for i, box in enumerate(boxes):
+        x1, y1, x2, y2 = map(int, box.cpu().numpy())
+        conf = confidences[i].cpu().numpy()
+        cls = int(categories[i].cpu().numpy())
+        label = f"{category_names[cls]} {conf:.2f}"
+
+        color = colors[cls].tolist()
+
+        # Draw bounding box
+        cv2.rectangle(vis_img_bgr, (x1, y1), (x2, y2), color, 2)
+
+        # Put label above the bounding box
+        (label_width, label_height), baseline = cv2.getTextSize(
+            label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2
+        )
+        cv2.rectangle(
+            vis_img_bgr,
+            (x1, y1 - label_height - 10),
+            (x1 + label_width, y1),
+            color,
+            -1,
+        )
+        cv2.putText(
+            vis_img_bgr,
+            label,
+            (x1, y1 - 5),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (255, 255, 255),
+            1,
+        )
+
+    # Convert BGR back to RGB for displaying with matplotlib
+    vis_img_rgb = cv2.cvtColor(vis_img_bgr, cv2.COLOR_BGR2RGB)
+
+    return vis_img_rgb

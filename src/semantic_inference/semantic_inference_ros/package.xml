@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>semantic_inference_ros</name>
+  <version>0.0.1</version>
+  <description>ROS interface to tensorrt segmentation</description>
+
+  <maintainer email="na26933@mit.edu">Nathan Hughes</maintainer>
+  <license>3-Clause BSD License</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+  <depend>ament_index_cpp</depend>
+  <depend>cli11</depend>
+  <depend>cv_bridge</depend>
+  <depend>ianvs</depend>
+  <depend>image_geometry</depend>
+  <depend>message_filters</depend>
+  <depend>nlohmann-json-dev</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>rosbag2_transport</depend>
+  <depend>semantic_inference</depend>
+  <depend>tf2_eigen</depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>image_transport_plugins</exec_depend>
+
+  <test_depend>pcl_conversions</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+      <build_type>ament_cmake</build_type>
+  </export>
+</package>
