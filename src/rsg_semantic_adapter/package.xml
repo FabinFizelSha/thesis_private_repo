@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>rsg_semantic_adapter</name>
+  <version>0.1.0</version>
+  <description>RGB-D to Hydra semantic image adapter with SAM/RAP/VLM hooks.</description>
+  <maintainer email="fabin@example.com">Fabin</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>message_filters</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
+  <exec_depend>hydra_ros</exec_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

@@ -1,0 +1,78 @@
+# Central Risk Scene Graph pipeline configuration.
+# Only the preprocessing section is used by RSG_pre_processor.
+
+# Global and node-specific debug switches.
+# Timing measurement and Excel timing output are active only when at least one
+# of these switches is true.
+debug:
+  global_debug: true                 # Enables debug features for the complete pipeline when true
+  RSG_pre_processor: false             # Enables debug features only for this preprocessing node when true
+
+preprocessing:
+  runtime:
+    source: "rosbag"                  # Input source label used in output metadata: rosbag or live
+    use_sim_time: true                # Use ROS simulated time, required when replaying ros2 bag with --clock
+    publish_debug_images: false       # Reserved for optional debug image outputs; not used by this node yet
+
+  topics:
+    rgb: "/tesse/left_cam/rgb/image_raw"                          # Input RGB image topic from the RealSense camera
+    depth: "/tesse/depth_cam/mono/image_raw"       # Input aligned depth topic; depth pixels must match RGB pixels
+    camera_info: "/tesse/left_cam/camera_info"               # Input camera calibration topic for RGB camera intrinsics
+    odom: "/tesse/odom"                                             # Input robot odometry topic representing odom -> base_link
+    imu: "/go1/d455/imu"                                      # Optional camera IMU topic from RealSense D455
+    prepared_frame: "/rsg/preprocessed/frame"                 # Output synchronized RGB-D-pose frame topic for the main worker
+    status: "/rsg/preprocessor/status"                        # Output status/debug topic for accepted and rejected frames
+
+
+  synchronization:
+    rgb_depth_slop_sec: 0.03          # Maximum allowed RGB-depth-CameraInfo timestamp difference in seconds
+    odom_buffer_size: 300             # Number of recent odometry messages stored for lookup/interpolation
+    odom_tolerance_sec: 0.05          # Maximum allowed odometry-to-RGB timestamp difference in seconds
+    use_odom_interpolation: true      # Interpolate odometry pose at RGB timestamp when possible
+    reject_unsynchronized_frames: true # Reject frames if RGB, depth, CameraInfo, or odometry cannot be synchronized
+
+  imu:
+    enabled: false                     # Enable camera IMU buffering and forwarding in RsgFrame
+    buffer_size: 1000                  # Number of recent IMU messages stored for timestamp lookup
+    tolerance_sec: 0.03                # Maximum allowed IMU-to-RGB timestamp difference in seconds
+    require_for_frame: false           # Reject frames if no matching IMU sample is available
+
+  image:
+    output_rgb_encoding: "rgb8"       # Output RGB image encoding expected by downstream vision models
+    output_depth_encoding: "32FC1"    # Output depth encoding after conversion to float32 metres
+    depth_scale_to_meter: 0.001       # RealSense Z16 depth conversion factor: millimetres to metres
+    min_depth_m: 0.2                  # Minimum valid depth value in metres
+    max_depth_m: 6.0                  # Maximum valid depth value in metres
+    max_invalid_depth_ratio: 0.70     # Reject frame if invalid depth pixels exceed this fraction
+    reject_resolution_mismatch: true  # Reject frame if RGB and depth image resolutions are different
+
+  frames:
+    world_frame: "odom"               # Global/local reference frame used for camera pose output
+    base_frame: "base_link"           # Robot body frame used by Go1 odometry
+    camera_frame: "d455_color_optical_frame" # Camera optical frame used for RGB-D projection
+
+    # Manually measured rigid transform from robot base frame to camera optical frame.
+    # Update these values after measuring the 3D printed mount.
+    base_to_camera:
+      translation_m: [0.25, 0.0, 0.20] # Camera position relative to base_link: [x, y, z] in metres
+      rotation_rpy_rad: [0.0, 0.0, 0.0] # Camera orientation relative to base_link: [roll, pitch, yaw] in radians
+
+  frame_id:
+    prefix: "rsg"                     # Prefix added to every generated preprocessed frame ID
+    # If empty, the node uses the local PC date at node startup, e.g. 20260607.
+    # Use a fixed value for repeatable naming across different runs.
+    session_date: ""                  # Fixed session date for repeatable frame IDs; empty means use local date
+
+  performance:
+    measure_timing: true              # Allow timing measurement when global or node debug is enabled
+    publish_timing: true              # Publish timing samples on timing_topic when debug is enabled
+    timing_topic: "/rsg/preprocessor/timing" # Output timing topic; data[0]=sequence, data[1]=delay_ms
+    write_timing_excel: true          # Write timing table and Excel line chart when debug is enabled
+    timing_excel_path: "~/rsg_ros2_ws/debug/RSG_pre_processor_debug_{session_date}_{creation_time}.xlsx" # Separate Excel debug file for this node/run
+    timing_sheet_name: "timing_debug" # Worksheet name inside this node-specific debug workbook
+    timing_excel_autosave_every: 250  # Save Excel every N samples; 0 saves only on clean shutdown
+
+  qos:
+    sensor_depth: 10                  # ROS subscriber queue depth for RGB, depth, and CameraInfo topics
+    odom_depth: 200                   # ROS subscriber queue depth for odometry topic
+    output_depth: 10                  # ROS publisher queue depth for prepared frame, status, and timing topics

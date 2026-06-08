@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/risk_scene_graph_core" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/risk_scene_graph_core/risk_scene_graph_core" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/rsg" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (rsg_ros2_ws)" jdkType="Python SDK" />

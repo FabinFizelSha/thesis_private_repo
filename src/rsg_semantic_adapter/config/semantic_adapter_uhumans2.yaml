@@ -1,0 +1,183 @@
+rsg_semantic_adapter:
+  ros__parameters:
+    ###########################################################################
+    # 1. Input topics from rosbag / robot
+    ###########################################################################
+    rgb_topic: /tesse/left_cam/rgb/image_raw
+    depth_topic: /tesse/depth_cam/mono/image_raw
+    camera_info_topic: /tesse/left_cam/camera_info
+
+    ###########################################################################
+    # 2. Adapter output topics
+    ###########################################################################
+    # Dense integer semantic label image consumed by Hydra.
+    semantic_topic: /rsg/semantic/image_raw
+
+    # RGB debug overlay for rqt_image_view.
+    overlay_topic: /rsg/semantic/overlay
+
+    # Per-frame SAM/RAP metadata. Contains adapter_object_id for every object.
+    object_updates_topic: /rsg/semantic/object_updates
+
+    # Delayed Qwen/VLM results from the FIFO worker.
+    # These updates use adapter_object_id so a fusion node can associate the VLM
+    # result with an object first detected by SAM/RAP and later created in Hydra.
+    vlm_updates_topic: /rsg/semantic/vlm_updates
+
+    ###########################################################################
+    # 3. Republished synchronized Hydra input topics
+    ###########################################################################
+    # Hydra should subscribe to these /rsg/hydra/... topics, not directly to the
+    # rosbag image topics, when SAM is enabled. This keeps RGB, depth,
+    # CameraInfo, and semantic image timestamps synchronized after SAM finishes.
+    republish_hydra_inputs: true
+    hydra_rgb_topic: /rsg/hydra/left_cam/rgb/image_raw
+    hydra_depth_topic: /rsg/hydra/left_cam/depth_registered/image_rect
+    hydra_camera_info_topic: /rsg/hydra/left_cam/rgb/camera_info
+    use_rgb_header_for_republished_depth: true
+
+    ###########################################################################
+    # 4. Frames and depth scale
+    ###########################################################################
+    map_frame: map
+
+    # 0.001 means uint16 depth is in millimetres. Use 1.0 for float metres.
+    depth_scale: 0.001
+
+    ###########################################################################
+    # 5. Pipeline modes
+    ###########################################################################
+    # dummy_grid: test rectangle only, no SAM.
+    # sam: real SAM segmentation.
+    segmenter_mode: dummy_grid
+
+    # disabled: no RAP query, every SAM mask is low-confidence.
+    # http: use RAP HTTP endpoint.
+    rap_mode: disabled
+
+    # disabled: no VLM.
+    # qwen/openai_compatible: use local OpenAI-compatible VLM endpoint.
+    vlm_mode: disabled
+
+    # If true and RAP is low-confidence, VLM may be used. In async mode this
+    # means enqueueing a crop, not blocking the frame callback.
+    use_vlm_for_low_confidence: true
+
+    # true: VLM runs in a background FIFO worker. Recommended.
+    # false: VLM runs inside the frame callback. This can stall Hydra.
+    vlm_async_mode: true
+
+    ###########################################################################
+    # 6. Runtime controls
+    ###########################################################################
+    min_process_interval_s: 0.5
+    sync_slop_s: 0.08
+    rap_confidence_threshold: 0.65
+    vlm_confidence_threshold: 0.40
+    max_masks_per_frame: 12
+    publish_overlay: true
+    semantic_encoding: mono8
+
+    ###########################################################################
+    # 7. Hydra-compatible label mapping
+    ###########################################################################
+    # TEMPORARY ADE20K-compatible setup:
+    #   0  = wall in ADE20K, used as background only for testing.
+    #   41 = box in ADE20K, used as object_candidate/unknown_object proxy.
+    # Final thesis setup should use a custom Hydra labelspace where 0 means
+    # unknown/ignore and where unknown_object has a real object label ID.
+    background_label_id: 0
+    object_candidate_label_id: 41
+    unknown_object_label_id: 41
+    unknown_label_name: unknown_object
+
+    # RAP/VLM labels are mapped to stable Hydra integer labels. Unknown and
+    # risk-specific labels are intentionally mapped to a stable coarse class.
+    label_map_json: >
+      {
+        "wall": 0,
+        "floor": 3,
+        "cabinet": 10,
+        "door": 14,
+        "table": 15,
+        "chair": 19,
+        "sofa": 23,
+        "shelf": 24,
+        "desk": 33,
+        "box": 41,
+        "bottle": 98,
+        "monitor": 143,
+        "object_candidate": 41,
+        "unknown_object": 41,
+        "extension cable": 41,
+        "cable": 41,
+        "trip hazard": 41
+      }
+
+    ###########################################################################
+    # 8. SAM model configuration
+    ###########################################################################
+    # Must match the checkpoint:
+    #   sam_vit_b_01ec64.pth -> vit_b
+    #   sam_vit_h_4b8939.pth -> vit_h
+    sam_checkpoint: /home/fabin/.cache/sam/sam_vit_b_01ec64.pth
+    sam_model_type: vit_b
+    sam_device: cuda
+    sam_min_area: 1000
+    sam_max_masks: 16
+    dummy_box_fraction: 0.35
+
+    ###########################################################################
+    # 9. Depth-gated SAM settings
+    ###########################################################################
+    use_depth_gate: true
+    sam_min_depth_m: 0.25
+    sam_max_depth_m: 3.0
+    sam_min_near_pixels: 1500
+    sam_min_mask_depth_overlap: 0.50
+    sam_depth_dilate_px: 9
+
+    ###########################################################################
+    # 10. ROI and resize settings for SAM
+    ###########################################################################
+    sam_use_depth_roi: true
+    sam_roi_padding_px: 24
+    sam_min_roi_area_px: 2500
+    sam_max_rois: 4
+    sam_resize_input: true
+    sam_resize_max_side: 512
+    sam_resize_min_scale: 0.25
+
+    ###########################################################################
+    # 11. SAM automatic mask generator settings
+    ###########################################################################
+    sam_points_per_side: 8
+    sam_pred_iou_thresh: 0.92
+    sam_stability_score_thresh: 0.88
+
+    ###########################################################################
+    # 12. RAP HTTP service
+    ###########################################################################
+    rap_http_endpoint: http://127.0.0.1:8010/query
+    rap_top_k: 5
+    rap_timeout_s: 2.0
+
+    ###########################################################################
+    # 13. Local Qwen/OpenAI-compatible VLM endpoint
+    ###########################################################################
+    vlm_endpoint: http://127.0.0.1:8005/v1/chat/completions
+    vlm_model: qwen2.5-vl
+    vlm_api_key: EMPTY
+    vlm_timeout_s: 20.0
+
+    ###########################################################################
+    # 14. Unknown-object FIFO queue
+    ###########################################################################
+    # Unknown crops are pushed here when RAP confidence is below
+    # rap_confidence_threshold and vlm_mode is enabled.
+    enqueue_unknown_for_vlm: true
+    vlm_queue_max_size: 32
+
+    # drop_oldest keeps the most recent objects when Qwen is slower than input.
+    # drop_newest preserves older queued objects but may ignore recent hazards.
+    vlm_queue_drop_policy: drop_oldest
