@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+"""Executable entry point for the RSG preprocessing node."""
+
+from rsg_preprocessing.RSG_pre_processor import main
+
+
+if __name__ == "__main__":
+    main()

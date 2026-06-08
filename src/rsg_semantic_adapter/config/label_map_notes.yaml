@@ -1,0 +1,3 @@
+# Initial test mode uses Hydra's ade20k_full labelspace.
+# Unknown object candidates are mapped to ADE20K label 41 = box as a temporary proxy.
+# Final thesis mode should use a custom Hydra labelspace with object_candidate/hazard_candidate.
