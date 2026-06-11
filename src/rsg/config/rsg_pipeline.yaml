@@ -5,7 +5,7 @@
 # Timing measurement and Excel timing output are active only when at least one
 # of these switches is true.
 debug:
-  global_debug: true                 # Enables debug features for the complete pipeline when true
+  global_debug: true                   # Enables debug features for the complete pipeline when true
   RSG_pre_processor: false             # Enables debug features only for this preprocessing node when true
 
 preprocessing:
@@ -16,7 +16,7 @@ preprocessing:
 
   topics:
     rgb: "/tesse/left_cam/rgb/image_raw"                          # Input RGB image topic from the RealSense camera
-    depth: "/tesse/depth_cam/mono/image_raw"       # Input aligned depth topic; depth pixels must match RGB pixels
+    depth: "/tesse/depth_cam/mono/image_raw"                # Input aligned depth topic; depth pixels must match RGB pixels
     camera_info: "/tesse/left_cam/camera_info"               # Input camera calibration topic for RGB camera intrinsics
     odom: "/tesse/odom"                                             # Input robot odometry topic representing odom -> base_link
     imu: "/go1/d455/imu"                                      # Optional camera IMU topic from RealSense D455
@@ -26,10 +26,11 @@ preprocessing:
 
   synchronization:
     rgb_depth_slop_sec: 0.03          # Maximum allowed RGB-depth-CameraInfo timestamp difference in seconds
-    odom_buffer_size: 300             # Number of recent odometry messages stored for lookup/interpolation
+    odom_buffer_size: 100             # Number of recent odometry messages stored for lookup/interpolation
     odom_tolerance_sec: 0.05          # Maximum allowed odometry-to-RGB timestamp difference in seconds
-    use_odom_interpolation: true      # Interpolate odometry pose at RGB timestamp when possible
-    reject_unsynchronized_frames: true # Reject frames if RGB, depth, CameraInfo, or odometry cannot be synchronized
+    use_odom_interpolation: false      # Interpolate odometry pose at RGB timestamp when possible
+    reject_unsynchronized_frames: true # Kept for compatibility; odometry rejection is controlled by validation.require_odom_for_frame
+    assume_ordered_messages: true      # Faster buffers: assume bag/live messages arrive in timestamp order
 
   imu:
     enabled: false                     # Enable camera IMU buffering and forwarding in RsgFrame
@@ -45,6 +46,30 @@ preprocessing:
     max_depth_m: 6.0                  # Maximum valid depth value in metres
     max_invalid_depth_ratio: 0.70     # Reject frame if invalid depth pixels exceed this fraction
     reject_resolution_mismatch: true  # Reject frame if RGB and depth image resolutions are different
+
+  validation:
+    # These switches control rejection checks and expensive per-frame operations.
+    # Turning a check off keeps the node running, but the output may be less strict.
+    check_resolution: true             # Reject RGB/depth pairs with different image sizes
+    convert_rgb: true                  # Convert RGB to output_rgb_encoding; set false only if input is already correct
+    convert_depth: true                # Convert depth to output_depth_encoding/metres; normally keep true
+    compute_invalid_depth_ratio: true  # Compute invalid-depth ratio for metadata/debug
+    check_invalid_depth_ratio: true    # Reject frames whose invalid-depth ratio is too high
+    depth_check_stride: 4              # 1 checks all depth pixels; 2/4/8 samples pixels for faster validation
+    require_odom_for_frame: true       # Reject frame if no odometry is available; false uses identity pose fallback
+    require_imu_for_frame: false       # Reject frame if camera IMU is enabled but no matching IMU is available
+
+  status_output:
+    publish_published: true            # Publish JSON status for accepted frames
+    publish_rejected: true             # Publish JSON status for rejected frames
+    published_every_n_frames: 30        # Use 30 or 60 for faster real-time runs with less status traffic
+
+  latency_guard:
+    enabled: true                       # Check elapsed preprocessing time at safe points inside the callback
+    warn_delay_ms: 20.0                 # Soft warning threshold for 15 fps operation
+    drop_delay_ms: 30.0                # Hard threshold; 15 fps gives 66.7 ms per frame
+    drop_exceeded_frames: true          # Do not publish frames that exceed drop_delay_ms
+    record_dropped_to_excel: true       # Store exceeded-threshold frames in the debug Excel file when Excel output is enabled
 
   frames:
     world_frame: "odom"               # Global/local reference frame used for camera pose output
@@ -70,7 +95,7 @@ preprocessing:
     write_timing_excel: true          # Write timing table and Excel line chart when debug is enabled
     timing_excel_path: "~/rsg_ros2_ws/debug/RSG_pre_processor_debug_{session_date}_{creation_time}.xlsx" # Separate Excel debug file for this node/run
     timing_sheet_name: "timing_debug" # Worksheet name inside this node-specific debug workbook
-    timing_excel_autosave_every: 250  # Save Excel every N samples; 0 saves only on clean shutdown
+    timing_excel_autosave_every: 0  # Save Excel every N samples; 0 saves only on clean shutdown
 
   qos:
     sensor_depth: 10                  # ROS subscriber queue depth for RGB, depth, and CameraInfo topics
