@@ -1,103 +1,305 @@
 # Central Risk Scene Graph pipeline configuration.
-# Only the preprocessing section is used by RSG_pre_processor.
+#
+# Current active nodes:
+#   1. RSG_pre_processor
+#   2. rsg_object_detection
+#
+# Notes:
+#   - The active Phase 1 object detection pipeline is a single-process node:
+#       rsg_object_detection
+#   - Older split-node names such as "coordinator" and "object_classifier" are
+#     kept only where the current code still reads those parameter names.
+#   - All debug enable/disable switches are collected in the top-level "debug"
+#     section. Some node-local debug keys are kept as compatibility aliases.
 
-# Global and node-specific debug switches.
-# Timing measurement and Excel timing output are active only when at least one
-# of these switches is true.
+# ==============================================================================
+# 0. GLOBAL DEBUG CONTROL
+# ==============================================================================
 debug:
-  global_debug: true                   # Enables debug features for the complete pipeline when true
-  RSG_pre_processor: false             # Enables debug features only for this preprocessing node when true
+  # Master switches -------------------------------------------------------------
+  enabled: false                       # Future-compatible global debug alias
+  global_debug: false                  # Compatibility key used by current nodes
 
+  # Node-specific switches ------------------------------------------------------
+  # Keep these flat keys because the current codebase may read them directly.
+  RSG_pre_processor: false             # Compatibility key for preprocessing node
+  rsg_pre_processor: false             # Lower-case alias for future parser support
+  rsg_object_detection: false          # Active Phase 1 combined object detection node
+
+  # Structured node map for future nodes ----------------------------------------
+  # Future code should prefer this map, while current code can continue using the
+  # flat compatibility keys above.
+  nodes:
+    RSG_pre_processor: false
+    rsg_object_detection: false
+
+    # Reserved future nodes. These do not affect the current code unless future
+    # parsers explicitly read them.
+    rsg_hydra_adapter: false
+    rsg_risk_annotator: false
+    rsg_dsg_visualizer: false
+
+  # Debug output policy ---------------------------------------------------------
+  outputs:
+    publish_status_topics: true         # Allow nodes to publish lightweight status topics
+    publish_timing_topics: true         # Allow nodes to publish timing topics when timing is enabled
+    publish_debug_images: false         # Global preference for debug image streams
+    write_excel_workbooks: true         # Allow node-level Excel debug workbooks
+    save_debug_on_shutdown_only: true   # Avoid runtime Excel autosave latency spikes
+
+# ==============================================================================
+# 1. INPUT PREPROCESSING NODE: RSG_pre_processor
+# ==============================================================================
 preprocessing:
   runtime:
-    source: "rosbag"                  # Input source label used in output metadata: rosbag or live
-    use_sim_time: true                # Use ROS simulated time, required when replaying ros2 bag with --clock
-    publish_debug_images: false       # Reserved for optional debug image outputs; not used by this node yet
+    source: "rosbag"                   # rosbag or live
+    use_sim_time: true                 # Required when replaying ros2 bag with --clock
+    publish_debug_images: false        # Reserved; current preprocessor normally does not publish images
 
   topics:
-    rgb: "/tesse/left_cam/rgb/image_raw"                          # Input RGB image topic from the RealSense camera
-    depth: "/tesse/depth_cam/mono/image_raw"                # Input aligned depth topic; depth pixels must match RGB pixels
-    camera_info: "/tesse/left_cam/camera_info"               # Input camera calibration topic for RGB camera intrinsics
-    odom: "/tesse/odom"                                             # Input robot odometry topic representing odom -> base_link
-    imu: "/go1/d455/imu"                                      # Optional camera IMU topic from RealSense D455
-    prepared_frame: "/rsg/preprocessed/frame"                 # Output synchronized RGB-D-pose frame topic for the main worker
-    status: "/rsg/preprocessor/status"                        # Output status/debug topic for accepted and rejected frames
+    rgb: "/tesse/left_cam/rgb/image_raw"
+    depth: "/tesse/depth_cam/mono/image_raw"
+    camera_info: "/tesse/left_cam/camera_info"
+    odom: "/tesse/odom"
+    imu: "/go1/d455/imu"
 
+    prepared_frame: "/rsg/preprocessed/frame"
+    status: "/rsg/preprocessor/status"
 
   synchronization:
-    rgb_depth_slop_sec: 0.03          # Maximum allowed RGB-depth-CameraInfo timestamp difference in seconds
-    odom_buffer_size: 100             # Number of recent odometry messages stored for lookup/interpolation
-    odom_tolerance_sec: 0.05          # Maximum allowed odometry-to-RGB timestamp difference in seconds
-    use_odom_interpolation: false      # Interpolate odometry pose at RGB timestamp when possible
-    reject_unsynchronized_frames: true # Kept for compatibility; odometry rejection is controlled by validation.require_odom_for_frame
-    assume_ordered_messages: true      # Faster buffers: assume bag/live messages arrive in timestamp order
+    rgb_depth_slop_sec: 0.03           # Max RGB-depth-CameraInfo timestamp difference [s]
+    odom_buffer_size: 100
+    odom_tolerance_sec: 0.05
+    use_odom_interpolation: false
+    reject_unsynchronized_frames: true # Compatibility; odom rejection is controlled by validation.require_odom_for_frame
+    assume_ordered_messages: true      # Faster buffer handling for ordered bag/live streams
 
   imu:
-    enabled: false                     # Enable camera IMU buffering and forwarding in RsgFrame
-    buffer_size: 1000                  # Number of recent IMU messages stored for timestamp lookup
-    tolerance_sec: 0.03                # Maximum allowed IMU-to-RGB timestamp difference in seconds
-    require_for_frame: false           # Reject frames if no matching IMU sample is available
+    enabled: false
+    buffer_size: 1000
+    tolerance_sec: 0.03
+    require_for_frame: false
 
   image:
-    output_rgb_encoding: "rgb8"       # Output RGB image encoding expected by downstream vision models
-    output_depth_encoding: "32FC1"    # Output depth encoding after conversion to float32 metres
-    depth_scale_to_meter: 0.001       # RealSense Z16 depth conversion factor: millimetres to metres
-    min_depth_m: 0.2                  # Minimum valid depth value in metres
-    max_depth_m: 6.0                  # Maximum valid depth value in metres
-    max_invalid_depth_ratio: 0.70     # Reject frame if invalid depth pixels exceed this fraction
-    reject_resolution_mismatch: true  # Reject frame if RGB and depth image resolutions are different
+    output_rgb_encoding: "rgb8"
+    output_depth_encoding: "32FC1"
+    depth_scale_to_meter: 0.001
+    min_depth_m: 0.2
+    max_depth_m: 6.0
+    max_invalid_depth_ratio: 0.70
+    reject_resolution_mismatch: true
 
   validation:
-    # These switches control rejection checks and expensive per-frame operations.
-    # Turning a check off keeps the node running, but the output may be less strict.
-    check_resolution: true             # Reject RGB/depth pairs with different image sizes
-    convert_rgb: true                  # Convert RGB to output_rgb_encoding; set false only if input is already correct
-    convert_depth: true                # Convert depth to output_depth_encoding/metres; normally keep true
-    compute_invalid_depth_ratio: true  # Compute invalid-depth ratio for metadata/debug
-    check_invalid_depth_ratio: true    # Reject frames whose invalid-depth ratio is too high
-    depth_check_stride: 4              # 1 checks all depth pixels; 2/4/8 samples pixels for faster validation
-    require_odom_for_frame: true       # Reject frame if no odometry is available; false uses identity pose fallback
-    require_imu_for_frame: false       # Reject frame if camera IMU is enabled but no matching IMU is available
+    check_resolution: true
+    convert_rgb: true
+    convert_depth: true
+    compute_invalid_depth_ratio: true
+    check_invalid_depth_ratio: true
+    depth_check_stride: 4
+    require_odom_for_frame: true
+    require_imu_for_frame: false
 
   status_output:
-    publish_published: true            # Publish JSON status for accepted frames
-    publish_rejected: true             # Publish JSON status for rejected frames
-    published_every_n_frames: 30        # Use 30 or 60 for faster real-time runs with less status traffic
+    publish_published: true
+    publish_rejected: true
+    published_every_n_frames: 30
 
   latency_guard:
-    enabled: true                       # Check elapsed preprocessing time at safe points inside the callback
-    warn_delay_ms: 20.0                 # Soft warning threshold for 15 fps operation
-    drop_delay_ms: 30.0                # Hard threshold; 15 fps gives 66.7 ms per frame
-    drop_exceeded_frames: true          # Do not publish frames that exceed drop_delay_ms
-    record_dropped_to_excel: true       # Store exceeded-threshold frames in the debug Excel file when Excel output is enabled
+    enabled: true
+    warn_delay_ms: 20.0
+    drop_delay_ms: 30.0
+    drop_exceeded_frames: true
+    record_dropped_to_excel: true
 
   frames:
-    world_frame: "odom"               # Global/local reference frame used for camera pose output
-    base_frame: "base_link"           # Robot body frame used by Go1 odometry
-    camera_frame: "d455_color_optical_frame" # Camera optical frame used for RGB-D projection
+    world_frame: "odom"
+    base_frame: "base_link"
+    camera_frame: "d455_color_optical_frame"
 
-    # Manually measured rigid transform from robot base frame to camera optical frame.
-    # Update these values after measuring the 3D printed mount.
     base_to_camera:
-      translation_m: [0.25, 0.0, 0.20] # Camera position relative to base_link: [x, y, z] in metres
-      rotation_rpy_rad: [0.0, 0.0, 0.0] # Camera orientation relative to base_link: [roll, pitch, yaw] in radians
+      translation_m: [0.25, 0.0, 0.20]
+      rotation_rpy_rad: [0.0, 0.0, 0.0]
 
   frame_id:
-    prefix: "rsg"                     # Prefix added to every generated preprocessed frame ID
-    # If empty, the node uses the local PC date at node startup, e.g. 20260607.
-    # Use a fixed value for repeatable naming across different runs.
-    session_date: ""                  # Fixed session date for repeatable frame IDs; empty means use local date
+    prefix: "rsg"
+    session_date: ""                   # Empty means local date at node startup
 
   performance:
-    measure_timing: true              # Allow timing measurement when global or node debug is enabled
-    publish_timing: true              # Publish timing samples on timing_topic when debug is enabled
-    timing_topic: "/rsg/preprocessor/timing" # Output timing topic; data[0]=sequence, data[1]=delay_ms
-    write_timing_excel: true          # Write timing table and Excel line chart when debug is enabled
-    timing_excel_path: "~/rsg_ros2_ws/debug/RSG_pre_processor_debug_{session_date}_{creation_time}.xlsx" # Separate Excel debug file for this node/run
-    timing_sheet_name: "timing_debug" # Worksheet name inside this node-specific debug workbook
-    timing_excel_autosave_every: 0  # Save Excel every N samples; 0 saves only on clean shutdown
+    measure_timing: true
+    publish_timing: true
+    timing_topic: "/rsg/preprocessor/timing"
+    write_timing_excel: false
+    timing_excel_path: "~/rsg_ros2_ws/debug/RSG_pre_processor_debug_{session_date}_{creation_time}.xlsx"
+    timing_sheet_name: "preprocessing_timing"
+    timing_excel_autosave_every: 0      # 0 = save only on clean shutdown
 
   qos:
-    sensor_depth: 10                  # ROS subscriber queue depth for RGB, depth, and CameraInfo topics
-    odom_depth: 200                   # ROS subscriber queue depth for odometry topic
-    output_depth: 10                  # ROS publisher queue depth for prepared frame, status, and timing topics
+    sensor_depth: 10
+    odom_depth: 200
+    output_depth: 10
+
+# ==============================================================================
+# 2. PHASE 1 OBJECT DETECTION NODE: rsg_object_detection
+# ==============================================================================
+phase1:
+  runtime:
+    use_sim_time: true
+
+  # Compatibility debug key. The preferred control is the top-level "debug" section.
+  debug:
+    rsg_object_detection: false
+
+  topics:
+    # Active input/output topics -------------------------------------------------
+    preprocessed_frame: "/rsg/preprocessed/frame"
+    hydra_frame: "/rsg/phase1/hydra/input_frame"
+    unknown_candidates: "/rsg/phase1/unknown_candidates"
+
+    # Active status/debug topics -------------------------------------------------
+    status: "/rsg/phase1/object_detection/status"
+    timing: "/rsg/phase1/object_detection/timing"
+    debug_semantic_labels: "/rsg/phase1/debug/semantic_labels"
+    debug_instance_labels: "/rsg/phase1/debug/instance_labels"
+
+    # Compatibility aliases used by earlier generated code ----------------------
+    rsg_object_detection_status: "/rsg/phase1/object_detection/status"
+    rsg_object_detection_timing: "/rsg/phase1/object_detection/timing"
+    vlm_result: "/rsg/phase1/object_classifier/vlm_result"
+
+    # Legacy split-node topic names. The active combined node should not require
+    # these, but keeping them avoids breaking older parser code.
+    perception_request: "/rsg/phase1/object_classifier/input"
+    perception_result: "/rsg/phase1/object_classifier/result"
+
+    # Optional separated Hydra-style streams. Used only when
+    # hydra_output.publish_separate_topics is true.
+    hydra_rgb: "/rsg/hydra/rgb"
+    hydra_depth: "/rsg/hydra/depth"
+    hydra_camera_info: "/rsg/hydra/camera_info"
+    hydra_pose: "/rsg/hydra/pose"
+    hydra_semantic_labels: "/rsg/hydra/semantic_labels"
+    hydra_instance_labels: "/rsg/hydra/instance_labels"
+    hydra_metadata: "/rsg/hydra/metadata"
+
+  qos:
+    input_depth: 30
+    output_depth: 30
+
+  # Internal frame FIFO before SAM/RAP ------------------------------------------
+  # The section name "coordinator" is retained for compatibility with current
+  # code, but in the current architecture this is not a separate ROS coordinator.
+  # It is the internal FIFO owned by rsg_object_detection.
+  coordinator:
+    request_queue_size: 30             # Internal FIFO frame queue before SAM/RAP
+    frame_cache_size: 5                # Small lookup/cache only; not a processing queue
+    max_result_age_sec: 1.0            # Legacy/two-node parameter; not critical in combined mode
+    drop_oldest_when_full: false       # false = preserve FIFO; reject newest if full
+    publish_status: true
+    status_every_n_frames: 30
+    publish_debug_label_images: false
+
+  # Deprecated in combined mode --------------------------------------------------
+  # The active node uses coordinator.request_queue_size as the frame FIFO.
+  object_classifier:
+    queue_size: 1
+
+  hydra_output:
+    publish_combined: true
+    publish_separate_topics: false
+    semantic_label_encoding: "16UC1"
+    instance_label_encoding: "16UC1"
+
+  metadata:
+    include_object_metadata: true
+    include_known_objects: true
+    include_unknown_objects: true
+    include_bbox_2d: true
+    include_centroid_2d: true
+    include_centroid_3d: true
+    include_bbox_3d: true
+    include_bbox_volume: true
+    include_depth_stats: true
+    include_mask_area: true
+    include_timing_metadata: true
+    include_frame_relation_metadata: false
+
+  sam:
+    enabled: true
+    backend: "dummy"                  # dummy, baseline
+    min_mask_pixels: 500
+    max_masks: 64
+    dummy_num_masks: 1
+
+  rap:
+    enabled: true
+    backend: "dummy"                  # dummy, baseline
+    confidence_threshold: 0.30
+    distance_threshold: 0.30
+    dummy_unknown_every_n: 1
+    dummy_known_labels: ["chair", "table", "box"]
+    update_memory_from_vlm: true
+    update_min_confidence: 0.50
+    memory_update_path: "~/rsg_ros2_ws/debug/phase1_rap_memory.jsonl"
+
+  unknown_tracking:
+    enabled: true
+    max_match_distance_m: 0.30
+    max_volume_ratio: 3.0
+    max_track_age_sec: 2.0
+    min_observations_before_vlm: 3
+    max_wait_before_vlm_sec: 0.75
+    call_vlm_only_once_per_track: true
+    retry_failed_tracks: false
+    update_track_centroid: true
+    centroid_update_alpha: 0.70
+    best_frame_selection: true
+    min_quality_for_vlm: 0.0
+    max_tracks: 200
+    use_2d_iou_fallback: true
+    min_2d_iou: 0.30
+
+  # FIFO queue after RAP/unknown tracking for unknown-object VLM calls ----------
+  vlm:
+    enabled: true
+    mode: "dummy"                     # dummy, qwen_http, openai_vision
+    async: true
+    queue_size: 16
+    queue_drop_policy: "drop_newest"
+    dummy_delay_sec: 0.0
+    dummy_label_prefix: "vlm_dummy_object"
+    dummy_confidence: 0.55
+
+    endpoint: "http://127.0.0.1:8000/v1/chat/completions"
+    model: "Qwen2.5-VL-7B-Instruct"
+    timeout_sec: 30.0
+    prompt: "Identify the main object in this image crop. Return only a short object label."
+
+  object_geometry:
+    enabled: true
+    projection_stride: 4
+    min_valid_depth_points: 20
+    min_depth_m: 0.2
+    max_depth_m: 6.0
+    centroid_method: "median"
+
+  evidence_buffer:
+    enabled: false
+    max_frames: 50
+
+  performance:
+    measure_timing: true
+    publish_timing: true
+
+    # Legacy per-node timing workbook. Keep disabled in normal performance runs.
+    write_timing_excel: false
+    timing_excel_path: "~/rsg_ros2_ws/debug/{node_name}_debug_{session_date}_{creation_time}.xlsx"
+    timing_sheet_name: "phase1_debug"
+    timing_excel_autosave_every: 0
+
+    # Current combined debug workbook.
+    # The legacy key names are retained because the current code reads them.
+    # In the current code this creates:
+    #   ~/rsg_ros2_ws/debug/phase1_excel_current/phase1_debug.xlsx
+    write_simple_csv: true
+    csv_debug_dir: "~/rsg_ros2_ws/debug/phase1_excel_current"
+    generate_plots_on_shutdown: false

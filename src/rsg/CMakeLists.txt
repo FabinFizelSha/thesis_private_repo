@@ -13,14 +13,20 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
 ament_python_install_package(rsg_preprocessing)
+ament_python_install_package(rsg_phase1)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/RsgFrame.msg"
+  "msg/Phase1ClassificationResult.msg"
+  "msg/Phase1VlmResult.msg"
+  "msg/RsgHydraFrame.msg"
   DEPENDENCIES std_msgs sensor_msgs geometry_msgs
 )
 
 install(PROGRAMS
   scripts/RSG_pre_processor
+  scripts/rsg_object_detection
+  scripts/plot_phase1_debug
   DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -28,6 +34,7 @@ install(DIRECTORY
   launch
   config
   rsg_preprocessing
+  rsg_phase1
   DESTINATION share/${PROJECT_NAME}
 )
 
