@@ -1,94 +1,40 @@
-# Central Risk Scene Graph pipeline configuration.
-#
-# Current active nodes:
-#   1. RSG_pre_processor
-#   2. rsg_object_detection
-#
-# Notes:
-#   - The active Phase 1 object detection pipeline is a single-process node:
-#       rsg_object_detection
-#   - Older split-node names such as "coordinator" and "object_classifier" are
-#     kept only where the current code still reads those parameter names.
-#   - All debug enable/disable switches are collected in the top-level "debug"
-#     section. Some node-local debug keys are kept as compatibility aliases.
-
-# ==============================================================================
-# 0. GLOBAL DEBUG CONTROL
-# ==============================================================================
 debug:
-  # Master switches -------------------------------------------------------------
-  enabled: false                       # Future-compatible global debug alias
-  global_debug: false                  # Compatibility key used by current nodes
-
-  # Node-specific switches ------------------------------------------------------
-  # Keep these flat keys because the current codebase may read them directly.
-  RSG_pre_processor: false             # Compatibility key for preprocessing node
-  rsg_pre_processor: false             # Lower-case alias for future parser support
-  rsg_object_detection: false          # Active Phase 1 combined object detection node
-
-  # Structured node map for future nodes ----------------------------------------
-  # Future code should prefer this map, while current code can continue using the
-  # flat compatibility keys above.
-  nodes:
-    RSG_pre_processor: false
-    rsg_object_detection: false
-
-    # Reserved future nodes. These do not affect the current code unless future
-    # parsers explicitly read them.
-    rsg_hydra_adapter: false
-    rsg_risk_annotator: false
-    rsg_dsg_visualizer: false
-
-  # Debug output policy ---------------------------------------------------------
-  outputs:
-    publish_status_topics: true         # Allow nodes to publish lightweight status topics
-    publish_timing_topics: true         # Allow nodes to publish timing topics when timing is enabled
-    publish_debug_images: false         # Global preference for debug image streams
-    write_excel_workbooks: true         # Allow node-level Excel debug workbooks
-    save_debug_on_shutdown_only: true   # Avoid runtime Excel autosave latency spikes
-
-# ==============================================================================
-# 1. INPUT PREPROCESSING NODE: RSG_pre_processor
-# ==============================================================================
+  global_debug: false
+  RSG_pre_processor: false
+  rsg_object_detection: false
 preprocessing:
   runtime:
-    source: "rosbag"                   # rosbag or live
-    use_sim_time: true                 # Required when replaying ros2 bag with --clock
-    publish_debug_images: false        # Reserved; current preprocessor normally does not publish images
-
+    source: rosbag
+    use_sim_time: true
+    publish_debug_images: false
   topics:
-    rgb: "/tesse/left_cam/rgb/image_raw"
-    depth: "/tesse/depth_cam/mono/image_raw"
-    camera_info: "/tesse/left_cam/camera_info"
-    odom: "/tesse/odom"
-    imu: "/go1/d455/imu"
-
-    prepared_frame: "/rsg/preprocessed/frame"
-    status: "/rsg/preprocessor/status"
-
+    rgb: /tesse/left_cam/rgb/image_raw
+    depth: /tesse/depth_cam/mono/image_raw
+    camera_info: /tesse/left_cam/camera_info
+    odom: /tesse/odom
+    imu: /go1/d455/imu
+    prepared_frame: /rsg/preprocessed/frame
+    status: /rsg/preprocessor/status
   synchronization:
-    rgb_depth_slop_sec: 0.03           # Max RGB-depth-CameraInfo timestamp difference [s]
+    rgb_depth_slop_sec: 0.03
     odom_buffer_size: 100
     odom_tolerance_sec: 0.05
     use_odom_interpolation: false
-    reject_unsynchronized_frames: true # Compatibility; odom rejection is controlled by validation.require_odom_for_frame
-    assume_ordered_messages: true      # Faster buffer handling for ordered bag/live streams
-
+    reject_unsynchronized_frames: true
+    assume_ordered_messages: true
   imu:
     enabled: false
     buffer_size: 1000
     tolerance_sec: 0.03
     require_for_frame: false
-
   image:
-    output_rgb_encoding: "rgb8"
-    output_depth_encoding: "32FC1"
+    output_rgb_encoding: rgb8
+    output_depth_encoding: 32FC1
     depth_scale_to_meter: 0.001
     min_depth_m: 0.2
     max_depth_m: 6.0
-    max_invalid_depth_ratio: 0.70
+    max_invalid_depth_ratio: 0.7
     reject_resolution_mismatch: true
-
   validation:
     check_resolution: true
     convert_rgb: true
@@ -98,117 +44,85 @@ preprocessing:
     depth_check_stride: 4
     require_odom_for_frame: true
     require_imu_for_frame: false
-
   status_output:
     publish_published: true
     publish_rejected: true
     published_every_n_frames: 30
-
   latency_guard:
     enabled: true
     warn_delay_ms: 20.0
     drop_delay_ms: 30.0
     drop_exceeded_frames: true
     record_dropped_to_excel: true
-
   frames:
-    world_frame: "odom"
-    base_frame: "base_link"
-    camera_frame: "d455_color_optical_frame"
-
+    world_frame: odom
+    base_frame: base_link
+    camera_frame: d455_color_optical_frame
     base_to_camera:
-      translation_m: [0.25, 0.0, 0.20]
-      rotation_rpy_rad: [0.0, 0.0, 0.0]
-
+      translation_m:
+      - 0.25
+      - 0.0
+      - 0.2
+      rotation_rpy_rad:
+      - 0.0
+      - 0.0
+      - 0.0
   frame_id:
-    prefix: "rsg"
-    session_date: ""                   # Empty means local date at node startup
-
+    prefix: rsg
+    session_date: ''
   performance:
     measure_timing: true
     publish_timing: true
-    timing_topic: "/rsg/preprocessor/timing"
+    timing_topic: /rsg/preprocessor/timing
     write_timing_excel: false
-    timing_excel_path: "~/rsg_ros2_ws/debug/RSG_pre_processor_debug_{session_date}_{creation_time}.xlsx"
-    timing_sheet_name: "preprocessing_timing"
-    timing_excel_autosave_every: 0      # 0 = save only on clean shutdown
-
+    timing_excel_path: ~/rsg_ros2_ws/debug/RSG_pre_processor_debug_{session_date}_{creation_time}.xlsx
+    timing_sheet_name: timing_debug
+    timing_excel_autosave_every: 0
   qos:
     sensor_depth: 10
     odom_depth: 200
     output_depth: 10
-
-# ==============================================================================
-# 2. PHASE 1 OBJECT DETECTION NODE: rsg_object_detection
-# ==============================================================================
 phase1:
   runtime:
     use_sim_time: true
-
-  # Compatibility debug key. The preferred control is the top-level "debug" section.
   debug:
     rsg_object_detection: false
-
   topics:
-    # Active input/output topics -------------------------------------------------
-    preprocessed_frame: "/rsg/preprocessed/frame"
-    hydra_frame: "/rsg/phase1/hydra/input_frame"
-    unknown_candidates: "/rsg/phase1/unknown_candidates"
-
-    # Active status/debug topics -------------------------------------------------
-    status: "/rsg/phase1/object_detection/status"
-    timing: "/rsg/phase1/object_detection/timing"
-    debug_semantic_labels: "/rsg/phase1/debug/semantic_labels"
-    debug_instance_labels: "/rsg/phase1/debug/instance_labels"
-
-    # Compatibility aliases used by earlier generated code ----------------------
-    rsg_object_detection_status: "/rsg/phase1/object_detection/status"
-    rsg_object_detection_timing: "/rsg/phase1/object_detection/timing"
-    vlm_result: "/rsg/phase1/object_classifier/vlm_result"
-
-    # Legacy split-node topic names. The active combined node should not require
-    # these, but keeping them avoids breaking older parser code.
-    perception_request: "/rsg/phase1/object_classifier/input"
-    perception_result: "/rsg/phase1/object_classifier/result"
-
-    # Optional separated Hydra-style streams. Used only when
-    # hydra_output.publish_separate_topics is true.
-    hydra_rgb: "/rsg/hydra/rgb"
-    hydra_depth: "/rsg/hydra/depth"
-    hydra_camera_info: "/rsg/hydra/camera_info"
-    hydra_pose: "/rsg/hydra/pose"
-    hydra_semantic_labels: "/rsg/hydra/semantic_labels"
-    hydra_instance_labels: "/rsg/hydra/instance_labels"
-    hydra_metadata: "/rsg/hydra/metadata"
-
+    preprocessed_frame: /rsg/preprocessed/frame
+    perception_request: /rsg/phase1/object_classifier/input
+    perception_result: /rsg/phase1/object_classifier/result
+    vlm_result: /rsg/phase1/object_classifier/vlm_result
+    hydra_frame: /rsg/phase1/hydra/input_frame
+    unknown_candidates: /rsg/phase1/unknown_candidates
+    rsg_object_detection_status: /rsg/phase1/object_detection/status
+    rsg_object_detection_timing: /rsg/phase1/object_detection/timing
+    debug_semantic_labels: /rsg/phase1/debug/semantic_labels
+    debug_instance_labels: /rsg/phase1/debug/instance_labels
+    hydra_rgb: /rsg/hydra/rgb
+    hydra_depth: /rsg/hydra/depth
+    hydra_camera_info: /rsg/hydra/camera_info
+    hydra_pose: /rsg/hydra/pose
+    hydra_semantic_labels: /rsg/hydra/semantic_labels
+    hydra_instance_labels: /rsg/hydra/instance_labels
+    hydra_metadata: /rsg/hydra/metadata
   qos:
     input_depth: 30
     output_depth: 30
-
-  # Internal frame FIFO before SAM/RAP ------------------------------------------
-  # The section name "coordinator" is retained for compatibility with current
-  # code, but in the current architecture this is not a separate ROS coordinator.
-  # It is the internal FIFO owned by rsg_object_detection.
   coordinator:
-    request_queue_size: 30             # Internal FIFO frame queue before SAM/RAP
-    frame_cache_size: 5                # Small lookup/cache only; not a processing queue
-    max_result_age_sec: 1.0            # Legacy/two-node parameter; not critical in combined mode
-    drop_oldest_when_full: false       # false = preserve FIFO; reject newest if full
+    request_queue_size: 30
+    frame_cache_size: 5
+    max_result_age_sec: 1.0
+    drop_oldest_when_full: false
     publish_status: true
     status_every_n_frames: 30
     publish_debug_label_images: false
-
-  # Deprecated in combined mode --------------------------------------------------
-  # The active node uses coordinator.request_queue_size as the frame FIFO.
   object_classifier:
     queue_size: 1
-
   hydra_output:
     publish_combined: true
     publish_separate_topics: false
-    semantic_label_encoding: "16UC1"
-    instance_label_encoding: "16UC1"
-
+    semantic_label_encoding: 16UC1
+    instance_label_encoding: 16UC1
   metadata:
     include_object_metadata: true
     include_known_objects: true
@@ -222,28 +136,44 @@ phase1:
     include_mask_area: true
     include_timing_metadata: true
     include_frame_relation_metadata: false
-
   sam:
     enabled: true
-    backend: "dummy"                  # dummy, baseline
+    backend: dummy
     min_mask_pixels: 500
     max_masks: 64
     dummy_num_masks: 1
-
+    model_type: vit_h
+    checkpoint_path: ''
+    checkpoint_cache_dir: ~/.cache/sam
+    device: ''
+    auto_download: false
+    mask_threshold: 0.88
+    padding: 0.2
+    points_per_side: 16
+    pred_iou_thresh: 0.96
   rap:
     enabled: true
-    backend: "dummy"                  # dummy, baseline
-    confidence_threshold: 0.30
-    distance_threshold: 0.30
+    backend: dummy
+    confidence_threshold: 0.3
+    distance_threshold: 0.3
     dummy_unknown_every_n: 1
-    dummy_known_labels: ["chair", "table", "box"]
+    dummy_known_labels:
+    - chair
+    - table
+    - box
     update_memory_from_vlm: true
-    update_min_confidence: 0.50
-    memory_update_path: "~/rsg_ros2_ws/debug/phase1_rap_memory.jsonl"
-
+    update_min_confidence: 0.5
+    memory_update_path: ~/rsg_ros2_ws/debug/phase1_rap_memory.jsonl
+    model_name: openai/clip-vit-base-patch32
+    device: ''
+    storage_path: ~/rsg_ros2_ws/visual_memory
+    chroma_host: localhost
+    chroma_port: 8001
+    collection_name: visual_rag
+    auto_start_server: true
   unknown_tracking:
     enabled: true
-    max_match_distance_m: 0.30
+    max_match_distance_m: 0.3
     max_volume_ratio: 3.0
     max_track_age_sec: 2.0
     min_observations_before_vlm: 3
@@ -251,55 +181,108 @@ phase1:
     call_vlm_only_once_per_track: true
     retry_failed_tracks: false
     update_track_centroid: true
-    centroid_update_alpha: 0.70
+    centroid_update_alpha: 0.7
     best_frame_selection: true
     min_quality_for_vlm: 0.0
     max_tracks: 200
     use_2d_iou_fallback: true
-    min_2d_iou: 0.30
-
-  # FIFO queue after RAP/unknown tracking for unknown-object VLM calls ----------
+    min_2d_iou: 0.3
   vlm:
     enabled: true
-    mode: "dummy"                     # dummy, qwen_http, openai_vision
+    mode: dummy
     async: true
     queue_size: 16
-    queue_drop_policy: "drop_newest"
+    queue_drop_policy: drop_newest
     dummy_delay_sec: 0.0
-    dummy_label_prefix: "vlm_dummy_object"
+    dummy_label_prefix: vlm_dummy_object
     dummy_confidence: 0.55
-
-    endpoint: "http://127.0.0.1:8000/v1/chat/completions"
-    model: "Qwen2.5-VL-7B-Instruct"
+    endpoint: http://127.0.0.1:8000/v1/chat/completions
+    model: Qwen2.5-VL-7B-Instruct
     timeout_sec: 30.0
-    prompt: "Identify the main object in this image crop. Return only a short object label."
-
+    prompt: Identify the main object in this image crop. Return only a short object
+      label.
+    api_key: ''
+    max_tokens: 32
+    temperature: 0.0
+    jpeg_quality: 85
   object_geometry:
     enabled: true
     projection_stride: 4
     min_valid_depth_points: 20
     min_depth_m: 0.2
     max_depth_m: 6.0
-    centroid_method: "median"
-
+    centroid_method: median
   evidence_buffer:
     enabled: false
     max_frames: 50
-
   performance:
     measure_timing: true
     publish_timing: true
-
-    # Legacy per-node timing workbook. Keep disabled in normal performance runs.
     write_timing_excel: false
-    timing_excel_path: "~/rsg_ros2_ws/debug/{node_name}_debug_{session_date}_{creation_time}.xlsx"
-    timing_sheet_name: "phase1_debug"
+    timing_excel_path: ~/rsg_ros2_ws/debug/{node_name}_debug_{session_date}_{creation_time}.xlsx
+    timing_sheet_name: phase1_debug
     timing_excel_autosave_every: 0
-
-    # Current combined debug workbook.
-    # The legacy key names are retained because the current code reads them.
-    # In the current code this creates:
-    #   ~/rsg_ros2_ws/debug/phase1_excel_current/phase1_debug.xlsx
     write_simple_csv: true
-    csv_debug_dir: "~/rsg_ros2_ws/debug/phase1_excel_current"
+    csv_debug_dir: ~/rsg_ros2_ws/debug/phase1_excel_current
     generate_plots_on_shutdown: false
+  profile: dummy
+  deployment:
+    allow_dummy_fallback: false
+  profiles:
+    dummy:
+      deployment:
+        allow_dummy_fallback: true
+      sam:
+        backend: dummy
+        enabled: true
+      rap:
+        backend: dummy
+        enabled: true
+      vlm:
+        mode: dummy
+        enabled: true
+    real_orin:
+      deployment:
+        allow_dummy_fallback: false
+      sam:
+        enabled: true
+        backend: real
+        model_type: vit_h
+        checkpoint_path: ''
+        checkpoint_cache_dir: ~/.cache/sam
+        device: cuda
+        auto_download: false
+        mask_threshold: 0.88
+        padding: 0.2
+        points_per_side: 16
+        pred_iou_thresh: 0.96
+        min_mask_pixels: 500
+        max_masks: 64
+      rap:
+        enabled: true
+        backend: real
+        model_name: openai/clip-vit-base-patch32
+        device: cuda
+        storage_path: ~/rsg_ros2_ws/visual_memory
+        chroma_host: localhost
+        chroma_port: 8001
+        collection_name: visual_rag
+        auto_start_server: true
+        confidence_threshold: 0.3
+        distance_threshold: 0.3
+        update_memory_from_vlm: true
+        update_min_confidence: 0.5
+        memory_update_path: ~/rsg_ros2_ws/debug/phase1_rap_memory.jsonl
+      vlm:
+        enabled: true
+        mode: qwen_http
+        async: true
+        endpoint: http://127.0.0.1:8000/v1/chat/completions
+        api_key: ''
+        model: Qwen2.5-VL-7B-Instruct
+        timeout_sec: 30.0
+        max_tokens: 32
+        temperature: 0.0
+        jpeg_quality: 85
+        prompt: Identify the main object in this image crop. Return only a short object
+          label.

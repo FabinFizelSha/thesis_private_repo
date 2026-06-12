@@ -26,6 +26,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 install(PROGRAMS
   scripts/RSG_pre_processor
   scripts/rsg_object_detection
+  scripts/rsg_load_rap_memory
   scripts/plot_phase1_debug
   DESTINATION lib/${PROJECT_NAME}
 )

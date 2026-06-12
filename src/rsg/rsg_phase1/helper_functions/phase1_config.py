@@ -22,12 +22,24 @@ def _as_bool(value: Any, default: bool = False) -> bool:
     return bool(value)
 
 
-@dataclass
+def _deep_update(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
+    """Recursively merge override into base and return base."""
+    for key, value in (override or {}).items():
+        if isinstance(value, dict) and isinstance(base.get(key), dict):
+            _deep_update(base[key], value)
+        else:
+            base[key] = value
+    return base
+
+
+@dataclass(kw_only=True)
 class Phase1Config:
     """Configuration values shared by ``rsg_object_detection`` and classifier."""
 
     node_key: str
     use_sim_time: bool
+    profile: str
+    allow_dummy_fallback: bool
 
     # Topics.
     preprocessed_frame_topic: str
@@ -99,6 +111,15 @@ class Phase1Config:
     sam_min_mask_pixels: int
     sam_max_masks: int
     sam_dummy_num_masks: int
+    sam_model_type: str = "vit_h"
+    sam_checkpoint_path: str = ""
+    sam_checkpoint_cache_dir: str = "~/.cache/sam"
+    sam_device: str = ""
+    sam_mask_threshold: float = 0.88
+    sam_padding: float = 0.1
+    sam_points_per_side: int = 16
+    sam_pred_iou_thresh: float = 0.96
+    sam_auto_download: bool = False
 
     rap_enabled: bool
     rap_backend: str
@@ -109,6 +130,13 @@ class Phase1Config:
     rap_update_enabled: bool = True
     rap_update_min_confidence: float = 0.50
     rap_memory_path: str = "~/rsg_ros2_ws/debug/phase1_rap_memory.jsonl"
+    rap_model_name: str = "openai/clip-vit-base-patch32"
+    rap_device: str = ""
+    rap_storage_path: str = "~/rsg_ros2_ws/visual_memory"
+    rap_chroma_host: str = "localhost"
+    rap_chroma_port: int = 8001
+    rap_collection_name: str = "visual_rag"
+    rap_auto_start_server: bool = True
 
     vlm_enabled: bool = False
     vlm_mode: str = "dummy"
@@ -123,6 +151,10 @@ class Phase1Config:
     vlm_endpoint: str = "http://127.0.0.1:8000/v1/chat/completions"
     vlm_model: str = "Qwen2.5-VL-7B-Instruct"
     vlm_timeout_sec: float = 30.0
+    vlm_api_key: str = ""
+    vlm_max_tokens: int = 32
+    vlm_temperature: float = 0.0
+    vlm_jpeg_quality: int = 85
     vlm_prompt: str = "Identify the main object in this image crop. Return only a short object label."
 
     # Projection / object geometry.
@@ -179,6 +211,23 @@ class Phase1Config:
         preprocessing = root.get("preprocessing", {}) or {}
         phase1 = root.get("phase1", {}) or {}
 
+        # Master profile switch.  To switch the complete Phase 1 perception
+        # stack, edit only ``phase1.profile`` in YAML.  The selected profile
+        # is merged into phase1 before individual keys are read.  Explicit keys
+        # outside the profile can still override profile defaults when needed.
+        profile_name = str(phase1.get("profile", "dummy"))
+        profiles = phase1.get("profiles", {}) or {}
+        if profile_name in profiles:
+            selected_profile = dict(profiles.get(profile_name) or {})
+            # Keep the profile name itself and the profiles table; merge selected
+            # values into a copy to avoid mutating the root structure.
+            base_phase1 = {k: v for k, v in phase1.items() if k != "profiles"}
+            phase1 = _deep_update(base_phase1, selected_profile)
+            phase1["profile"] = profile_name
+        else:
+            phase1 = dict(phase1)
+            phase1["profile"] = profile_name
+
         runtime = phase1.get("runtime", {}) or {}
         topics = phase1.get("topics", {}) or {}
         qos = phase1.get("qos", {}) or {}
@@ -192,6 +241,7 @@ class Phase1Config:
         geometry = phase1.get("object_geometry", {}) or {}
         evidence = phase1.get("evidence_buffer", {}) or {}
         unknown_tracking = phase1.get("unknown_tracking", {}) or {}
+        deployment = phase1.get("deployment", {}) or {}
         debug = {**(phase1.get("debug", {}) or {}), **root_debug}
         performance = phase1.get("performance", {}) or {}
 
@@ -220,6 +270,8 @@ class Phase1Config:
         return Phase1Config(
             node_key=node_key,
             use_sim_time=bool(runtime.get("use_sim_time", preproc_runtime.get("use_sim_time", True))),
+            profile=str(phase1.get("profile", "dummy")),
+            allow_dummy_fallback=bool(deployment.get("allow_dummy_fallback", False)),
             preprocessed_frame_topic=str(topics.get("preprocessed_frame", preproc_topics.get("prepared_frame", "/rsg/preprocessed/frame"))),
             perception_request_topic=str(topics.get("perception_request", "/rsg/phase1/object_classifier/input")),
             perception_result_topic=str(topics.get("perception_result", "/rsg/phase1/object_classifier/result")),
@@ -279,6 +331,15 @@ class Phase1Config:
             sam_min_mask_pixels=max(1, int(sam.get("min_mask_pixels", 500))),
             sam_max_masks=max(1, int(sam.get("max_masks", 64))),
             sam_dummy_num_masks=max(0, int(sam.get("dummy_num_masks", 1))),
+            sam_model_type=str(sam.get("model_type", "vit_h")),
+            sam_checkpoint_path=str(sam.get("checkpoint_path", "")),
+            sam_checkpoint_cache_dir=str(sam.get("checkpoint_cache_dir", "~/.cache/sam")),
+            sam_device=str(sam.get("device", "")),
+            sam_mask_threshold=float(sam.get("mask_threshold", sam.get("stability_score_thresh", 0.88))),
+            sam_padding=float(sam.get("padding", 0.1)),
+            sam_points_per_side=max(1, int(sam.get("points_per_side", 16))),
+            sam_pred_iou_thresh=float(sam.get("pred_iou_thresh", 0.96)),
+            sam_auto_download=bool(sam.get("auto_download", False)),
             rap_enabled=bool(rap.get("enabled", True)),
             rap_backend=str(rap.get("backend", "dummy")),
             rap_confidence_threshold=float(rap.get("confidence_threshold", 0.30)),
@@ -288,6 +349,13 @@ class Phase1Config:
             rap_update_enabled=bool(rap.get("update_memory_from_vlm", True)),
             rap_update_min_confidence=float(rap.get("update_min_confidence", 0.50)),
             rap_memory_path=str(rap.get("memory_update_path", "~/rsg_ros2_ws/debug/phase1_rap_memory.jsonl")),
+            rap_model_name=str(rap.get("model_name", "openai/clip-vit-base-patch32")),
+            rap_device=str(rap.get("device", "")),
+            rap_storage_path=str(rap.get("storage_path", "~/rsg_ros2_ws/visual_memory")),
+            rap_chroma_host=str(rap.get("chroma_host", "localhost")),
+            rap_chroma_port=int(rap.get("chroma_port", 8001)),
+            rap_collection_name=str(rap.get("collection_name", "visual_rag")),
+            rap_auto_start_server=bool(rap.get("auto_start_server", True)),
             vlm_enabled=bool(vlm.get("enabled", True)),
             vlm_mode=str(vlm.get("mode", "dummy")),
             vlm_async=bool(vlm.get("async", True)),
@@ -299,6 +367,10 @@ class Phase1Config:
             vlm_endpoint=str(vlm.get("endpoint", "http://127.0.0.1:8000/v1/chat/completions")),
             vlm_model=str(vlm.get("model", "Qwen2.5-VL-7B-Instruct")),
             vlm_timeout_sec=float(vlm.get("timeout_sec", 30.0)),
+            vlm_api_key=str(vlm.get("api_key", "")),
+            vlm_max_tokens=max(1, int(vlm.get("max_tokens", 32))),
+            vlm_temperature=float(vlm.get("temperature", 0.0)),
+            vlm_jpeg_quality=max(1, min(100, int(vlm.get("jpeg_quality", 85)))),
             vlm_prompt=str(vlm.get("prompt", "Identify the main object in this image crop. Return only a short object label.")),
             estimate_object_geometry=bool(geometry.get("enabled", True)),
             projection_stride=max(1, int(geometry.get("projection_stride", 4))),

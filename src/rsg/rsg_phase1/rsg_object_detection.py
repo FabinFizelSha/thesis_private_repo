@@ -170,6 +170,9 @@ class RSGObjectDetection(Node):
         self.get_logger().info(f"Optional classifier result topic: {self.config.perception_result_topic}")
         self.get_logger().info(f"VLM result topic: {self.config.vlm_result_topic}")
         self.get_logger().info(
+            f"Profile={self.config.profile}, allow_dummy_fallback={self.config.allow_dummy_fallback}"
+        )
+        self.get_logger().info(
             f"Frame FIFO size={self.config.request_queue_size}, frame_cache_size={self.config.frame_cache_size}, "
             f"VLM FIFO size={self.config.vlm_queue_size}"
         )
@@ -782,6 +785,18 @@ class RSGObjectDetection(Node):
             self.record_vlm_queue_event(event="dequeued", task=task, queue_wait_ms=queue_wait_ms, reason="fifo_order")
             result = self.vlm_backend.identify(task.get("rgb_crop"), task.get("object_metadata", {}))
             rap_update_status = self.rap_memory_updater.update_from_vlm(result, task.get("object_metadata", {}))
+            # In real RAP mode, immediately add the VLM-labelled crop back to
+            # the VisualRAP memory as the baseline LearningWorker does.  The
+            # JSONL log remains enabled as an audit trail.
+            try:
+                if self.config.rap_update_enabled and bool(result.get("success", False)) and float(result.get("confidence", 0.0)) >= float(self.config.rap_update_min_confidence):
+                    label_for_rap = str(result.get("label", "")).replace("_", " ").strip()
+                    if label_for_rap and hasattr(self.rap_backend, "add_image"):
+                        self.rap_backend.add_image(task.get("rgb_crop"), label_for_rap)
+                        rap_update_status["rap_memory_live_update"] = "added_to_visual_rap"
+            except Exception as exc:
+                rap_update_status["rap_memory_live_update"] = "failed"
+                rap_update_status["live_update_error"] = str(exc)
             result["rap_update"] = rap_update_status
             vlm_delay_ms = (time.perf_counter() - start) * 1000.0
             total_age_ms = (time.perf_counter() - float(task.get("created_monotonic", start))) * 1000.0
