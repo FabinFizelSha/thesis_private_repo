@@ -1,0 +1,321 @@
+#!/usr/bin/env python3
+"""Generate Phase 1 debug plots from the single Excel debug workbook.
+
+Usage:
+  ros2 run rsg plot_phase1_debug
+  ros2 run rsg plot_phase1_debug --debug-workbook ~/rsg_ros2_ws/debug/phase1_excel_current/phase1_debug.xlsx
+
+The script also remains backward-compatible with the older CSV debug directory.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+from pathlib import Path
+from typing import Dict, List
+
+
+SHEET_BY_TABLE = {
+    "phase1_cordinator_hydra_latency": "HydraLatency",
+    "phase1_classifier_phase_latency": "ClassifierLatency",
+    "phase1_frame_fifo_queue": "FrameFIFO",
+    "phase1_unknown_tracks": "UnknownTracks",
+    "phase1_vlm_queue": "VLMQueue",
+    "phase1_vlm_latency": "VLMLatency",
+}
+
+
+def _stringify(value) -> str:
+    if value is None:
+        return ""
+    return str(value)
+
+
+def read_rows(source: Path, table_name: str) -> List[Dict[str, str]]:
+    """Read one logical debug table from XLSX or fallback CSV."""
+    source = source.expanduser().resolve()
+
+    if source.is_file() and source.suffix.lower() == ".xlsx":
+        try:
+            from openpyxl import load_workbook
+        except ImportError as exc:
+            raise RuntimeError("openpyxl is required to read Phase 1 debug workbook") from exc
+        wb = load_workbook(source, read_only=True, data_only=True)
+        sheet_name = SHEET_BY_TABLE[table_name]
+        if sheet_name not in wb.sheetnames:
+            return []
+        ws = wb[sheet_name]
+        rows_iter = ws.iter_rows(values_only=True)
+        try:
+            headers = [_stringify(v) for v in next(rows_iter)]
+        except StopIteration:
+            return []
+        result = []
+        for values in rows_iter:
+            if values is None:
+                continue
+            row = {headers[i]: _stringify(values[i]) if i < len(values) else "" for i in range(len(headers))}
+            # Skip completely empty rows.
+            if any(v != "" for v in row.values()):
+                result.append(row)
+        return result
+
+    # Backward-compatible CSV directory mode.
+    path = source / f"{table_name}.csv" if source.is_dir() else source
+    if not path.exists():
+        return []
+    with path.open("r", encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def f(row: Dict[str, str], key: str, default: float = 0.0) -> float:
+    try:
+        value = row.get(key, "")
+        if value == "":
+            return default
+        return float(value)
+    except Exception:
+        return default
+
+
+def latest_debug_source(base: Path) -> Path:
+    """Find latest Phase 1 debug workbook, falling back to old CSV dirs."""
+    base = base.expanduser().resolve()
+    preferred = base / "phase1_excel_current" / "phase1_debug.xlsx"
+    if preferred.exists():
+        return preferred
+
+    workbooks = sorted(base.glob("phase1_excel_*/*.xlsx")) + sorted(base.glob("phase1_csv_*/*.xlsx"))
+    if workbooks:
+        return workbooks[-1]
+
+    csv_dirs = sorted([p for p in base.glob("phase1_csv_*") if p.is_dir()])
+    if csv_dirs:
+        return csv_dirs[-1]
+
+    raise FileNotFoundError(f"No Phase 1 debug workbook or CSV directory found under {base}")
+
+
+def output_dir_for(source: Path) -> Path:
+    return source.parent if source.is_file() else source
+
+
+def save_hydra_plot(source: Path, out_dir: Path) -> None:
+    rows = read_rows(source, "phase1_cordinator_hydra_latency")
+    if not rows:
+        return
+    rows = [r for r in rows if r.get("status") == "sent_to_hydra"]
+    rows.sort(key=lambda r: f(r, "sequence"))
+    if not rows:
+        return
+    import matplotlib.pyplot as plt
+    x = [f(r, "sequence") for r in rows]
+    y = [f(r, "total_delay_ms") for r in rows]
+    plt.figure()
+    plt.plot(x, y, marker="o")
+    plt.xlabel("Frame sequence")
+    plt.ylabel("End-to-end delay to Hydra [ms]")
+    plt.title("Phase 1 end-to-end delay")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_dir / "phase1_hydra_end_to_end_delay.png", dpi=160)
+    plt.close()
+
+    plt.figure()
+    for key in [
+        "sent_to_classifier_delay_ms",
+        "classifier_delay_ms",
+        "classifier_debug_record_delay_ms",
+        "hydra_build_delay_ms",
+        "hydra_publish_delay_ms",
+        "unknown_publish_delay_ms",
+        "coordinator_delay_ms",
+        "pipeline_wait_ms",
+        "total_delay_ms",
+    ]:
+        if key in rows[0]:
+            plt.plot(x, [f(r, key) for r in rows], marker="o", label=key)
+    plt.xlabel("Frame sequence")
+    plt.ylabel("Delay [ms]")
+    plt.title("Phase 1 delay breakdown")
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(out_dir / "phase1_hydra_delay_breakdown.png", dpi=160)
+    plt.close()
+
+
+def save_classifier_plot(source: Path, out_dir: Path) -> None:
+    rows = read_rows(source, "phase1_classifier_phase_latency")
+    if not rows:
+        return
+    rows.sort(key=lambda r: f(r, "sequence"))
+    import matplotlib.pyplot as plt
+    x = [f(r, "sequence") for r in rows]
+    plt.figure()
+    for key in [
+        "input_age_ms",
+        "image_conversion_delay_ms",
+        "sam_delay_ms",
+        "rap_delay_ms",
+        "label_map_delay_ms",
+        "metadata_delay_ms",
+        "result_message_build_delay_ms",
+        "classifier_debug_record_delay_ms",
+        "classifier_delay_ms",
+    ]:
+        if key in rows[0]:
+            plt.plot(x, [f(r, key) for r in rows], marker="o", label=key)
+    plt.xlabel("Frame sequence")
+    plt.ylabel("Delay [ms]")
+    plt.title("Phase 1 classifier phase delays")
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(out_dir / "phase1_classifier_phase_delays.png", dpi=160)
+    plt.close()
+
+
+def save_frame_fifo_plot(source: Path, out_dir: Path) -> None:
+    rows = read_rows(source, "phase1_frame_fifo_queue")
+    if not rows:
+        return
+    rows.sort(key=lambda r: f(r, "event_index"))
+    import matplotlib.pyplot as plt
+    x = [f(r, "event_index") for r in rows]
+    y = [f(r, "queue_size") for r in rows]
+    plt.figure()
+    plt.plot(x, y, marker="o")
+    plt.xlabel("Frame FIFO event index")
+    plt.ylabel("Queue size")
+    plt.title("Internal frame FIFO queue size")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_dir / "phase1_frame_fifo_queue_size.png", dpi=160)
+    plt.close()
+
+    dequeued = [r for r in rows if r.get("event") in {"dequeued_to_sam_rap", "dequeued_sent_to_classifier"}]
+    if dequeued:
+        dx = [f(r, "sequence") for r in dequeued]
+        dy = [f(r, "queue_wait_ms") for r in dequeued]
+        plt.figure()
+        plt.plot(dx, dy, marker="o")
+        plt.xlabel("Frame sequence")
+        plt.ylabel("FIFO wait before SAM/RAP [ms]")
+        plt.title("Frame FIFO wait time before SAM/RAP")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(out_dir / "phase1_frame_fifo_wait_time.png", dpi=160)
+        plt.close()
+
+
+def save_unknown_track_plot(source: Path, out_dir: Path) -> None:
+    rows = read_rows(source, "phase1_unknown_tracks")
+    if not rows:
+        return
+    import matplotlib.pyplot as plt
+    rows.sort(key=lambda r: f(r, "sequence"))
+    tracks = sorted({r.get("unknown_track_id", "") for r in rows if r.get("unknown_track_id")})
+    if not tracks:
+        return
+    plt.figure()
+    for track_id in tracks:
+        track_rows = [r for r in rows if r.get("unknown_track_id") == track_id]
+        x = [f(r, "sequence") for r in track_rows]
+        y = [f(r, "track_seen_count") for r in track_rows]
+        plt.plot(x, y, marker="o", label=track_id)
+    plt.xlabel("Frame sequence")
+    plt.ylabel("Track seen count")
+    plt.title("Persistent unknown-object tracks")
+    plt.grid(True)
+    if len(tracks) <= 12:
+        plt.legend()
+    plt.tight_layout()
+    plt.savefig(out_dir / "phase1_unknown_tracks.png", dpi=160)
+    plt.close()
+
+
+def save_vlm_queue_plot(source: Path, out_dir: Path) -> None:
+    rows = read_rows(source, "phase1_vlm_queue")
+    if not rows:
+        return
+    rows.sort(key=lambda r: f(r, "event_index"))
+    import matplotlib.pyplot as plt
+    x = [f(r, "event_index") for r in rows]
+    y = [f(r, "queue_size") for r in rows]
+    plt.figure()
+    plt.plot(x, y, marker="o")
+    plt.xlabel("VLM FIFO queue event index")
+    plt.ylabel("Queue size")
+    plt.title("Post-RAP VLM FIFO queue size")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_dir / "phase1_vlm_fifo_queue_size.png", dpi=160)
+    plt.close()
+
+    dequeued = [r for r in rows if r.get("event") == "dequeued"]
+    if dequeued:
+        dx = list(range(1, len(dequeued) + 1))
+        dy = [f(r, "queue_wait_ms") for r in dequeued]
+        names = [r.get("unknown_track_id") or str(i) for i, r in enumerate(dequeued, start=1)]
+        plt.figure()
+        plt.plot(dx, dy, marker="o")
+        plt.xticks(dx, names, rotation=45, ha="right")
+        plt.xlabel("Dequeued unknown track")
+        plt.ylabel("FIFO wait time before VLM [ms]")
+        plt.title("Unknown-object VLM FIFO wait time")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(out_dir / "phase1_vlm_fifo_wait_time.png", dpi=160)
+        plt.close()
+
+
+def save_vlm_plot(source: Path, out_dir: Path) -> None:
+    rows = read_rows(source, "phase1_vlm_latency")
+    if not rows:
+        return
+    import matplotlib.pyplot as plt
+    labels = [r.get("unknown_track_id") or r.get("candidate_id") or str(i + 1) for i, r in enumerate(rows)]
+    x = list(range(1, len(labels) + 1))
+    plt.figure()
+    plt.plot(x, [f(r, "total_age_ms") for r in rows], marker="o", label="total_age_ms")
+    plt.plot(x, [f(r, "vlm_delay_ms") for r in rows], marker="o", label="vlm_delay_ms")
+    plt.xticks(x, labels, rotation=45, ha="right")
+    plt.ylabel("Delay [ms]")
+    plt.title("Unknown-object VLM delay per track")
+    plt.grid(True)
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(out_dir / "phase1_vlm_delays.png", dpi=160)
+    plt.close()
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--debug-workbook", default="", help="Path to phase1_debug.xlsx")
+    parser.add_argument("--debug-dir", default="", help="Backward-compatible directory containing old CSV debug files")
+    parser.add_argument("--base-dir", default="~/rsg_ros2_ws/debug", help="Base directory used to find latest debug workbook")
+    args = parser.parse_args()
+
+    if args.debug_workbook:
+        source = Path(args.debug_workbook).expanduser().resolve()
+    elif args.debug_dir:
+        source = Path(args.debug_dir).expanduser().resolve()
+    else:
+        source = latest_debug_source(Path(args.base_dir).expanduser().resolve())
+    out_dir = output_dir_for(source)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Using debug source: {source}")
+
+    save_hydra_plot(source, out_dir)
+    save_classifier_plot(source, out_dir)
+    save_frame_fifo_plot(source, out_dir)
+    save_unknown_track_plot(source, out_dir)
+    save_vlm_queue_plot(source, out_dir)
+    save_vlm_plot(source, out_dir)
+    print("Generated available plots in:", out_dir)
+
+
+if __name__ == "__main__":
+    main()
